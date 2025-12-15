@@ -1,0 +1,18 @@
+#       _
+#      [ ]
+#     (   )
+#      |>|
+#   __/===\__
+#  //| o=o |\\
+#<]  | o=o |  [>
+#    \=====/
+#   / / | \ \
+#  <_________>
+
+User-agent: *
+Disallow: /
+
+User-agent: AdsBot-Google
+Disallow: /
+
+Sitemap: http://brianjgoodwin.net.test/sitemap.xml
