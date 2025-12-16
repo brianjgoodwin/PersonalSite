@@ -2,7 +2,7 @@ Title: Home
 
 ----
 
-Pagecolor: 253, 171, 1
+Pagecolor: 217, 34, 42
 
 ----
 

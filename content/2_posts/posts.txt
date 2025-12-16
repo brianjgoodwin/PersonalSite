@@ -2,7 +2,7 @@ Title: Posts
 
 ----
 
-Pagecolor: 100, 150, 200
+Pagecolor: 253, 171, 1
 
 ----
 

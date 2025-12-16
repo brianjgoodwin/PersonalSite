@@ -2,7 +2,7 @@ Title: Projects
 
 ----
 
-Pagecolor: 200, 100, 150
+Pagecolor: 0, 136, 215
 
 ----
 

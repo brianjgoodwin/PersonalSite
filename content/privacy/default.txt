@@ -2,7 +2,7 @@ Title: Privacy Policy
 
 ----
 
-Pagecolor: 100, 100, 100
+Pagecolor: 130, 33, 134
 
 ----
 
