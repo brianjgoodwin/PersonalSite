@@ -8,7 +8,7 @@ Pagecolor: 253, 171, 1
 
 Intro:
 
-Welcome to my blog. Here I share thoughts, tutorials, and insights about web development, design, and technology.
+Only the best posts.
 
 ----
 
