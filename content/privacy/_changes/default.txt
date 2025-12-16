@@ -2,7 +2,7 @@ Title: Privacy Policy
 
 ----
 
-Blocks: [{"content":{"text":"<p>This website does not collect, store, or share any personal information. There are no cookies and there is no user tracking. </p><p>The site is hosted on [Hetzner](<a href=\"https://www.hetzner.com\">https://www.hetzner.com</a>) servers in Europe 🇫🇮 and powered by [Kirby CMS](<a href=\"https://getkirby.com\">https://getkirby.com</a>), an open-source CMS built with a focus on [user privacy](<a href=\"https://getkirby.com/docs/guide/kirby-and-privacy\">https://getkirby.com/docs/guide/kirby-and-privacy</a>).</p>"},"id":"1c7bf5c8-71bf-477e-95b0-55c230e8bde5","isHidden":false,"type":"text"}]
+Blocks: [{"content":{"text":"This website does not collect, store, or share any personal information.\n\nThe site is hosted on [Hetzner](https://www.hetzner.com) servers in Europe 🇫🇮 and powered by [Kirby CMS](https://getkirby.com), an open-source CMS built with a focus on [user privacy](https://getkirby.com/docs/guide/kirby-and-privacy)."},"id":"9bc5db6a-02b6-493a-9313-b8c0eea4166b","isHidden":false,"type":"markdown"}]
 
 ----
 
