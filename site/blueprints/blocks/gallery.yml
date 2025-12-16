@@ -1,0 +1,25 @@
+name: Gallery
+icon: images
+
+fields:
+  images:
+    label: Images
+    type: files
+    layout: cards
+    multiple: true
+    help: Select multiple images for the gallery
+
+  columns:
+    label: Columns
+    type: select
+    default: "3"
+    options:
+      "2": 2 columns
+      "3": 3 columns
+      "4": 4 columns
+    help: Number of columns in the gallery grid
+
+  caption:
+    label: Gallery Caption
+    type: text
+    help: Optional caption for the entire gallery

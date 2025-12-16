@@ -1,0 +1,36 @@
+name: Call to Action
+icon: bolt
+
+fields:
+  headline:
+    label: Headline
+    type: text
+    placeholder: Ready to get started?
+
+  text:
+    label: Description
+    type: textarea
+    buttons: false
+    maxlength: 200
+
+  buttonText:
+    label: Button Text
+    type: text
+    placeholder: Learn More
+    width: 1/2
+
+  buttonUrl:
+    label: Button URL
+    type: url
+    placeholder: https://example.com
+    width: 1/2
+
+  style:
+    label: Style
+    type: select
+    default: default
+    options:
+      default: Default
+      primary: Primary (Blue)
+      success: Success (Green)
+      warning: Warning (Orange)
