@@ -6,9 +6,9 @@ Pagecolor: 100, 150, 200
 
 ----
 
-Text:
+Intro:
 
-Coming soon.
+Welcome to my blog. Here I share thoughts, tutorials, and insights about web development, design, and technology.
 
 ----
 

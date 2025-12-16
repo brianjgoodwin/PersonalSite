@@ -1,0 +1,62 @@
+title: Posts
+
+icon: 📝
+
+# Page status options
+status:
+  draft: true
+  listed: true
+
+columns:
+  main:
+    width: 2/3
+    sections:
+      # Introduction text for the blog
+      fields:
+        type: fields
+        fields:
+          intro:
+            label: Introduction
+            type: textarea
+            help: Optional introduction text shown at the top of the blog
+            size: medium
+
+      # List of blog posts
+      drafts:
+        type: pages
+        headline: Draft Posts
+        status: draft
+        template: post
+        layout: cards
+        info: "{{ page.date.toDate('M d, Y') }}"
+        image:
+          query: page.cover
+          cover: true
+        sortBy: date desc
+        empty: No draft posts yet
+
+      posts:
+        type: pages
+        headline: Published Posts
+        status: listed
+        template: post
+        layout: cards
+        info: "{{ page.date.toDate('M d, Y') }}"
+        image:
+          query: page.cover
+          cover: true
+        sortBy: date desc
+        empty: No published posts yet
+
+  sidebar:
+    width: 1/3
+    sections:
+      # Page options
+      meta:
+        type: fields
+        fields:
+          pagecolor:
+            label: Page Color
+            type: text
+            help: RGB values (e.g. "100, 150, 200")
+            placeholder: "100, 150, 200"

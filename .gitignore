@@ -80,3 +80,8 @@ php_error.log
 *.backup
 *.sql
 *.sql.gz
+
+# Documentation
+# ---------------
+
+kirby-server-setup-summary.md

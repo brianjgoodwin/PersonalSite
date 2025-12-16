@@ -1,0 +1,46 @@
+title: Read Only
+description: Can view the Panel and browse content, but cannot make any changes
+
+permissions:
+  # Panel access
+  access:
+    panel: true      # Can access the Panel
+    site: true       # Can view site settings
+    settings: false  # Cannot change settings
+    users: false     # Cannot manage users
+    languages: false # Cannot manage languages
+    system: false    # Cannot access system settings
+
+  # Page permissions - read only
+  pages:
+    create: false
+    read: true       # Can view pages
+    update: false
+    delete: false
+    changeSlug: false
+    changeStatus: false
+    changeTemplate: false
+    changeTitle: false
+    duplicate: false
+    preview: true    # Can preview pages
+    sort: false
+
+  # File permissions - read only
+  files:
+    create: false
+    read: true       # Can view files
+    update: false
+    delete: false
+    changeName: false
+    replace: false
+
+  # User permissions - cannot manage users
+  users:
+    create: false
+    read: false
+    update: false
+    delete: false
+    changeEmail: false
+    changeName: false
+    changePassword: false
+    changeRole: false
