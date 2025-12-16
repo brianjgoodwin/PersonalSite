@@ -49,10 +49,11 @@ index.html
 /site/sessions/*
 !/site/sessions/index.html
 
-# License
+# License & Config
 # ---------------
 
 /site/config/.license
+/site/config/config.php
 
 # Composer dependencies
 # ---------------

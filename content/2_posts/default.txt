@@ -1,0 +1,15 @@
+Title: Posts
+
+----
+
+Pagecolor: 100, 150, 200
+
+----
+
+Text:
+
+Coming soon.
+
+----
+
+Uuid: posts001

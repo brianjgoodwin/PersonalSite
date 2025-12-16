@@ -1,0 +1,17 @@
+Title: Privacy
+
+----
+
+Pagecolor: 100, 100, 100
+
+----
+
+Text:
+
+# Privacy Policy
+
+This website does not collect, store, or share any personal information.
+
+----
+
+Uuid: privacy001

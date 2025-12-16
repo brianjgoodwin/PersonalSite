@@ -1,0 +1,15 @@
+Title: Links
+
+----
+
+Pagecolor: 150, 200, 100
+
+----
+
+Text:
+
+Coming soon.
+
+----
+
+Uuid: links001

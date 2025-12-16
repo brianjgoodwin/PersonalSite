@@ -1,0 +1,15 @@
+Title: Projects
+
+----
+
+Pagecolor: 200, 100, 150
+
+----
+
+Text:
+
+Coming soon.
+
+----
+
+Uuid: projects001
