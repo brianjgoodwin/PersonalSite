@@ -19,6 +19,7 @@ columns:
             fieldsets:
               - heading
               - text
+              - markdown
               - image
               - gallery
               - video

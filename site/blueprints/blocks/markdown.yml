@@ -1,0 +1,16 @@
+name: Markdown
+icon: text
+
+fields:
+  text:
+    label: Markdown Content
+    type: textarea
+    size: huge
+    buttons:
+      - bold
+      - italic
+      - link
+      - code
+      - ul
+      - ol
+    help: Use markdown formatting - will be rendered as styled HTML
