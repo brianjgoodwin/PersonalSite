@@ -1,0 +1,19 @@
+Title: Links
+
+----
+
+Pagecolor: 79, 179, 47
+
+----
+
+Intro:
+
+A curated collection of links to resources, tools, and sites I find useful or interesting.
+
+----
+
+Linksections:
+
+----
+
+Uuid: links001
