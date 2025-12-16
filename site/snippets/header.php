@@ -2,10 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title><?= $page->title() ?> | <?= $site->title() ?></title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* iOS Safe Area Support */
+        :root {
+            --safe-area-inset-top: env(safe-area-inset-top);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom);
+        }
 
         <?php
         // Get page color - check current page first, then parent
@@ -29,6 +37,9 @@
 
         html {
             height: 100%;
+            /* Extend background to cover safe areas on iOS */
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
         }
 
         body {
@@ -40,7 +51,11 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            min-height: -webkit-fill-available;
             position: relative;
+            /* Padding for iOS safe areas */
+            padding-top: var(--safe-area-inset-top);
+            padding-bottom: var(--safe-area-inset-bottom);
         }
 
         /* Three-layer layout: background (html) -> border land -> body content */
