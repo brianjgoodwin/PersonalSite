@@ -53,9 +53,7 @@
             min-height: 100vh;
             min-height: -webkit-fill-available;
             position: relative;
-            /* Padding for iOS safe areas */
-            padding-top: var(--safe-area-inset-top);
-            padding-bottom: var(--safe-area-inset-bottom);
+            /* No padding on body - we'll handle safe areas in header/footer */
         }
 
         /* Three-layer layout: background (html) -> border land -> body content */
@@ -136,6 +134,8 @@
         header {
             position: relative;
             padding: 20px;
+            /* Add safe area padding at top for iOS */
+            padding-top: max(20px, var(--safe-area-inset-top));
             margin-bottom: 40px;
             background: white;
         }
@@ -309,6 +309,8 @@
             position: relative;
             margin-top: 60px;
             padding: 20px;
+            /* Add safe area padding at bottom for iOS */
+            padding-bottom: max(20px, var(--safe-area-inset-bottom));
             background-color: #000;
         }
 
