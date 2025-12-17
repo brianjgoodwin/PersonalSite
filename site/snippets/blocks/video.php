@@ -4,10 +4,22 @@ $caption = $block->caption()->value();
 $embedUrl = null;
 $error = null;
 
-// Validate URL first - must be valid URL with http/https protocol
-if (!filter_var($url, FILTER_VALIDATE_URL) || !preg_match('/^https?:\/\//i', $url)) {
+// Parse the URL first
+$parsedUrl = parse_url($url);
+
+// Reject if not a valid URL or missing required parts
+if (!$parsedUrl || !isset($parsedUrl['scheme']) || !isset($parsedUrl['host'])) {
     $error = 'Invalid video URL. Please provide a valid YouTube or Vimeo URL.';
-} else {
+}
+// Reject if not http/https protocol
+elseif (!preg_match('/^https?$/i', $parsedUrl['scheme'])) {
+    $error = 'Invalid protocol. Only http and https URLs are supported.';
+}
+// Check if domain is YouTube or Vimeo
+elseif (!preg_match('/^(www\.)?(youtube\.com|youtu\.be|vimeo\.com)$/i', $parsedUrl['host'])) {
+    $error = 'Only YouTube and Vimeo videos are supported. Domain: ' . esc($parsedUrl['host'], 'html');
+}
+else {
     // Convert YouTube/Vimeo URLs to embed URLs
     if (preg_match('/youtube\.com\/watch\?v=([^&]+)/', $url, $matches)) {
         $embedUrl = 'https://www.youtube.com/embed/' . esc($matches[1], 'attr');
@@ -16,15 +28,7 @@ if (!filter_var($url, FILTER_VALIDATE_URL) || !preg_match('/^https?:\/\//i', $ur
     } elseif (preg_match('/vimeo\.com\/(\d+)/', $url, $matches)) {
         $embedUrl = 'https://player.vimeo.com/video/' . esc($matches[1], 'attr');
     } else {
-        // For non-YouTube/Vimeo URLs, only allow specific trusted domains
-        $allowedDomains = ['youtube.com', 'www.youtube.com', 'youtube-nocookie.com', 'player.vimeo.com'];
-        $parsedUrl = parse_url($url);
-
-        if (!isset($parsedUrl['host']) || !in_array($parsedUrl['host'], $allowedDomains)) {
-            $error = 'Only YouTube and Vimeo videos are supported.';
-        } else {
-            $embedUrl = esc($url, 'attr');
-        }
+        $error = 'Could not parse YouTube or Vimeo video URL. Please check the URL format.';
     }
 }
 ?>
