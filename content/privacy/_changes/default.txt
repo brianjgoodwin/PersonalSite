@@ -2,7 +2,7 @@ Title: Privacy Policy
 
 ----
 
-Blocks: [{"content":{"text":"This website does not collect, store, or share any personal information.\n\nThe site is hosted on [Hetzner](https://www.hetzner.com) servers in Europe 🇫🇮 and powered by [Kirby CMS](https://getkirby.com), an open-source CMS built with a focus on [user privacy](https://getkirby.com/docs/guide/kirby-and-privacy)."},"id":"9bc5db6a-02b6-493a-9313-b8c0eea4166b","isHidden":false,"type":"markdown"},{"content":{"headline":"","text":"Test","buttontext":"test","buttonurl":"https://example.com","style":"default"},"id":"ee202020-57c8-490b-80b8-93e075c6835e","isHidden":false,"type":"cta"}]
+Blocks: [{"content":{"text":"This website does not collect, store, or share any personal information.\n\nThe site is hosted on [Hetzner](https://www.hetzner.com) servers in Europe 🇫🇮 and powered by [Kirby CMS](https://getkirby.com), an open-source CMS built with a focus on [user privacy](https://getkirby.com/docs/guide/kirby-and-privacy)."},"id":"9bc5db6a-02b6-493a-9313-b8c0eea4166b","isHidden":false,"type":"markdown"},{"content":{"text":"# Normal Heading\n\n  Some normal text.\n\n  <script>alert('XSS')</script>\n\n  <img src=x onerror=\"alert('XSS')\">\n\n  <iframe src=\"https://evil.com\"></iframe>"},"id":"14bee6c0-9343-46c9-93b6-4ff2d339e85f","isHidden":false,"type":"markdown"}]
 
 ----
 
