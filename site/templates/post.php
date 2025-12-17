@@ -50,8 +50,10 @@
     </header>
 
     <!-- Post Content -->
-    <div class="text-content" style="font-size: 1.05rem; line-height: 1.8;">
-        <?= $page->text()->kirbytext() ?>
+    <div class="post-content" style="font-size: 1.05rem; line-height: 1.8;">
+        <?php if ($page->blocks()->isNotEmpty()): ?>
+            <?= $page->blocks()->toBlocks() ?>
+        <?php endif ?>
     </div>
 
     <!-- Additional Images/Files -->

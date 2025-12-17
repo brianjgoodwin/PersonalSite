@@ -10,26 +10,36 @@ columns:
   main:
     width: 2/3
     sections:
-      content:
+      metadata:
         type: fields
         fields:
-          intro:
-            label: Introduction
-            type: textarea
-            help: Brief intro about what this page is for
-            size: small
-
           updated:
             label: Last Updated
             type: date
             default: now
             help: When you last updated this page
 
-          text:
-            label: What I'm Doing Now
-            type: textarea
-            size: huge
-            help: What you're currently focused on (work, projects, learning, etc.)
+      content:
+        type: fields
+        fields:
+          blocks:
+            label: Content
+            type: blocks
+            fieldsets:
+              - heading
+              - text
+              - markdown
+              - image
+              - gallery
+              - video
+              - quote
+              - code
+              - list
+              - columngrid
+              - twocolumn
+              - cta
+              - alert
+            help: Build your /now page using blocks
 
   sidebar:
     width: 1/3

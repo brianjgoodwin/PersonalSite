@@ -2,10 +2,8 @@
 
 <h2><?= $page->title() ?></h2>
 
-<?php if ($intro = $page->intro()->isNotEmpty()): ?>
-<div class="text-content">
-    <?= $page->intro()->kirbytext() ?>
-</div>
+<?php if ($page->blocks()->isNotEmpty()): ?>
+    <?= $page->blocks()->toBlocks() ?>
 <?php endif ?>
 
 <?php

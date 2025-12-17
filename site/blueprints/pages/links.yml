@@ -10,72 +10,27 @@ columns:
   main:
     width: 2/3
     sections:
-      intro:
+      content:
         type: fields
         fields:
-          intro:
-            label: Introduction
-            type: textarea
-            help: Optional introduction text shown at the top
-            size: medium
-
-      links:
-        type: fields
-        fields:
-          linkSections:
-            label: Link Sections
-            type: structure
-            help: Organize your links into categories
-            fields:
-              sectionTitle:
-                label: Section Title
-                type: text
-                placeholder: e.g., "Tools I Use", "Favorite Blogs", "Resources"
-                width: 1/2
-
-              sectionDescription:
-                label: Section Description
-                type: textarea
-                placeholder: Optional description for this section
-                buttons: false
-                maxlength: 200
-                width: 1/2
-
-              links:
-                label: Links
-                type: structure
-                fields:
-                  title:
-                    label: Link Title
-                    type: text
-                    placeholder: Name of the site or resource
-                    width: 1/2
-
-                  url:
-                    label: URL
-                    type: url
-                    placeholder: https://example.com
-                    width: 1/2
-
-                  description:
-                    label: Description
-                    type: textarea
-                    placeholder: Brief description of what this link is about
-                    buttons: false
-                    maxlength: 150
-
-                  tags:
-                    label: Tags
-                    type: tags
-                    placeholder: tool, blog, inspiration, etc.
-                    width: 1/2
-
-                  featured:
-                    label: Featured
-                    type: toggle
-                    default: false
-                    help: Highlight this link
-                    width: 1/2
+          blocks:
+            label: Content
+            type: blocks
+            fieldsets:
+              - heading
+              - text
+              - markdown
+              - image
+              - gallery
+              - video
+              - quote
+              - code
+              - list
+              - columngrid
+              - twocolumn
+              - cta
+              - alert
+            help: Build your links page using blocks
 
   sidebar:
     width: 1/3

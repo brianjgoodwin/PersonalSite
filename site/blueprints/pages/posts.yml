@@ -11,15 +11,27 @@ columns:
   main:
     width: 2/3
     sections:
-      # Introduction text for the blog
-      fields:
+      content:
         type: fields
         fields:
-          intro:
-            label: Introduction
-            type: textarea
-            help: Optional introduction text shown at the top of the blog
-            size: medium
+          blocks:
+            label: Content
+            type: blocks
+            fieldsets:
+              - heading
+              - text
+              - markdown
+              - image
+              - gallery
+              - video
+              - quote
+              - code
+              - list
+              - columngrid
+              - twocolumn
+              - cta
+              - alert
+            help: Build your page content using blocks
 
       # List of blog posts
       drafts:

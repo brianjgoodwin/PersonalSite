@@ -18,7 +18,7 @@ columns:
   main:
     width: 2/3
     sections:
-      content:
+      metadata:
         type: fields
         fields:
           cover:
@@ -44,17 +44,33 @@ columns:
             help: Short description shown in post listings (max 300 characters)
             buttons: false
 
-          text:
-            label: Content
-            type: textarea
-            size: huge
-            help: The main content of your post (supports Kirbytext formatting)
-
           tags:
             label: Tags
             type: tags
             help: Categorize your post with tags
             icon: tag
+
+      content:
+        type: fields
+        fields:
+          blocks:
+            label: Content
+            type: blocks
+            fieldsets:
+              - heading
+              - text
+              - markdown
+              - image
+              - gallery
+              - video
+              - quote
+              - code
+              - list
+              - columngrid
+              - twocolumn
+              - cta
+              - alert
+            help: Build your post content using blocks
 
   sidebar:
     width: 1/3

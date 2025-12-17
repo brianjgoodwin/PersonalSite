@@ -2,21 +2,15 @@
 
 <h2><?= $page->title() ?></h2>
 
-<?php if ($intro = $page->intro()->isNotEmpty()): ?>
-<div class="text-content" style="font-style: italic; color: #666; margin-bottom: 30px;">
-    <?= $page->intro()->kirbytext() ?>
-</div>
-<?php endif ?>
-
 <?php if ($updated = $page->updated()->isNotEmpty()): ?>
 <div style="font-size: 0.9rem; color: #666; margin-bottom: 30px;">
     Last updated: <strong><?= $page->updated()->toDate('F j, Y') ?></strong>
 </div>
 <?php endif ?>
 
-<div class="text-content">
-    <?= $page->text()->kirbytext() ?>
-</div>
+<?php if ($page->blocks()->isNotEmpty()): ?>
+    <?= $page->blocks()->toBlocks() ?>
+<?php endif ?>
 
 <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid #ddd; font-size: 0.9rem; color: #666;">
     <p>
