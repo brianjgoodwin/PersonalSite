@@ -228,21 +228,46 @@ a:hover {
 
 /* === VERTICAL SIDEBAR === */
 .vertical-sidebar {
-    background-color: var(--page-color);
-    width: 120px;
+    /* Base color + dark texture (for pages with black text) */
+    background:
+        url('../asfalt-dark.png') repeat,
+        var(--page-color);
+    background-blend-mode: multiply;
+
+    /* Smooth responsive width: 60px (mobile) to 120px (desktop) */
+    width: clamp(60px, 8vw + 20px, 120px);
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Anchor to top instead of center */
     justify-content: center;
+    padding-top: 2rem; /* 2rem spacing below header */
     position: relative;
 }
 
 .vertical-sidebar-text {
     writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    font-size: 2.5rem;
+    /* No rotation - American book spine reads top-to-bottom */
+    /* Smooth responsive text: 1.5rem (mobile) to 2.5rem (desktop) */
+    font-size: clamp(1.5rem, 1.5vw + 0.875rem, 2.5rem);
     font-weight: 700;
     color: var(--text-black);
     letter-spacing: 0.05em;
+    /* Opinionated shadow: 225° angle (Southwest), black shadow for depth */
+    text-shadow: -3px 3px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* White text variant for specific pages */
+.vertical-sidebar-text.white-text {
+    color: var(--bg-white);
+    /* Stronger white shadow for visibility on colored backgrounds */
+    text-shadow: -3px 3px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* Light texture for pages with white text */
+.vertical-sidebar:has(.white-text) {
+    background:
+        url('../asfalt-dark.png') repeat,
+        var(--page-color);
+    background-blend-mode: hard-light;
 }
 
 /* === CONTENT BLOCKS === */
@@ -255,6 +280,35 @@ a:hover {
 .text-content {
     line-height: 1.8;
     margin-bottom: 30px;
+}
+
+/* === COLUMN GRID BLOCK === */
+.block-columngrid {
+    width: 100%;
+}
+
+.columngrid-container {
+    width: 100%;
+}
+
+.columngrid-column {
+    min-height: 20px; /* Prevent completely empty columns from collapsing */
+}
+
+/* Ensure images in columns are responsive */
+.columngrid-column img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Remove default block spacing within columns for tighter control */
+.columngrid-column > .blocks > * {
+    margin-top: 0;
+}
+
+.columngrid-column > .blocks > * + * {
+    margin-top: 1rem;
 }
 
 /* === TWO COLUMN LAYOUT === */
@@ -512,18 +566,11 @@ a:hover {
     }
 
     .page-wrapper {
-        grid-template-columns: 1fr 80px; /* Keep two-column grid on mobile */
+        /* Grid columns handled by clamp() in main definition - no override needed */
+        grid-template-columns: 1fr auto;
     }
 
-    .vertical-sidebar {
-        width: 80px;
-        /* Remove fixed positioning - let it scroll with content */
-        position: relative;
-    }
-
-    .vertical-sidebar-text {
-        font-size: 2rem;
-    }
+    /* Sidebar width and text size are handled by clamp() - no mobile overrides needed */
 
     .main-content {
         padding: 2rem 1rem;
