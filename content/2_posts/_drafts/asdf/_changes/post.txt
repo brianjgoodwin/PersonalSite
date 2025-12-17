@@ -2,7 +2,7 @@ Title: asdf
 
 ----
 
-Cover: 
+Cover: - file://p3wuzzj1hx0zxocq
 
 ----
 
