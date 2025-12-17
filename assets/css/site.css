@@ -512,17 +512,13 @@ a:hover {
     }
 
     .page-wrapper {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 80px; /* Keep two-column grid on mobile */
     }
 
     .vertical-sidebar {
         width: 80px;
-        position: fixed;
-        right: 0;
-        top: 0;
-        bottom: 0; /* Extend from top to bottom */
-        height: auto; /* Remove fixed height, use top/bottom instead */
-        z-index: 40;
+        /* Remove fixed positioning - let it scroll with content */
+        position: relative;
     }
 
     .vertical-sidebar-text {
@@ -531,7 +527,7 @@ a:hover {
 
     .main-content {
         padding: 2rem 1rem;
-        padding-right: 90px;
+        /* No extra right padding needed - sidebar is part of grid now */
     }
 
     .two-column {
