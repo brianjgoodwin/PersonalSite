@@ -31,7 +31,7 @@ html {
     height: 100%;
     min-height: 100vh;
     min-height: -webkit-fill-available;
-    background: var(--bg-light);
+    background: var(--bg-white); /* White background covers top bounce area */
 }
 
 body {
@@ -42,7 +42,7 @@ body {
     min-height: -webkit-fill-available;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    background: var(--bg-light);
+    background: linear-gradient(to bottom, var(--bg-white) 0%, var(--bg-white) 70%, var(--text-black) 70%, var(--text-black) 100%); /* White top, black bottom */
 }
 
 /* === TYPOGRAPHY === */
@@ -93,18 +93,7 @@ a:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Extend header background upward to cover iOS notch and bounce area */
-.site-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100vh;
-    background-color: var(--bg-white);
-    transform: translateY(-100%);
-    z-index: -1;
-}
+/* No need for header extension - html background handles it */
 
 .header-inner {
     max-width: 1200px;
@@ -297,18 +286,7 @@ a:hover {
     z-index: 50;
 }
 
-/* Extend footer background downward to cover iOS home indicator and bounce area */
-.site-footer::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100vh;
-    background-color: var(--text-black);
-    transform: translateY(100%);
-    z-index: -1;
-}
+/* No need for footer extension - body gradient handles it */
 
 .footer-content {
     max-width: 1200px;
