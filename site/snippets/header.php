@@ -35,8 +35,13 @@
             </div>
 
             <div class="nav-wrapper">
-                <!-- Hamburger menu toggle for mobile -->
-                <button class="menu-toggle" aria-label="Toggle menu"></button>
+                <!-- Hamburger menu toggle for mobile (CSS-only) -->
+                <input type="checkbox" id="menu-toggle" class="menu-toggle-checkbox">
+                <label for="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>
 
                 <!-- Main navigation -->
                 <nav class="main-nav">
