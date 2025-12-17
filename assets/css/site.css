@@ -224,6 +224,7 @@ a:hover {
     grid-template-columns: 1fr auto;
     min-height: 100%;
     position: relative;
+    flex: 1; /* Allow wrapper to grow to fill available space */
 }
 
 /* Main content */
@@ -540,7 +541,8 @@ a:hover {
         position: fixed;
         right: 0;
         top: 0;
-        height: 60%;
+        bottom: 0; /* Extend from top to bottom */
+        height: auto; /* Remove fixed height, use top/bottom instead */
         z-index: 40;
     }
 
