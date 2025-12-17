@@ -6,13 +6,14 @@ $columns = $block->columns()->or('3');
 <?php if ($images->count() > 0): ?>
 <div class="block-gallery" style="margin: 30px 0;">
     <div style="display: grid; grid-template-columns: repeat(<?= $columns ?>, 1fr); gap: 15px;">
-        <?php foreach ($images as $image): ?>
+        <?php foreach ($images as $index => $image): ?>
             <figure style="margin: 0;">
                 <img
                     src="<?= $image->crop(600, 400)->url() ?>"
                     alt="<?= $image->alt()->or($image->filename()) ?>"
                     width="600"
                     height="400"
+                    <?php if ($index >= 4): ?>loading="lazy"<?php endif ?>
                     style="width: 100%; height: auto; border-radius: 4px; display: block;"
                 >
             </figure>

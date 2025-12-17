@@ -22,6 +22,7 @@ foreach ($authorIds as $id) {
 
 <?php if ($posts->count() > 0): ?>
     <div class="posts-list">
+        <?php $isFirst = true; ?>
         <?php foreach ($posts as $post): ?>
             <article class="post-preview" style="margin-bottom: 30px;">
                 <div class="post-preview-header">
@@ -56,10 +57,12 @@ foreach ($authorIds as $id) {
                                 alt="<?= $post->title()->html() ?>"
                                 width="800"
                                 height="400"
+                                <?php if ($isFirst): ?>fetchpriority="high"<?php else: ?>loading="lazy"<?php endif ?>
                                 style="width: 100%; height: auto; border-radius: 8px;"
                             >
                         </a>
                     </div>
+                    <?php $isFirst = false; ?>
                 <?php endif ?>
 
                 <?php if ($excerpt = $post->excerpt()->isNotEmpty()): ?>
