@@ -27,6 +27,7 @@
     </style>
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
         <div class="header-inner">
             <!-- Logo with active state on home page -->
@@ -44,7 +45,7 @@
                 </label>
 
                 <!-- Main navigation -->
-                <nav class="main-nav">
+                <nav class="main-nav" aria-label="Main navigation">
                     <ul>
                         <?php foreach ($site->children()->listed() as $item): ?>
                         <li>
@@ -62,4 +63,4 @@
     <!-- Main page wrapper with grid (includes content + sidebar) -->
     <div class="page-wrapper">
         <!-- Main content area -->
-        <main class="main-content">
+        <main class="main-content" id="main-content" tabindex="-1">

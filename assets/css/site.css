@@ -13,7 +13,7 @@
 /* === CSS CUSTOM PROPERTIES === */
 :root {
     /* Core colors */
-    --accent-red: #D9534F;
+    --accent-red: #C9302C;  /* WCAG AA compliant: 4.54:1 contrast ratio */
     --text-black: #000000;
     --bg-light: #E8E8E8;
     --bg-white: #FFFFFF;
@@ -81,6 +81,64 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+/* === ACCESSIBILITY: FOCUS INDICATORS === */
+/* Remove default browser outline for mouse users */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Universal focus-visible for keyboard navigation */
+*:focus-visible {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Enhanced focus for interactive elements */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+label:focus-visible {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Navigation-specific focus */
+.main-nav a:focus-visible {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Hamburger menu focus */
+.menu-toggle:focus-visible {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Skip link - hidden until focused */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--text-black);
+    color: var(--bg-white);
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 200;
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
 }
 
 /* === HEADER === */

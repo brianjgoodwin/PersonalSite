@@ -1,6 +1,6 @@
 <?php snippet('header') ?>
 
-<h2><?= $page->title() ?></h2>
+<h1><?= $page->title() ?></h1>
 
 <?php if ($page->blocks()->isNotEmpty()): ?>
     <?= $page->blocks()->toBlocks() ?>
