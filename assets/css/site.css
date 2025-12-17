@@ -42,7 +42,7 @@ body {
     min-height: -webkit-fill-available;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    background: linear-gradient(to bottom, var(--bg-white) 0%, var(--bg-white) 70%, var(--text-black) 70%, var(--text-black) 100%); /* White top, black bottom */
+    background: var(--text-black); /* Black background extends below footer */
 }
 
 /* === TYPOGRAPHY === */
@@ -214,6 +214,7 @@ a:hover {
     min-height: 100%;
     position: relative;
     flex: 1; /* Allow wrapper to grow to fill available space */
+    background-color: var(--bg-white); /* White background for content area */
 }
 
 /* Main content */
