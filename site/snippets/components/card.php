@@ -24,10 +24,10 @@ $featured = $featured ?? false;
         <div class="card-image">
             <?php if ($link): ?>
                 <a href="<?= $link ?>">
-                    <img src="<?= $image->crop(600, 400)->url() ?>" alt="<?= html($title) ?>" style="width: 100%; height: auto; display: block;">
+                    <img src="<?= $image->crop(600, 400)->url() ?>" alt="<?= html($title) ?>" width="600" height="400" style="width: 100%; height: auto; display: block;">
                 </a>
             <?php else: ?>
-                <img src="<?= $image->crop(600, 400)->url() ?>" alt="<?= html($title) ?>" style="width: 100%; height: auto; display: block;">
+                <img src="<?= $image->crop(600, 400)->url() ?>" alt="<?= html($title) ?>" width="600" height="400" style="width: 100%; height: auto; display: block;">
             <?php endif ?>
         </div>
     <?php endif ?>

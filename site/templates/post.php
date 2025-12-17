@@ -36,6 +36,8 @@
                 <img
                     src="<?= $cover->crop(1200, 600)->url() ?>"
                     alt="<?= $page->title()->html() ?>"
+                    width="1200"
+                    height="600"
                     style="width: 100%; height: auto; border-radius: 8px;"
                 >
             </figure>
@@ -67,6 +69,8 @@
                             <img
                                 src="<?= $file->crop(400, 300)->url() ?>"
                                 alt="<?= $file->alt()->or($page->title())->html() ?>"
+                                width="400"
+                                height="300"
                                 style="width: 100%; height: auto; border-radius: 4px;"
                             >
                         </figure>

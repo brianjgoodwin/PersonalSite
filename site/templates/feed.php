@@ -4,6 +4,15 @@
 $postsPage = page('posts');
 $posts = $postsPage ? $postsPage->children()->listed()->sortBy('date', 'desc')->limit(20) : [];
 
+// Pre-load all authors to avoid N+1 queries
+$authorIds = $posts->pluck('author', null, true);
+$authors = [];
+foreach ($authorIds as $id) {
+    if ($id && $user = kirby()->user($id)) {
+        $authors[$id] = $user;
+    }
+}
+
 // Set content type header
 header('Content-Type: application/rss+xml; charset=utf-8');
 
@@ -25,7 +34,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
       <guid isPermaLink="true"><?= $post->url() ?></guid>
       <pubDate><?= $post->date()->toDate('r') ?></pubDate>
 
-      <?php if ($author = $post->author()->toUser()): ?>
+      <?php
+      $authorId = $post->author()->value();
+      if ($authorId && isset($authors[$authorId])):
+          $author = $authors[$authorId];
+      ?>
       <author><?= $author->email()->xml() ?> (<?= $author->name()->xml() ?>)</author>
       <?php endif ?>
 

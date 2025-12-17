@@ -11,6 +11,8 @@ $columns = $block->columns()->or('3');
                 <img
                     src="<?= $image->crop(600, 400)->url() ?>"
                     alt="<?= $image->alt()->or($image->filename()) ?>"
+                    width="600"
+                    height="400"
                     style="width: 100%; height: auto; border-radius: 4px; display: block;"
                 >
             </figure>
@@ -19,7 +21,7 @@ $columns = $block->columns()->or('3');
 
     <?php if ($caption = $block->caption()->isNotEmpty()): ?>
         <figcaption style="text-align: center; color: #666; font-size: 0.9rem; margin-top: 10px; font-style: italic;">
-            <?= $caption ?>
+            <?= esc($block->caption()->value(), 'html') ?>
         </figcaption>
     <?php endif ?>
 </div>
