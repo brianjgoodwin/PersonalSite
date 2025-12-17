@@ -93,6 +93,19 @@ a:hover {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Extend header background upward to cover iOS notch and bounce area */
+.site-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background-color: var(--bg-white);
+    transform: translateY(-100%);
+    z-index: -1;
+}
+
 .header-inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -281,6 +294,19 @@ a:hover {
     text-align: center;
     position: relative;
     z-index: 50;
+}
+
+/* Extend footer background downward to cover iOS home indicator and bounce area */
+.site-footer::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background-color: var(--text-black);
+    transform: translateY(100%);
+    z-index: -1;
 }
 
 .footer-content {
