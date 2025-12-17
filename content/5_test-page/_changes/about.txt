@@ -2,7 +2,7 @@ Title: Test Page
 
 ----
 
-Blocks: [{"content":{"url":"https://www.youtube.com/watch?v=dQw4w9WgXcQ","caption":"This is a test caption"},"id":"ab5737b4-9685-443d-bae1-8fccfa44b1ba","isHidden":false,"type":"video"}]
+Blocks: [{"content":{"url":"https://www.youtube.com/watch?v=dQw4w9WgXcQ","caption":"This is a test caption"},"id":"ab5737b4-9685-443d-bae1-8fccfa44b1ba","isHidden":false,"type":"video"},{"content":{"images":[],"columns":"2 columns","caption":"<script>alert('XSS')</script>"},"id":"bbe24028-4ddc-4efb-b6af-c24b51f59a47","isHidden":false,"type":"gallery"}]
 
 ----
 
