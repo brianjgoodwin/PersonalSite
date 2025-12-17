@@ -65,6 +65,18 @@ tabs:
         default: medium
         width: 1/2
 
+      minHeight:
+        label: Minimum Height (Spacer)
+        type: select
+        options:
+          none: None
+          small: Small (3rem)
+          medium: Medium (6rem)
+          large: Large (12rem)
+        default: none
+        width: 1/2
+        help: Use for creating vertical spacing/breathing room
+
   column1:
     label: Column 1
     fields:
@@ -81,7 +93,6 @@ tabs:
           - quote
           - code
           - list
-          - columngrid
         help: Add content blocks for this column
 
       col1_padding:
@@ -166,7 +177,6 @@ tabs:
           - quote
           - code
           - list
-          - columngrid
 
       col2_padding:
         label: Padding
@@ -249,7 +259,6 @@ tabs:
           - quote
           - code
           - list
-          - columngrid
 
       col3_padding:
         label: Padding
@@ -332,7 +341,6 @@ tabs:
           - quote
           - code
           - list
-          - columngrid
 
       col4_padding:
         label: Padding

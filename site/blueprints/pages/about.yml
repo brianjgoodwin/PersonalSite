@@ -26,6 +26,7 @@ columns:
               - quote
               - code
               - list
+              - columngrid
               - twocolumn
               - cta
               - alert

@@ -5,7 +5,7 @@ A flexible, responsive grid component for creating 1-4 column layouts with power
 ## Features
 
 - **1-4 columns** with equal or asymmetric width ratios
-- **Nested blocks** - each column can contain images, text, markdown, or other blocks
+- **Multiple content blocks per column** - images, text, markdown, gallery, video, quote, code, lists
 - **Brutalist drop shadows** (225° angle, consistent with site design)
 - **Page color integration** - columns can inherit the page color
 - **Mobile responsive** - gaps disappear, columns stack, reorder, or hide
@@ -35,6 +35,15 @@ Choose 1-4 columns
 Top and bottom margins for the entire grid:
 - None, Small (1rem), Medium (2rem), Large (3rem)
 
+### Minimum Height (Spacer)
+Set a minimum height for the grid - perfect for creating vertical breathing room:
+- None (default - content determines height)
+- Small: 3rem
+- Medium: 6rem
+- Large: 12rem
+
+**Use case:** Create a minimal spacer row with no content but set a minimum height for visual separation between sections.
+
 ## Column Settings
 
 Each column has independent controls:
@@ -43,9 +52,10 @@ Each column has independent controls:
 Use Kirby's block editor to add:
 - Images
 - Text/Markdown
-- Other blocks (including nested column grids!)
+- Gallery, Video, Quote, Code, Lists
+- Stack multiple content types vertically within one column
 
-Stack multiple content types vertically within one column.
+**Note:** Column grids cannot be nested within other column grids (to prevent infinite recursion).
 
 ### Padding
 - None (default)
@@ -101,25 +111,26 @@ How content aligns within the column:
 - Gap: Medium
 - Each column: Page color background, medium padding, light shadow
 
-### Nested Layout
-- Columns: 2
-- Ratio: 2:1
-- Column 1: Add another Column Grid block (nested!)
-- Column 2: Text content
-
 ### Mobile Reordering
 - Columns: 3
 - Column 1: Mobile Order = 2
 - Column 2: Mobile Order = 1 (appears first on mobile)
 - Column 3: Mobile Order = 3
 
+### Minimal Spacer
+- Columns: 1
+- Min Height: Medium (6rem)
+- Vertical Spacing: None
+- Leave column content empty
+- **Result:** Clean 6rem vertical space between sections
+
 ## Tips
 
 1. **Empty columns:** You can leave columns empty - they'll maintain grid structure
-2. **Nested grids:** Column grids can contain other column grids for complex layouts
-3. **Markdown friendly:** Write in markdown blocks within columns
-4. **Minimal design:** Leave backgrounds/shadows off for clean, minimal layouts
-5. **Page color:** Use brutalist page color backgrounds for strong visual impact
+2. **Markdown friendly:** Write in markdown blocks within columns
+3. **Minimal design:** Leave backgrounds/shadows off for clean, minimal layouts
+4. **Page color:** Use brutalist page color backgrounds for strong visual impact
+5. **Multiple grids:** You can use multiple column grids on the same page without conflicts
 
 ## Files
 

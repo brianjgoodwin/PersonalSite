@@ -4,12 +4,16 @@
  * Flexible 1-4 column grid system with responsive behavior
  */
 
+// Generate unique ID for this grid instance
+$gridId = 'columngrid-' . uniqid();
+
 // Get grid settings
 $numColumns = (int)$block->columns()->value();
 $columnRatio = $block->columnRatio()->value();
 $customRatio = $block->customRatio()->value();
 $gap = $block->gap()->value();
 $verticalSpacing = $block->verticalSpacing()->value();
+$minHeight = $block->minHeight()->value();
 
 // Determine column ratio (grid-template-columns value)
 $gridColumns = '';
@@ -42,6 +46,15 @@ $spacingMap = [
     'large' => '3rem'
 ];
 $topBottomMargin = $spacingMap[$verticalSpacing] ?? '2rem';
+
+// Map minimum height to CSS
+$minHeightMap = [
+    'none' => 'auto',
+    'small' => '3rem',
+    'medium' => '6rem',
+    'large' => '12rem'
+];
+$minHeightValue = $minHeightMap[$minHeight] ?? 'auto';
 
 // Helper function to get column data
 function getColumnData($block, $colNum) {
@@ -89,11 +102,12 @@ $valignMap = [
 ];
 ?>
 
-<div class="block-columngrid" style="margin: <?= $topBottomMargin ?> 0;">
+<div class="block-columngrid" id="<?= $gridId ?>" style="margin: <?= $topBottomMargin ?> 0;">
     <div class="columngrid-container" style="
         display: grid;
         grid-template-columns: <?= $gridColumns ?>;
         gap: <?= $gapValue ?>;
+        min-height: <?= $minHeightValue ?>;
     ">
         <?php foreach ($columns as $index => $col): ?>
             <?php
@@ -104,7 +118,9 @@ $valignMap = [
             } elseif ($col['background'] === 'white') {
                 $bgColor = 'background-color: var(--bg-white);';
             } elseif ($col['background'] === 'custom' && !empty($col['customBg'])) {
-                $bgColor = 'background-color: rgb(' . $col['customBg'] . ');';
+                // Sanitize RGB input: only allow numbers, commas, and spaces
+                $sanitized = preg_replace('/[^0-9,\s]/', '', $col['customBg']);
+                $bgColor = 'background-color: rgb(' . $sanitized . ');';
             }
 
             // Build column styles
@@ -137,21 +153,21 @@ $valignMap = [
 </div>
 
 <style>
-/* Mobile responsive behavior */
+/* Mobile responsive behavior for this specific grid */
 @media (max-width: 768px) {
-    .block-columngrid .columngrid-container {
+    #<?= $gridId ?> .columngrid-container {
         grid-template-columns: 1fr !important;
         gap: 0 !important; /* Blocks touch on mobile */
     }
 
     /* Hide columns marked as mobile-hide */
-    .block-columngrid .mobile-hide {
+    #<?= $gridId ?> .mobile-hide {
         display: none !important;
     }
 
     /* Reorder columns based on data-mobile-order */
     <?php foreach ($columns as $index => $col): ?>
-        .block-columngrid .columngrid-column:nth-child(<?= $index + 1 ?>) {
+        #<?= $gridId ?> .columngrid-column:nth-child(<?= $index + 1 ?>) {
             order: <?= $col['mobileOrder'] ?>;
         }
     <?php endforeach ?>
