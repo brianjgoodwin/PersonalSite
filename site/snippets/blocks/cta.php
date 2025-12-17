@@ -29,7 +29,14 @@ $s = $styles[$style];
     <?php endif ?>
 
     <?php if ($buttonText && $buttonUrl): ?>
-        <a href="<?= $buttonUrl ?>" style="display: inline-block; background: <?= $s['button'] ?>; color: <?= $s['buttonText'] ?>; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 1rem;">
+        <?php
+        // Validate button URL - must be valid URL with http/https protocol
+        $safeUrl = '#';
+        if (filter_var($buttonUrl, FILTER_VALIDATE_URL) && preg_match('/^https?:\/\//i', $buttonUrl)) {
+            $safeUrl = esc($buttonUrl, 'attr');
+        }
+        ?>
+        <a href="<?= $safeUrl ?>" style="display: inline-block; background: <?= $s['button'] ?>; color: <?= $s['buttonText'] ?>; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 1rem;" rel="noopener noreferrer">
             <?= html($buttonText) ?>
         </a>
     <?php endif ?>
