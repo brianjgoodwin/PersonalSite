@@ -42,7 +42,7 @@ body {
     min-height: -webkit-fill-available;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    background: var(--text-black); /* Black background extends below footer */
+    background: var(--bg-white); /* White background for entire page */
 }
 
 /* === TYPOGRAPHY === */
