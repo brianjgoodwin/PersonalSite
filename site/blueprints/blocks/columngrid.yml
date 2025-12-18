@@ -146,6 +146,24 @@ tabs:
         default: top
         width: 1/3
 
+      col1_square:
+        label: Square Aspect Ratio
+        type: toggle
+        default: false
+        width: 1/3
+        help: Force this column to be square (height = width)
+
+      col1_textAlign:
+        label: Text Alignment
+        type: select
+        options:
+          left: Left
+          center: Center
+          right: Right
+        default: left
+        width: 1/3
+        help: Horizontal text alignment for content in this column
+
       col1_mobileShow:
         label: Show on Mobile
         type: toggle
@@ -229,6 +247,24 @@ tabs:
         default: top
         width: 1/3
 
+      col2_square:
+        label: Square Aspect Ratio
+        type: toggle
+        default: false
+        width: 1/3
+        help: Force this column to be square (height = width)
+
+      col2_textAlign:
+        label: Text Alignment
+        type: select
+        options:
+          left: Left
+          center: Center
+          right: Right
+        default: left
+        width: 1/3
+        help: Horizontal text alignment for content in this column
+
       col2_mobileShow:
         label: Show on Mobile
         type: toggle
@@ -311,6 +347,24 @@ tabs:
         default: top
         width: 1/3
 
+      col3_square:
+        label: Square Aspect Ratio
+        type: toggle
+        default: false
+        width: 1/3
+        help: Force this column to be square (height = width)
+
+      col3_textAlign:
+        label: Text Alignment
+        type: select
+        options:
+          left: Left
+          center: Center
+          right: Right
+        default: left
+        width: 1/3
+        help: Horizontal text alignment for content in this column
+
       col3_mobileShow:
         label: Show on Mobile
         type: toggle
@@ -392,6 +446,24 @@ tabs:
           bottom: Bottom
         default: top
         width: 1/3
+
+      col4_square:
+        label: Square Aspect Ratio
+        type: toggle
+        default: false
+        width: 1/3
+        help: Force this column to be square (height = width)
+
+      col4_textAlign:
+        label: Text Alignment
+        type: select
+        options:
+          left: Left
+          center: Center
+          right: Right
+        default: left
+        width: 1/3
+        help: Horizontal text alignment for content in this column
 
       col4_mobileShow:
         label: Show on Mobile

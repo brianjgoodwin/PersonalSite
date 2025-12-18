@@ -67,6 +67,8 @@ function getColumnData($block, $colNum) {
         'customBg' => $block->{$prefix . 'customBg'}()->value(),
         'shadow' => $block->{$prefix . 'shadow'}()->value(),
         'valign' => $block->{$prefix . 'valign'}()->value(),
+        'square' => $block->{$prefix . 'square'}()->toBool(),
+        'textAlign' => $block->{$prefix . 'textAlign'}()->value(),
         'mobileShow' => $block->{$prefix . 'mobileShow'}()->toBool(),
         'mobileOrder' => (int)$block->{$prefix . 'mobileOrder'}()->value()
     ];
@@ -108,6 +110,7 @@ $valignMap = [
         grid-template-columns: <?= $gridColumns ?>;
         gap: <?= $gapValue ?>;
         min-height: <?= $minHeightValue ?>;
+        container-type: inline-size;
     ">
         <?php foreach ($columns as $index => $col): ?>
             <?php
@@ -132,6 +135,18 @@ $valignMap = [
                 $bgColor,
                 'box-shadow: ' . ($shadowMap[$col['shadow']] ?? 'none')
             ];
+
+            // Add square aspect ratio if enabled
+            if ($col['square']) {
+                // Use container query to set min-height equal to width
+                // This allows the column to grow taller if content requires it
+                $columnStyles[] = 'min-height: 100cqw';
+            }
+
+            // Add text alignment
+            if (!empty($col['textAlign'])) {
+                $columnStyles[] = 'text-align: ' . $col['textAlign'];
+            }
 
             $columnClasses = ['columngrid-column'];
             if (!$col['mobileShow']) {
