@@ -11,32 +11,74 @@ Kirby::plugin('brianardoin/cache-invalidation', [
     'hooks' => [
         // Clear cache when any page is updated
         'page.update:after' => function ($newPage, $oldPage) {
-            kirby()->cache('pages')->flush();
+            try {
+                if ($cache = kirby()->cache('pages')) {
+                    $cache->flush();
+                }
+            } catch (Exception $e) {
+                error_log('Cache flush failed during page update: ' . $e->getMessage());
+            }
         },
 
         'page.create:after' => function ($page) {
-            kirby()->cache('pages')->flush();
+            try {
+                if ($cache = kirby()->cache('pages')) {
+                    $cache->flush();
+                }
+            } catch (Exception $e) {
+                error_log('Cache flush failed during page creation: ' . $e->getMessage());
+            }
         },
 
         'page.delete:after' => function ($page) {
-            kirby()->cache('pages')->flush();
+            try {
+                if ($cache = kirby()->cache('pages')) {
+                    $cache->flush();
+                }
+            } catch (Exception $e) {
+                error_log('Cache flush failed during page deletion: ' . $e->getMessage());
+            }
         },
 
         'page.changeStatus:after' => function ($newPage, $oldPage) {
-            kirby()->cache('pages')->flush();
+            try {
+                if ($cache = kirby()->cache('pages')) {
+                    $cache->flush();
+                }
+            } catch (Exception $e) {
+                error_log('Cache flush failed during status change: ' . $e->getMessage());
+            }
         },
 
         // Clear cache when files are uploaded/changed
         'file.create:after' => function ($file) {
-            kirby()->cache('pages')->flush();
+            try {
+                if ($cache = kirby()->cache('pages')) {
+                    $cache->flush();
+                }
+            } catch (Exception $e) {
+                error_log('Cache flush failed during file creation: ' . $e->getMessage());
+            }
         },
 
         'file.update:after' => function ($newFile, $oldFile) {
-            kirby()->cache('pages')->flush();
+            try {
+                if ($cache = kirby()->cache('pages')) {
+                    $cache->flush();
+                }
+            } catch (Exception $e) {
+                error_log('Cache flush failed during file update: ' . $e->getMessage());
+            }
         },
 
         'file.delete:after' => function ($file) {
-            kirby()->cache('pages')->flush();
+            try {
+                if ($cache = kirby()->cache('pages')) {
+                    $cache->flush();
+                }
+            } catch (Exception $e) {
+                error_log('Cache flush failed during file deletion: ' . $e->getMessage());
+            }
         }
     ]
 ]);

@@ -21,8 +21,9 @@ fields:
 
   buttonUrl:
     label: Button URL
-    type: url
-    placeholder: https://example.com
+    type: text
+    placeholder: "https://example.com, /about, mailto:email@example.com, tel:+1234567890"
+    help: Enter a URL (external link), internal link (/about), email (mailto:), or phone (tel:)
     width: 1/2
 
   style:

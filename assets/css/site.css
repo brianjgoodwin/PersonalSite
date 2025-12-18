@@ -84,45 +84,8 @@ a:hover {
 }
 
 /* === ACCESSIBILITY: FOCUS INDICATORS === */
-/* Remove default browser outline for mouse users */
-*:focus:not(:focus-visible) {
-    outline: none;
-}
 
-/* Universal focus-visible for keyboard navigation */
-*:focus-visible {
-    outline: 3px solid var(--accent-red);
-    outline-offset: 2px;
-    border-radius: 2px;
-}
-
-/* Enhanced focus for interactive elements */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible,
-label:focus-visible {
-    outline: 3px solid var(--accent-red);
-    outline-offset: 2px;
-    border-radius: 2px;
-}
-
-/* Navigation-specific focus */
-.main-nav a:focus-visible {
-    outline: 3px solid var(--accent-red);
-    outline-offset: 2px;
-    border-radius: 2px;
-}
-
-/* Hamburger menu focus */
-.menu-toggle:focus-visible {
-    outline: 3px solid var(--accent-red);
-    outline-offset: 2px;
-    border-radius: 2px;
-}
-
-/* Skip link - hidden until focused */
+/* Skip link - MUST be visible when focused (keyboard users) */
 .skip-link {
     position: absolute;
     top: -40px;
@@ -139,6 +102,46 @@ label:focus-visible {
     top: 0;
     outline: 3px solid var(--accent-red);
     outline-offset: 2px;
+}
+
+/* Universal focus indicators for all interactive elements */
+/* Using both :focus and :focus-visible for broader browser support */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus,
+[tabindex]:focus {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Enhanced for :focus-visible supporting browsers (keyboard only) */
+*:focus-visible {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Remove focus for mouse users in supporting browsers */
+/* Use transparent instead of none for Windows High Contrast Mode compatibility */
+*:focus:not(:focus-visible) {
+    outline-color: transparent;
+}
+
+/* Ensure hamburger checkbox doesn't interfere with tab navigation */
+.menu-toggle-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Hamburger menu label must be focusable */
+.menu-toggle:focus {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 /* === HEADER === */
@@ -238,11 +241,6 @@ label:focus-visible {
     height: 4px;
     background-color: var(--page-color);
     transform: translateY(100%);
-}
-
-/* Hamburger menu - checkbox (hidden) */
-.menu-toggle-checkbox {
-    display: none;
 }
 
 /* Hamburger menu icon */

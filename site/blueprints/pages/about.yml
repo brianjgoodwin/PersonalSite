@@ -28,7 +28,6 @@ columns:
               - list
               - columngrid
               - twocolumn
-              - cta
               - alert
             help: Build your About page using blocks
 
