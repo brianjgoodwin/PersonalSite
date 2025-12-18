@@ -90,3 +90,5 @@ kirby-server-setup-summary.md
 # ---------------
 
 /For Claude/
+.claude/agents/design-quality-auditor.md
+.claude/agents/kirby-consultant.md
