@@ -2,7 +2,7 @@ Title: Test Post
 
 ----
 
-Cover: 
+Cover: - file://tsvli057mfhyh1lr
 
 ----
 
