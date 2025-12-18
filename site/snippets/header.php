@@ -1,66 +1,48 @@
+<?php
+/**
+ * Global Header
+ *
+ * Handles <head>, body class, and common elements
+ * Body class automatically switches based on template
+ */
+
+// Get layout class from page method (defined in config)
+$layoutClass = method_exists($page, 'layoutClass') ? $page->layoutClass() : 'layout-default';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title><?= $page->title() ?> | <?= $site->title() ?></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title><?= $page->title()->esc() ?><?php if (!$page->isHomePage()): ?> | <?= $site->title()->esc() ?><?php endif ?></title>
+
+  <?php if ($page->description()->isNotEmpty()): ?>
+    <meta name="description" content="<?= $page->description()->esc() ?>">
+  <?php endif ?>
+
+  <?php
+  // CSS with cache busting
+  $cssFile = 'assets/css/main.css';
+  $cssPath = kirby()->root('index') . '/' . $cssFile;
+  $cssVersion = file_exists($cssPath) ? filemtime($cssPath) : time();
+  ?>
+  <link rel="stylesheet" href="<?= url($cssFile) ?>?v=<?= $cssVersion ?>">
+
+  <?php
+  // Keep existing site.css for now (will be phased out)
+  if (file_exists(kirby()->root('index') . '/assets/css/site.css')):
+  ?>
     <?= css('assets/css/site.css') ?>
-
-    <style>
-        <?php
-        // Get page color - check current page first, then parent
-        $pageColor = $page->pagecolor()->value();
-        if (empty($pageColor) && $page->parent()) {
-            $pageColor = $page->parent()->pagecolor()->value();
-        }
-
-        // Set the page color custom property
-        if (!empty($pageColor)) {
-            echo ":root {\n";
-            echo "    --page-color: rgb($pageColor);\n";
-            echo "}\n";
-        }
-        ?>
-    </style>
+  <?php endif ?>
 </head>
-<body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    <header class="site-header">
-        <div class="header-inner">
-            <!-- Logo with active state on home page -->
-            <div class="site-logo <?php e($page->isHomePage(), 'active') ?>">
-                <a href="<?= $site->url() ?>"><?= $site->title() ?></a>
-            </div>
+<body class="<?= $layoutClass ?>">
 
-            <div class="nav-wrapper">
-                <!-- Hamburger menu toggle for mobile (CSS-only) -->
-                <input type="checkbox" id="menu-toggle" class="menu-toggle-checkbox">
-                <label for="menu-toggle" class="menu-toggle" aria-label="Toggle menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </label>
+  <!-- Navigation -->
+  <?php snippet('navigation') ?>
 
-                <!-- Main navigation -->
-                <nav class="main-nav" aria-label="Main navigation">
-                    <ul>
-                        <?php foreach ($site->children()->listed() as $item): ?>
-                        <li>
-                            <a href="<?= $item->url() ?>" <?php e($item->isOpen(), 'class="active"') ?>>
-                                <?= $item->title() ?>
-                            </a>
-                        </li>
-                        <?php endforeach ?>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
+  <!-- Vertical Sidebar -->
+  <?php snippet('sidebar') ?>
 
-    <!-- Main page wrapper with grid (includes content + sidebar) -->
-    <div class="page-wrapper">
-        <!-- Main content area -->
-        <main class="main-content" id="main-content" tabindex="-1">
+  <!-- Main content wrapper -->
+  <main class="main-content">

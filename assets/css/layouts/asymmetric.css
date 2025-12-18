@@ -1,0 +1,572 @@
+/**
+ * Asymmetric Layout (Tschichold's Asymmetric Block)
+ *
+ * 3:2 Ratio Grid Layout
+ * - Content column: 3 parts (max 38em)
+ * - Right margin: 2 parts (1.5× content width)
+ *
+ * Used for:
+ * - Blog posts (.layout-post)
+ * - Default pages (.layout-default)
+ *
+ * Based on Jan Tschichold's Die neue Typographie (1928)
+ * and Swiss International Typographic Style
+ */
+
+/* ==========================================
+   LAYOUT GRID
+   ========================================== */
+
+.layout-asymmetric {
+  /* Desktop: 3:2 ratio grid */
+  display: grid;
+  grid-template-columns:
+    [full-start content-start] minmax(auto, var(--measure-standard))
+    [content-end margin-start] 1.5fr
+    [margin-end full-end];
+  gap: var(--space-8);
+  padding: var(--space-8);
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .layout-asymmetric {
+    /* Account for fixed sidebar on desktop */
+    padding-left: max(var(--space-8), calc((100vw - 1400px) / 2));
+  }
+}
+
+/* ==========================================
+   CONTENT PLACEMENT
+   Default: all content spans content column
+   ========================================== */
+
+.layout-asymmetric .page-header,
+.layout-asymmetric .page-content,
+.layout-asymmetric .page-footer,
+.layout-asymmetric .post-header,
+.layout-asymmetric .post-content,
+.layout-asymmetric .post-footer {
+  grid-column: content-start / content-end;
+}
+
+/* ==========================================
+   FULL-WIDTH ELEMENTS
+   Break out to right margin
+   ========================================== */
+
+.layout-asymmetric .image-full,
+.layout-asymmetric .post-cover,
+.layout-asymmetric .cover-image {
+  grid-column: content-start / margin-end;
+  margin-block: var(--space-12);
+}
+
+.layout-asymmetric .image-full img,
+.layout-asymmetric .post-cover img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.layout-asymmetric .image-full figcaption,
+.layout-asymmetric .post-cover figcaption {
+  max-width: var(--measure-standard);
+  margin-block-start: var(--space-2);
+  padding-inline-start: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-600);
+}
+
+/* ==========================================
+   PAGE HEADER
+   ========================================== */
+
+.layout-asymmetric .page-header,
+.layout-asymmetric .post-header {
+  margin-block-end: var(--space-12);
+  padding-block-start: var(--space-8);
+}
+
+.layout-asymmetric .page-meta,
+.layout-asymmetric .post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-600);
+  margin-block-end: var(--space-4);
+}
+
+.layout-asymmetric .page-title,
+.layout-asymmetric .post-title {
+  font-size: var(--text-h1);
+  line-height: var(--leading-tight);
+  font-weight: 700;
+  margin-block-end: var(--space-4);
+  letter-spacing: -0.02em;
+}
+
+.layout-asymmetric .page-intro,
+.layout-asymmetric .post-description {
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-700);
+  max-width: 90%;
+}
+
+/* ==========================================
+   PAGE CONTENT
+   ========================================== */
+
+.layout-asymmetric .page-content,
+.layout-asymmetric .post-content {
+  line-height: var(--leading-relaxed);
+}
+
+/* Vertical rhythm for content elements */
+.layout-asymmetric .page-content > * + *,
+.layout-asymmetric .post-content > * + * {
+  margin-block-start: var(--space-6);
+}
+
+/* ==========================================
+   TYPOGRAPHY WITHIN CONTENT
+   ========================================== */
+
+/* Headings */
+.layout-asymmetric .page-content h2,
+.layout-asymmetric .post-content h2 {
+  font-size: var(--text-h2);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  margin-block-end: var(--space-4);
+  margin-block-start: var(--space-12);
+  letter-spacing: -0.01em;
+}
+
+.layout-asymmetric .page-content h2:first-child,
+.layout-asymmetric .post-content h2:first-child {
+  margin-block-start: 0;
+}
+
+.layout-asymmetric .page-content h3,
+.layout-asymmetric .post-content h3 {
+  font-size: var(--text-h3);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  margin-block-end: var(--space-3);
+  margin-block-start: var(--space-8);
+}
+
+.layout-asymmetric .page-content h4,
+.layout-asymmetric .post-content h4 {
+  font-size: var(--text-h4);
+  font-weight: 600;
+  line-height: var(--leading-normal);
+  margin-block-end: var(--space-3);
+  margin-block-start: var(--space-6);
+}
+
+/* Paragraphs */
+.layout-asymmetric .page-content p,
+.layout-asymmetric .post-content p {
+  line-height: var(--leading-relaxed);
+  margin-block-end: var(--space-4);
+}
+
+.layout-asymmetric .page-content p:last-child,
+.layout-asymmetric .post-content p:last-child {
+  margin-block-end: 0;
+}
+
+/* Links */
+.layout-asymmetric .page-content a,
+.layout-asymmetric .post-content a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: text-decoration-thickness var(--transition-fast);
+}
+
+.layout-asymmetric .page-content a:hover,
+.layout-asymmetric .post-content a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Emphasis */
+.layout-asymmetric .page-content strong,
+.layout-asymmetric .post-content strong {
+  font-weight: 600;
+}
+
+.layout-asymmetric .page-content em,
+.layout-asymmetric .post-content em {
+  font-style: italic;
+}
+
+/* ==========================================
+   PULL QUOTES
+   ========================================== */
+
+.layout-asymmetric .pullquote,
+.layout-asymmetric .blockquote-pull {
+  font-size: clamp(1.5rem, 1.5rem + 0.5vw, 2rem);
+  line-height: var(--leading-snug);
+  font-weight: 600;
+  max-width: 70%; /* Creates asymmetric tension */
+  border-inline-start: 6px solid var(--color-text);
+  padding-inline-start: var(--space-6);
+  margin-block: var(--space-8);
+}
+
+.layout-asymmetric .pullquote cite,
+.layout-asymmetric .blockquote-pull cite {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  font-style: normal;
+  margin-block-start: var(--space-2);
+  color: var(--color-gray-600);
+}
+
+/* ==========================================
+   BLOCK QUOTES
+   ========================================== */
+
+.layout-asymmetric .blockquote,
+.layout-asymmetric blockquote {
+  font-size: 0.9375rem;
+  line-height: var(--leading-relaxed);
+  border-inline-start: 2px solid var(--color-gray-200);
+  padding-inline-start: var(--space-6);
+  margin-block: var(--space-6);
+  color: var(--color-gray-800);
+}
+
+.layout-asymmetric .blockquote cite,
+.layout-asymmetric blockquote cite {
+  display: block;
+  margin-block-start: var(--space-2);
+  font-style: normal;
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
+}
+
+/* ==========================================
+   LISTS
+   ========================================== */
+
+.layout-asymmetric .page-content ul,
+.layout-asymmetric .page-content ol,
+.layout-asymmetric .post-content ul,
+.layout-asymmetric .post-content ol {
+  padding-inline-start: var(--space-6);
+  line-height: var(--leading-relaxed);
+  margin-block: var(--space-4);
+}
+
+.layout-asymmetric .page-content li,
+.layout-asymmetric .post-content li {
+  margin-block-end: var(--space-3);
+}
+
+.layout-asymmetric .page-content li:last-child,
+.layout-asymmetric .post-content li:last-child {
+  margin-block-end: 0;
+}
+
+/* ==========================================
+   CODE
+   ========================================== */
+
+.layout-asymmetric .page-content code,
+.layout-asymmetric .post-content code {
+  font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  font-size: 0.875em;
+  background: var(--color-gray-100);
+  padding: 0.125em 0.25em;
+  border-radius: 2px;
+}
+
+.layout-asymmetric .page-content pre,
+.layout-asymmetric .post-content pre {
+  font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  font-size: 0.875rem;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
+  padding: var(--space-4);
+  margin-block: var(--space-6);
+  border-radius: 4px;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+.layout-asymmetric .page-content pre code,
+.layout-asymmetric .post-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ==========================================
+   IMAGES (INLINE)
+   ========================================== */
+
+.layout-asymmetric .page-content img,
+.layout-asymmetric .post-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-block: var(--space-8);
+}
+
+.layout-asymmetric .page-content figure,
+.layout-asymmetric .post-content figure {
+  margin-block: var(--space-8);
+}
+
+.layout-asymmetric .page-content figcaption,
+.layout-asymmetric .post-content figcaption {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-600);
+}
+
+/* ==========================================
+   PAGE/POST FOOTER
+   ========================================== */
+
+.layout-asymmetric .page-footer,
+.layout-asymmetric .post-footer {
+  margin-block-start: var(--space-16);
+  padding-block-start: var(--space-8);
+  border-block-start: 1px solid var(--color-gray-200);
+}
+
+/* Tags */
+.layout-asymmetric .post-tags {
+  margin-block-end: var(--space-8);
+}
+
+.layout-asymmetric .post-tags__label {
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-600);
+  margin-inline-end: var(--space-2);
+}
+
+.layout-asymmetric .post-tags__list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+}
+
+.layout-asymmetric .post-tags__list a {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  color: inherit;
+  transition: background var(--transition-base);
+}
+
+.layout-asymmetric .post-tags__list a:hover {
+  background: var(--color-gray-200);
+}
+
+/* Post Navigation */
+.layout-asymmetric .post-navigation {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-4);
+  margin-block-end: var(--space-8);
+}
+
+.layout-asymmetric .post-navigation a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-gray-200);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-base);
+}
+
+.layout-asymmetric .post-navigation a:hover {
+  background: var(--color-gray-100);
+  border-color: var(--color-gray-300);
+}
+
+.layout-asymmetric .post-navigation__label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-gray-600);
+}
+
+.layout-asymmetric .post-navigation__title {
+  font-weight: 600;
+}
+
+.layout-asymmetric .post-navigation__next {
+  text-align: right;
+}
+
+/* ==========================================
+   RESPONSIVE: MOBILE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .layout-asymmetric {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+  }
+
+  /* All elements span full width on mobile */
+  .layout-asymmetric .page-header,
+  .layout-asymmetric .page-content,
+  .layout-asymmetric .page-footer,
+  .layout-asymmetric .post-header,
+  .layout-asymmetric .post-content,
+  .layout-asymmetric .post-footer,
+  .layout-asymmetric .image-full,
+  .layout-asymmetric .post-cover {
+    grid-column: 1;
+  }
+
+  /* Pull quotes span full width */
+  .layout-asymmetric .pullquote,
+  .layout-asymmetric .blockquote-pull {
+    max-width: 100%;
+    font-size: 1.5rem;
+  }
+
+  /* Reduce title size on mobile */
+  .layout-asymmetric .page-title,
+  .layout-asymmetric .post-title {
+    font-size: 2rem;
+  }
+
+  /* Stack metadata vertically */
+  .layout-asymmetric .page-meta,
+  .layout-asymmetric .post-meta {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+}
+
+/* ==========================================
+   VISUAL GRID HELPER (DEVELOPMENT ONLY)
+   Remove in production
+   ========================================== */
+
+@media (min-width: 769px) {
+  .layout-asymmetric::before {
+    content: '';
+    grid-column: margin-start / margin-end;
+    grid-row: 1 / -1;
+    border-inline-start: 1px dashed rgba(255, 102, 0, 0.15);
+    pointer-events: none;
+    /* Orange dashed line shows margin boundary */
+  }
+}
+
+/* ==========================================
+   KIRBY BLOCKS INTEGRATION
+   ========================================== */
+
+/* Blocks container */
+.layout-asymmetric .blocks {
+  display: grid;
+  gap: var(--space-6);
+}
+
+/* Individual blocks */
+.layout-asymmetric .block {
+  line-height: var(--leading-relaxed);
+}
+
+/* Block: Heading */
+.layout-asymmetric .block--heading h2 {
+  margin-block-start: var(--space-12);
+}
+
+.layout-asymmetric .block--heading h2:first-child {
+  margin-block-start: 0;
+}
+
+/* Block: Text */
+.layout-asymmetric .block--text p {
+  margin-block-end: var(--space-4);
+}
+
+.layout-asymmetric .block--text p:last-child {
+  margin-block-end: 0;
+}
+
+/* Block: Image */
+.layout-asymmetric .block--image {
+  margin-block: var(--space-8);
+}
+
+.layout-asymmetric .block--image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.layout-asymmetric .block--image figcaption {
+  margin-block-start: var(--space-2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-gray-600);
+}
+
+/* Block: Quote */
+.layout-asymmetric .block--quote {
+  font-size: 0.9375rem;
+  line-height: var(--leading-relaxed);
+  border-inline-start: 2px solid var(--color-gray-200);
+  padding-inline-start: var(--space-6);
+  margin-block: var(--space-6);
+  color: var(--color-gray-800);
+}
+
+/* Block: List */
+.layout-asymmetric .block--list ul,
+.layout-asymmetric .block--list ol {
+  padding-inline-start: var(--space-6);
+  line-height: var(--leading-relaxed);
+}
+
+.layout-asymmetric .block--list li {
+  margin-block-end: var(--space-3);
+}
+
+.layout-asymmetric .block--list li:last-child {
+  margin-block-end: 0;
+}
+
+/* Block: Code */
+.layout-asymmetric .block--code {
+  font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+  font-size: 0.875rem;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-gray-200);
+  padding: var(--space-4);
+  margin-block: var(--space-6);
+  border-radius: 4px;
+  overflow-x: auto;
+  line-height: 1.5;
+}

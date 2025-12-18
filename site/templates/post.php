@@ -1,112 +1,126 @@
-<?php snippet('header') ?>
+<?php
+/**
+ * Template: Blog Post
+ *
+ * Uses Tschichold asymmetric layout (3:2 ratio grid)
+ * Left-aligned content column with generous right margin
+ *
+ * Layout class: .layout-asymmetric .layout-post
+ */
 
-<article class="post">
-    <!-- Post Header -->
-    <header class="post-header" style="margin-bottom: 30px;">
-        <h2 style="margin-bottom: 10px;">
-            <?php if ($page->featured()->toBool()): ?>
-                <span style="color: #ff6b35; margin-right: 8px;">★</span>
-            <?php endif ?>
-            <?= $page->title()->html() ?>
-        </h2>
+snippet('header');
+?>
 
-        <div style="color: #666; font-size: 0.95rem; margin-bottom: 20px;">
-            <time datetime="<?= $page->date()->toDate('c') ?>">
-                <?= $page->date()->toDate('F j, Y') ?>
-            </time>
+<article class="layout-asymmetric layout-post">
+  <!-- Post Header -->
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="<?= $page->date()->toDate('c') ?>">
+        <?= $page->date()->toDate('F j, Y') ?>
+      </time>
 
-            <?php if ($author = $page->author()->toUser()): ?>
-                · by <strong><?= $author->name()->html() ?></strong>
-            <?php endif ?>
+      <?php if ($author = $page->author()->toUser()): ?>
+        <span class="post-author">by <?= $author->name()->esc() ?></span>
+      <?php endif ?>
 
-            <?php if ($page->tags()->isNotEmpty()): ?>
-                <div style="margin-top: 8px;">
-                    <?php foreach ($page->tags()->split() as $tag): ?>
-                        <span style="display: inline-block; background: #f0f0f0; padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; margin-right: 6px; margin-top: 4px;">
-                            <?= html($tag) ?>
-                        </span>
-                    <?php endforeach ?>
-                </div>
-            <?php endif ?>
-        </div>
-
-        <!-- Cover Image -->
-        <?php if ($cover = $page->cover()->toFile()): ?>
-            <figure style="margin: 0 0 30px 0;">
-                <img
-                    src="<?= $cover->crop(1200, 600)->url() ?>"
-                    alt="<?= $page->title()->html() ?>"
-                    width="1200"
-                    height="600"
-                    fetchpriority="high"
-                    style="width: 100%; height: auto; border-radius: 8px;"
-                >
-            </figure>
-        <?php endif ?>
-
-        <!-- Excerpt (if provided) -->
-        <?php if ($excerpt = $page->excerpt()->isNotEmpty()): ?>
-            <div style="font-size: 1.1rem; color: #555; font-style: italic; padding: 15px 0; border-left: 3px solid #333; padding-left: 20px; margin-bottom: 30px;">
-                <?= $excerpt->html() ?>
-            </div>
-        <?php endif ?>
-    </header>
-
-    <!-- Post Content -->
-    <div class="post-content" style="font-size: 1.05rem; line-height: 1.8;">
-        <?php if ($page->blocks()->isNotEmpty()): ?>
-            <?= $page->blocks()->toBlocks() ?>
-        <?php endif ?>
+      <span class="post-reading-time">
+        <?= $page->readingTime() ?> min read
+      </span>
     </div>
 
-    <!-- Additional Images/Files -->
-    <?php if ($page->files()->count() > 1): // More than just cover image ?>
-        <section style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #ddd;">
-            <h3 style="font-size: 1.2rem; margin-bottom: 15px;">Additional Images</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
-                <?php foreach ($page->files()->filterBy('extension', 'in', ['jpg', 'jpeg', 'png', 'gif', 'webp']) as $file): ?>
-                    <?php if ($file->id() !== $page->cover()->value()): // Skip cover image ?>
-                        <figure style="margin: 0;">
-                            <img
-                                src="<?= $file->crop(400, 300)->url() ?>"
-                                alt="<?= $file->alt()->or($page->title())->html() ?>"
-                                width="400"
-                                height="300"
-                                loading="lazy"
-                                style="width: 100%; height: auto; border-radius: 4px;"
-                            >
-                        </figure>
-                    <?php endif ?>
-                <?php endforeach ?>
-            </div>
-        </section>
+    <h1 class="post-title"><?= $page->title()->esc() ?></h1>
+
+    <?php if ($page->description()->isNotEmpty()): ?>
+      <p class="post-description">
+        <?= $page->description()->esc() ?>
+      </p>
+    <?php endif ?>
+  </header>
+
+  <!-- Cover Image (if exists) -->
+  <?php if ($cover = $page->cover()->toFile()): ?>
+    <figure class="post-cover">
+      <img
+        src="<?= $cover->resize(1200)->url() ?>"
+        srcset="<?= $cover->srcset([600, 1200, 1800, 2400]) ?>"
+        sizes="(min-width: 1200px) 1200px, 100vw"
+        alt="<?= $cover->alt()->esc() ?>"
+        loading="eager"
+      />
+      <?php if ($cover->caption()->isNotEmpty()): ?>
+        <figcaption class="post-cover__caption">
+          <?= $cover->caption()->kt() ?>
+          <?php if ($cover->credit()->isNotEmpty()): ?>
+            <span class="post-cover__credit">
+              Photo: <?= $cover->credit()->esc() ?>
+            </span>
+          <?php endif ?>
+        </figcaption>
+      <?php endif ?>
+    </figure>
+  <?php endif ?>
+
+  <!-- Post Content (Blocks Field) -->
+  <div class="post-content">
+    <div class="blocks">
+      <?php foreach ($page->content()->toBlocks() as $block): ?>
+        <div class="block block--<?= $block->type() ?>" id="<?= $block->id() ?>">
+          <?= $block ?>
+        </div>
+      <?php endforeach ?>
+    </div>
+  </div>
+
+  <!-- Post Footer -->
+  <footer class="post-footer">
+    <!-- Tags -->
+    <?php if ($page->tags()->isNotEmpty()): ?>
+      <div class="post-tags">
+        <span class="post-tags__label">Tagged:</span>
+        <ul class="post-tags__list">
+          <?php foreach ($page->tags()->split(',') as $tag): ?>
+            <li>
+              <a href="<?= url('blog/tag/' . urlencode($tag)) ?>">
+                <?= esc($tag) ?>
+              </a>
+            </li>
+          <?php endforeach ?>
+        </ul>
+      </div>
     <?php endif ?>
 
-    <!-- Post Navigation -->
-    <nav style="margin-top: 50px; padding-top: 30px; border-top: 2px solid #ddd; display: flex; justify-content: space-between; gap: 20px;">
-        <?php if ($prev = $page->prev()): ?>
-            <a href="<?= $prev->url() ?>" style="color: #0066cc; text-decoration: none; flex: 1;">
-                <div style="font-size: 0.85rem; color: #666; margin-bottom: 5px;">← Previous Post</div>
-                <div style="font-weight: 500;"><?= $prev->title()->html() ?></div>
-            </a>
-        <?php else: ?>
-            <div style="flex: 1;"></div>
+    <!-- Previous/Next Post Navigation -->
+    <?php
+    $prevPost = $page->prevListed();
+    $nextPost = $page->nextListed();
+    ?>
+    <?php if ($prevPost || $nextPost): ?>
+      <nav class="post-navigation" aria-label="Post navigation">
+        <?php if ($prevPost): ?>
+          <a href="<?= $prevPost->url() ?>" rel="prev" class="post-navigation__prev">
+            <span class="post-navigation__label">Previous</span>
+            <span class="post-navigation__title">
+              <?= $prevPost->title()->esc() ?>
+            </span>
+          </a>
         <?php endif ?>
 
-        <a href="<?= $page->parent()->url() ?>" style="color: #666; text-decoration: none; text-align: center; padding: 0 20px;">
-            <div style="font-size: 0.85rem; margin-bottom: 5px;">↑</div>
-            <div style="font-weight: 500;">All Posts</div>
-        </a>
-
-        <?php if ($next = $page->next()): ?>
-            <a href="<?= $next->url() ?>" style="color: #0066cc; text-decoration: none; flex: 1; text-align: right;">
-                <div style="font-size: 0.85rem; color: #666; margin-bottom: 5px;">Next Post →</div>
-                <div style="font-weight: 500;"><?= $next->title()->html() ?></div>
-            </a>
-        <?php else: ?>
-            <div style="flex: 1;"></div>
+        <?php if ($nextPost): ?>
+          <a href="<?= $nextPost->url() ?>" rel="next" class="post-navigation__next">
+            <span class="post-navigation__label">Next</span>
+            <span class="post-navigation__title">
+              <?= $nextPost->title()->esc() ?>
+            </span>
+          </a>
         <?php endif ?>
-    </nav>
+      </nav>
+    <?php endif ?>
+
+    <!-- Back to Blog -->
+    <a href="<?= page('blog')->url() ?>" class="post-footer__back">
+      ← Back to Blog
+    </a>
+  </footer>
 </article>
 
-<?php snippet('footer') ?>
+<?php snippet('footer'); ?>
