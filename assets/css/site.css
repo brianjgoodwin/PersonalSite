@@ -31,7 +31,7 @@ html {
     height: 100%;
     min-height: 100vh;
     min-height: -webkit-fill-available;
-    background: var(--bg-white); /* White background covers top bounce area */
+    background: var(--bg-white); /* White background for safe areas and bounce */
 }
 
 body {
@@ -42,7 +42,9 @@ body {
     min-height: -webkit-fill-available;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    background: var(--bg-white); /* White background for entire page */
+    /* Transparent background lets html white show through */
+    /* This prevents Safari black bar while allowing safe areas to be white */
+    background: transparent;
 }
 
 /* === TYPOGRAPHY === */
