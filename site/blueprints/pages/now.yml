@@ -37,7 +37,6 @@ columns:
               - list
               - columngrid
               - twocolumn
-              - cta
               - alert
             help: Build your /now page using blocks
 

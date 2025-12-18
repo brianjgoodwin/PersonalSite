@@ -64,4 +64,33 @@ AddOutputFilterByType DEFLATE application/x-javascript
 Header set Content-Type "text/plain" "expr=-z %{CONTENT_TYPE}"
 Header set X-Content-Type-Options "nosniff"
 
+# Phase 1 Security Headers
+# Prevent clickjacking
+Header always set X-Frame-Options "SAMEORIGIN"
+
+# Control referrer information
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Permissions Policy (restrict browser features)
+Header always set Permissions-Policy "geolocation=(self), microphone=(), camera=(), payment=(), usb=()"
+
+# XSS Protection (legacy browsers)
+Header always set X-XSS-Protection "1; mode=block"
+
+</IfModule>
+
+# Browser caching for static assets
+<IfModule mod_expires.c>
+ExpiresActive On
+
+# Images - 1 year
+ExpiresByType image/jpeg "access plus 1 year"
+ExpiresByType image/png "access plus 1 year"
+ExpiresByType image/gif "access plus 1 year"
+ExpiresByType image/webp "access plus 1 year"
+ExpiresByType image/svg+xml "access plus 1 year"
+
+# CSS and JavaScript - 1 week
+ExpiresByType text/css "access plus 1 week"
+ExpiresByType application/javascript "access plus 1 week"
 </IfModule>

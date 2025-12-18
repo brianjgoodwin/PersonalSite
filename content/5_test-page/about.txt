@@ -1,0 +1,13 @@
+Title: Test Page
+
+----
+
+Blocks: [{"content":{"url":"https://www.youtube.com/watch?v=dQw4w9WgXcQ","caption":"This is a test caption"},"id":"ab5737b4-9685-443d-bae1-8fccfa44b1ba","isHidden":false,"type":"video"},{"content":{"images":["file://suh8tjysiq7zbdrw"],"columns":"","caption":"<script>alert('XSS')</script>"},"id":"bbe24028-4ddc-4efb-b6af-c24b51f59a47","isHidden":false,"type":"gallery"},{"content":{"headline":"Headline","text":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.","buttontext":"This is a button","buttonurl":"https://example.com","style":"primary"},"id":"3797684c-1ad8-4726-b27e-c218e7a7d000","isHidden":false,"type":"cta"}]
+
+----
+
+Pagecolor: 
+
+----
+
+Uuid: a54jfpeu5ks2zy7l

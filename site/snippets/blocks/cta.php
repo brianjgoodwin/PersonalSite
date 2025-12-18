@@ -29,8 +29,31 @@ $s = $styles[$style];
     <?php endif ?>
 
     <?php if ($buttonText && $buttonUrl): ?>
-        <a href="<?= $buttonUrl ?>" style="display: inline-block; background: <?= $s['button'] ?>; color: <?= $s['buttonText'] ?>; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 1rem;">
-            <?= html($buttonText) ?>
-        </a>
+        <?php
+        // Security: Block dangerous protocols
+        $dangerousProtocols = ['javascript:', 'data:', 'vbscript:', 'file:', 'about:'];
+        $urlLower = strtolower(trim($buttonUrl));
+        $isDangerous = false;
+
+        foreach ($dangerousProtocols as $protocol) {
+            if (strpos($urlLower, $protocol) === 0) {
+                $isDangerous = true;
+                break;
+            }
+        }
+
+        // Only show button if URL is safe
+        $safeUrl = esc($buttonUrl, 'attr');
+        ?>
+
+        <?php if (!$isDangerous): ?>
+            <a href="<?= $safeUrl ?>" style="display: inline-block; background: <?= $s['button'] ?>; color: <?= $s['buttonText'] ?>; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 1rem;" rel="noopener noreferrer">
+                <?= html($buttonText) ?>
+            </a>
+        <?php else: ?>
+            <div style="padding: 15px; background: #ffebee; border-left: 4px solid #d32f2f; border-radius: 4px; margin: 10px 0;">
+                <strong style="color: #d32f2f;">Security Error:</strong> The button URL contains a dangerous protocol and cannot be displayed.
+            </div>
+        <?php endif ?>
     <?php endif ?>
 </div>

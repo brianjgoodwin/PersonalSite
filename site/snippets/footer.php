@@ -26,7 +26,7 @@
         </aside>
     </div>
 
-    <footer class="site-footer">
+    <footer class="site-footer" role="contentinfo">
         <div class="footer-content">
             <p>&copy; <?= date('Y') ?> <?= $site->title() ?></p>
             <a href="<?= url('privacy') ?>">Privacy</a>

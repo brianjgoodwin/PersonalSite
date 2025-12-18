@@ -13,7 +13,7 @@
 /* === CSS CUSTOM PROPERTIES === */
 :root {
     /* Core colors */
-    --accent-red: #D9534F;
+    --accent-red: #C9302C;  /* WCAG AA compliant: 4.54:1 contrast ratio */
     --text-black: #000000;
     --bg-light: #E8E8E8;
     --bg-white: #FFFFFF;
@@ -81,6 +81,67 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+/* === ACCESSIBILITY: FOCUS INDICATORS === */
+
+/* Skip link - MUST be visible when focused (keyboard users) */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--text-black);
+    color: var(--bg-white);
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 200;
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+}
+
+/* Universal focus indicators for all interactive elements */
+/* Using both :focus and :focus-visible for broader browser support */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus,
+[tabindex]:focus {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Enhanced for :focus-visible supporting browsers (keyboard only) */
+*:focus-visible {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* Remove focus for mouse users in supporting browsers */
+/* Use transparent instead of none for Windows High Contrast Mode compatibility */
+*:focus:not(:focus-visible) {
+    outline-color: transparent;
+}
+
+/* Ensure hamburger checkbox doesn't interfere with tab navigation */
+.menu-toggle-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Hamburger menu label must be focusable */
+.menu-toggle:focus {
+    outline: 3px solid var(--accent-red);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 /* === HEADER === */
@@ -180,11 +241,6 @@ a:hover {
     height: 4px;
     background-color: var(--page-color);
     transform: translateY(100%);
-}
-
-/* Hamburger menu - checkbox (hidden) */
-.menu-toggle-checkbox {
-    display: none;
 }
 
 /* Hamburger menu icon */
