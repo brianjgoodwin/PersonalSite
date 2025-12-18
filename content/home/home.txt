@@ -2,7 +2,7 @@ Title: Home
 
 ----
 
-Blocks: [{"content":{"columns":"4 Columns","columnratio":"equal","customratio":"","gap":"small","verticalspacing":"none","minheight":"none","col1_content":"","col1_padding":"large","col1_background":"none","col1_custombg":"","col1_shadow":"none","col1_valign":"top","col1_mobileshow":"false","col1_mobileorder":1,"col2_content":"","col2_padding":"none","col2_background":"none","col2_custombg":"","col2_shadow":"none","col2_valign":"top","col2_mobileshow":"true","col2_mobileorder":2,"col3_content":"[{\"content\":{\"text\":\"## Hi, I'm Brian\\n\\nI like making stuff\"},\"id\":\"1a0398fd-6ce4-494b-b993-445434a3d806\",\"isHidden\":false,\"type\":\"markdown\"}]","col3_padding":"none","col3_background":"none","col3_custombg":"","col3_shadow":"none","col3_valign":"top","col3_mobileshow":"true","col3_mobileorder":3,"col4_content":"[{\"content\":{\"text\":\"## ## Like Apps\\n\\n\\n### And this website\"},\"id\":\"8ca9518c-6358-4e0a-8341-bae809f8dbd6\",\"isHidden\":false,\"type\":\"markdown\"}]","col4_padding":"none","col4_background":"none","col4_custombg":"","col4_shadow":"none","col4_valign":"top","col4_mobileshow":"true","col4_mobileorder":4},"id":"bc5bb08d-dc49-4823-b995-ce76e2bab2c8","isHidden":false,"type":"columngrid"}]
+Blocks: 
 
 ----
 
