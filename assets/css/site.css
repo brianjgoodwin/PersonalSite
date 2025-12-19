@@ -891,6 +891,54 @@ code {
     text-align: right;
 }
 
+/* ============================================
+   DEFAULT PAGE LAYOUT (About, Contact, etc.)
+   ============================================ */
+
+/* Reuse asymmetric grid for default pages */
+.page {
+    display: grid;
+    grid-template-columns:
+        [margin-left-start] var(--space-8)
+        [margin-left-end content-start] min(var(--measure), calc(100% - 4rem))
+        [content-end margin-right-start] 1fr
+        [margin-right-end];
+    gap: 0;
+    padding-block-start: var(--space-6);
+    padding-block-end: var(--space-8);
+    padding-inline: var(--space-8);
+    min-height: 100vh;
+}
+
+/* Page Header */
+.page-header {
+    grid-column: content-start / content-end;
+    margin-block-end: 0;  /* Optical compensation handles spacing */
+}
+
+.page-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.15;
+    font-weight: 700;
+    margin-block-end: 0;
+    letter-spacing: -0.02em;
+}
+
+/* Page Content */
+.page-content {
+    grid-column: content-start / content-end;
+}
+
+/* Optical compensation for first paragraph in default pages */
+.page-content .block--text:first-child p:first-child {
+    margin-block-start: -0.5em;
+}
+
+/* Spacing between blocks in default pages */
+.page-content > .block + .block {
+    margin-block-start: var(--space-6);
+}
+
 /* === RESPONSIVE DESIGN === */
 /* Tablet and below */
 @media (max-width: 768px) {
@@ -1011,5 +1059,23 @@ code {
     /* When excerpt exists on mobile, add spacing between title and excerpt */
     .post-header.has-excerpt .post-title {
         margin-block-end: var(--space-3);  /* 0.75rem / 12px */
+    }
+
+    /* Default Page Responsive */
+    .page {
+        grid-template-columns: 1fr;
+        padding-block-start: var(--space-3);
+        padding-block-end: var(--space-6);
+        padding-inline: var(--space-4);
+    }
+
+    .page-header,
+    .page-content {
+        grid-column: 1;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        line-height: 1.15;
     }
 }
