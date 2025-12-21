@@ -1,36 +1,16 @@
-        </main>
+  </main><!-- .main-content -->
 
-        <!-- Vertical sidebar with page name -->
-        <aside class="vertical-sidebar">
-            <?php
-            // Determine which page to check for white text
-            $pageToCheck = ($page->parent() && !$page->isHomePage()) ? $page->parent() : $page;
-
-            // Pages that should have white text
-            $whiteTextPages = ['home', 'projects', 'privacy'];
-            $useWhiteText = $pageToCheck->isHomePage() ||
-                           in_array(strtolower($pageToCheck->slug()), $whiteTextPages) ||
-                           in_array(strtolower($pageToCheck->title()), $whiteTextPages);
-            ?>
-            <div class="vertical-sidebar-text <?php e($useWhiteText, 'white-text') ?>">
-                <?php
-                // Display parent page title if this is a child page
-                // Otherwise display current page title
-                if ($page->parent() && !$page->isHomePage()) {
-                    echo $page->parent()->title();
-                } else {
-                    echo $page->title();
-                }
-                ?>
-            </div>
-        </aside>
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p class="site-footer__copyright">
+        &copy; <?= date('Y') ?> <?= $site->title()->esc() ?>
+      </p>
+      <nav class="site-footer__nav">
+        <a href="<?= url('privacy') ?>">Privacy</a>
+      </nav>
     </div>
+  </footer>
 
-    <footer class="site-footer" role="contentinfo">
-        <div class="footer-content">
-            <p>&copy; <?= date('Y') ?> <?= $site->title() ?></p>
-            <a href="<?= url('privacy') ?>">Privacy</a>
-        </div>
-    </footer>
 </body>
 </html>
