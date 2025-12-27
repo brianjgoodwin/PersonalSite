@@ -1,0 +1,11 @@
+Title: Privacy
+
+----
+
+Body: This website does not collect, store, or share any personal information.
+
+The site is hosted on [Hetzner](https://www.hetzner.com) servers in Europe 🇫🇮 and powered by [Kirby CMS](https://getkirby.com), an open-source CMS built with a focus on [user privacy](https://getkirby.com/docs/guide/kirby-and-privacy).
+
+----
+
+Uuid: Privacy001

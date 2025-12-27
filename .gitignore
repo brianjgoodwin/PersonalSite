@@ -90,7 +90,9 @@ kirby-server-setup-summary.md
 # ---------------
 
 /For Claude/
+.claude/*
 .claude/agents/design-quality-auditor.md
 .claude/agents/kirby-consultant.md
 brianjgoodwin.net---docs-main/00-planning-overview.md
 brianjgoodwin.net---docs-main/01-current-site-audits.md
+.claudeZ/agents/kirby-consultant.md

@@ -2,4 +2,8 @@ Title: Sitemap
 
 ----
 
-Uuid: sitemap001
+Template: sitemap.xml
+
+----
+
+Uuid: p74ilr8anbbqsjiz

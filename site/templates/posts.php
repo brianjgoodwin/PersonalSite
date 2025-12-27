@@ -1,90 +1,40 @@
 <?php snippet('header') ?>
 
-<h1><?= $page->title() ?></h1>
+<section class="content blog">
 
-<?php if ($page->blocks()->isNotEmpty()): ?>
-    <?= $page->blocks()->toBlocks() ?>
-<?php endif ?>
+  <h1><?= $page->title()->html() ?></h1>
+  <?= $page->body()->kirbytext() ?>
 
-<?php
-// Get all published posts, sorted by date (newest first)
-$posts = $page->children()->listed()->sortBy('date', 'desc');
+  <?php
+  $articles = $page->children()->listed()->flip()->paginate(5);
+  foreach($articles as $article):
+  ?>
 
-// Pre-load all authors to avoid N+1 queries
-$authorIds = $posts->pluck('author', null, true);
-$authors = [];
-foreach ($authorIds as $id) {
-    if ($id && $user = kirby()->user($id)) {
-        $authors[$id] = $user;
-    }
-}
-?>
+  <article>
+    <h2><a href="<?= $article->url() ?>"><?= $article->title()->html() ?></a></h2>
+    <?= $article->body()->kirbytext() ?>
+  </article>
 
-<?php if ($posts->count() > 0): ?>
-    <div class="posts-list">
-        <?php $isFirst = true; ?>
-        <?php foreach ($posts as $post): ?>
-            <article class="post-preview" style="margin-bottom: 30px;">
-                <div class="post-preview-header">
-                    <h3 class="post-preview-title">
-                        <a href="<?= $post->url() ?>">
-                            <?php if ($post->featured()->toBool()): ?>
-                                <span style="color: #ff6b35; margin-right: 5px;">★</span>
-                            <?php endif ?>
-                            <?= $post->title()->html() ?>
-                        </a>
-                    </h3>
-                    <span class="post-preview-date">
-                        <?= $post->date()->toDate('F j, Y') ?>
-                        <?php
-                        $authorId = $post->author()->value();
-                        if ($authorId && isset($authors[$authorId])):
-                            $author = $authors[$authorId];
-                        ?>
-                            · by <?= $author->name() ?>
-                        <?php endif ?>
-                        <?php if ($post->tags()->isNotEmpty()): ?>
-                            · Tagged: <?= $post->tags()->html() ?>
-                        <?php endif ?>
-                    </span>
-                </div>
+  <?php endforeach ?>
 
-                <?php if ($cover = $post->cover()->toFile()): ?>
-                    <div style="margin: 15px 0;">
-                        <a href="<?= $post->url() ?>">
-                            <img
-                                src="<?= $cover->crop(800, 400)->url() ?>"
-                                alt="<?= $post->title()->html() ?>"
-                                width="800"
-                                height="400"
-                                <?php if ($isFirst): ?>fetchpriority="high"<?php else: ?>loading="lazy"<?php endif ?>
-                                style="width: 100%; height: auto; border-radius: 8px;"
-                            >
-                        </a>
-                    </div>
-                    <?php $isFirst = false; ?>
-                <?php endif ?>
+  <?php if ($articles->pagination()->hasPages()): ?>
+    <nav class="pagination">
 
-                <?php if ($excerpt = $post->excerpt()->isNotEmpty()): ?>
-                    <div class="post-preview-excerpt">
-                        <?= $excerpt->html() ?>
-                    </div>
-                <?php else: ?>
-                    <div class="post-preview-excerpt">
-                        <?= $post->text()->excerpt(200) ?>
-                    </div>
-                <?php endif ?>
+      <?php if ($articles->pagination()->hasNextPage()): ?>
+      <a class="next" href="<?= $articles->pagination()->nextPageURL() ?>">
+        ‹ older posts
+      </a>
+      <?php endif ?>
 
-                <a href="<?= $post->url() ?>" class="post-preview-link">
-                    Read more →
-                </a>
-            </article>
-        <?php endforeach ?>
-    </div>
-<?php else: ?>
-    <div class="text-content">
-        <p>No posts published yet. Check back soon!</p>
-    </div>
-<?php endif ?>
+      <?php if ($articles->pagination()->hasPrevPage()): ?>
+      <a class="prev" href="<?= $articles->pagination()->prevPageURL() ?>">
+        newer posts ›
+      </a>
+      <?php endif ?>
+
+    </nav>
+  <?php endif ?>
+
+</section>
 
 <?php snippet('footer') ?>

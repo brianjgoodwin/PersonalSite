@@ -2,35 +2,10 @@ Title: Now
 
 ----
 
-Pagecolor: 130, 33, 134
+Body: ## What I'm doing now
+
+*(This is a [now page](https://nownownow.com/about), and if you have your own site, [you should make one](https://nownownow.com/about), too.)*
 
 ----
 
-Intro:
-
-This page is a living document that shows what I'm currently focused on. I update it every few weeks.
-
-----
-
-Updated: <?= date('Y-m-d') ?>
-
-----
-
-Text:
-
-## Current Projects
-
-Working on building out my personal website and exploring the Kirby CMS.
-
-## Learning
-
-- Kirby CMS architecture and best practices
-- Modern web development workflows
-
-## Reading
-
-Add what you're currently reading here.
-
-----
-
-Uuid: now001
+Uuid: Now001

@@ -1,0 +1,95 @@
+*,
+*:after,
+*:before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+a {
+    color: currentColor
+}
+
+body {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.header {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.logo {
+    display: flex;
+    font-weight: bold;
+}
+
+menu {
+    display: flex;
+}
+
+.header a {
+    text-decoration: none;
+}
+
+.menu ul {
+    list-style: none;
+    display: flex;
+}
+
+.menu ul li {
+    margin-left: 1.5rem;
+}
+
+main {
+    flex-grow: 1;
+    margin-bottom: 3rem;
+}
+
+main h1 {
+    margin-bottom: 1.5rem;
+}
+
+p {
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+h3, h4, h5, h6 {
+    margin-bottom: 1.5rem;
+}
+
+ul, ol {
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+footer {
+    text-align: right;
+    margin-top: auto;
+    color: #666;
+}

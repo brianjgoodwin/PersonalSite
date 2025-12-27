@@ -1,4 +1,4 @@
-Title: Posts
+Title: About
 
 ----
 
@@ -6,7 +6,11 @@ Text: How now, brown cow?
 
 ----
 
-Uuid: fc7nbzakcmxguq6i
+Body: Hi, I'm Brian
+
+----
+
+Uuid: About001
 
 ----
 

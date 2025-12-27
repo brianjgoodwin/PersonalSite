@@ -1,0 +1,6 @@
+title: Sitemap
+
+fields:
+  info:
+    type: info
+    text: This page generates an XML sitemap for search engines.
