@@ -2,12 +2,7 @@ Title: About
 
 ----
 
-Body:
-
-Hi, I'm Brian
-
-
-asdf
+Body: Hi, I'm Brian
 
 ----
 
