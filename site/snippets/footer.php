@@ -1,16 +1,10 @@
-  </main><!-- .main-content -->
-
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="site-footer__inner">
-      <p class="site-footer__copyright">
-        &copy; <?= date('Y') ?> <?= $site->title()->esc() ?>
-      </p>
-      <nav class="site-footer__nav">
-        <a href="<?= url('privacy') ?>">Privacy</a>
-      </nav>
-    </div>
-  </footer>
-
+  </main>
+  
+      <footer class="site-footer" role="contentinfo">
+        <div class="footer-content">
+            <p>&copy; <?= date('Y') ?> <?= $site->title()->html() ?></p>
+            <a href="<?= url('privacy') ?>">Privacy</a>
+        </div>
+    </footer>
 </body>
 </html>

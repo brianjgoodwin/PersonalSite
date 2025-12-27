@@ -2,7 +2,9 @@ Title: Posts
 
 ----
 
-Text: How now, brown cow?
+Body: Only the best posts.
+
+[Subscribe via RSS](/feed.xml)
 
 ----
 

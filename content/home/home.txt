@@ -1,4 +1,12 @@
-Title: Home
+Title: Hi, I'm Brian
+
+----
+
+Body: This is my website. I made it myself.
+
+I like making stuff. Writing, art, software.
+
+Take a look around.
 
 ----
 
