@@ -9,16 +9,26 @@
     
 </head>
 <body>
+    <!-- Skip link - first focusable element for keyboard users -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <header class="header">
         <a class="logo" href="<?= $site->url() ?>"><?= $site->title()->html() ?></a>
 
-        <nav class="menu">
+        <nav class="menu" aria-label="Main">
             <ul>
                 <?php foreach ($site->children()->listed() as $item): ?>
-                <li><a href="<?= $item->url() ?>"><?= $item->title()->html() ?></a></li>
+                <li>
+                    <a
+                        href="<?= $item->url() ?>"
+                        <?= $item->isOpen() ? 'aria-current="page"' : '' ?>
+                    >
+                        <?= $item->title()->html() ?>
+                    </a>
+                </li>
                 <?php endforeach ?>
             </ul>
         </nav>
 
     </header>
-    <main>
+    <main id="main-content">
