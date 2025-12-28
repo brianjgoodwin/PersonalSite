@@ -93,3 +93,80 @@ footer {
     margin-top: auto;
     color: #666;
 }
+
+/* ============================================
+   SKIP NAVIGATION LINK
+   Accessibility - allows keyboard users to
+   bypass repetitive navigation
+   ============================================ */
+
+.skip-link {
+    /* Visually hidden but accessible to screen readers and keyboard */
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+
+    /* Styling for when it becomes visible */
+    background: #000;
+    color: #fff;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    /* Make visible and positioned at top when focused */
+    left: 0;
+    top: 0;
+    width: auto;
+    height: auto;
+    overflow: visible;
+}
+
+/* ============================================
+   FOCUS INDICATORS
+   Critical for keyboard navigation accessibility
+   ============================================ */
+
+/* Base focus style - applies to all interactive elements */
+a:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    /* Visible outline for keyboard users */
+    outline: 2px solid #000;
+    outline-offset: 2px;
+}
+
+/* Remove outline for mouse users (if browser supports :focus-visible) */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible),
+select:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Enhanced focus for keyboard users only */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 3px solid #000;
+    outline-offset: 2px;
+}
+
+/* ============================================
+   CURRENT PAGE INDICATOR
+   Shows which navigation item is active
+   ============================================ */
+
+/* Visual style for current page in navigation */
+.menu a[aria-current="page"] {
+    font-weight: bold;
+    text-decoration: underline;
+}
