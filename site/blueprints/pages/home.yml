@@ -1,0 +1,17 @@
+title: Home
+
+fields:
+  title:
+    label: Page Title
+    type: text
+    help: This appears as the H1 on your home page
+
+  breadcrumbTitle:
+    label: Breadcrumb Title
+    type: text
+    default: Home
+    help: How this page appears in breadcrumbs (defaults to "Home")
+
+  body:
+    label: Text
+    type: textarea

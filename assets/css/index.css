@@ -170,3 +170,52 @@ select:focus-visible {
     font-weight: bold;
     text-decoration: underline;
 }
+
+/* ============================================
+   BREADCRUMB NAVIGATION
+   Traditional file-path style breadcrumb
+   ============================================ */
+
+/* Container for breadcrumb */
+nav[aria-label="breadcrumb"] {
+    margin-bottom: 1.5rem;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Remove default list styling */
+nav[aria-label="breadcrumb"] ol {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+}
+
+/* Each breadcrumb item */
+nav[aria-label="breadcrumb"] li {
+    display: inline;
+}
+
+/* Add separator after each item except the last */
+nav[aria-label="breadcrumb"] li:not(:last-child)::after {
+    content: " / ";
+    margin: 0 0.5rem;
+    color: #999;
+}
+
+/* Links in breadcrumb */
+nav[aria-label="breadcrumb"] a {
+    text-decoration: none;
+    color: #666;
+}
+
+nav[aria-label="breadcrumb"] a:hover {
+    text-decoration: underline;
+}
+
+/* Current page in breadcrumb (rendered as span, not link) */
+nav[aria-label="breadcrumb"] span[aria-current="page"] {
+    color: #333;
+    font-weight: normal;
+}

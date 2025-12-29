@@ -1,5 +1,7 @@
 <?php snippet('header') ?>
 
+<?php snippet('breadcrumb') ?>
+
 <section class="content article">
   <article>
     <h1><?= $page->title()->html() ?></h1>
