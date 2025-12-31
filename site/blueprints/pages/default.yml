@@ -7,7 +7,18 @@ columns:
       fields:
         type: fields
         fields:
+          title:
+            label: Title
+            type: text
+            required: true
+
+          breadcrumbTitle:
+            label: Breadcrumb Title
+            type: text
+            help: Optional - how this page appears in breadcrumbs (defaults to page title)
+
           body:
+            label: Body
             type: textarea
             size: huge
   sidebar:
