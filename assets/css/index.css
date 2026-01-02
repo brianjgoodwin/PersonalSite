@@ -16,7 +16,6 @@ a {
 }
 
 body {
-    padding: 3rem;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -29,6 +28,7 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   margin-bottom: 2rem;
+  padding: 2rem 3rem 0 3rem; /* top right bottom left */
 }
 
 .logo {
@@ -55,7 +55,10 @@ menu {
 
 main {
     flex-grow: 1;
-    margin-bottom: 3rem;
+    max-width: 600px;
+    margin: 0 auto 3rem auto; /* Center horizontally, 3rem bottom margin */
+    width: 100%; /* Allow it to be responsive on small screens */
+    padding: 0 3rem; /* Left and right padding */
 }
 
 main h1 {
@@ -92,6 +95,7 @@ footer {
     text-align: right;
     margin-top: auto;
     color: #666;
+    padding: 0 3rem 3rem 3rem; /* top right bottom left */
 }
 
 /* ============================================
