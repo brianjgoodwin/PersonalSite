@@ -26,7 +26,8 @@ body {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-between; /* Spread logo and nav apart with space between */
+  align-items: center;
   margin-bottom: 2rem;
   padding: 2rem 3rem 0 3rem; /* top right bottom left */
 }
@@ -171,8 +172,21 @@ select:focus-visible {
 
 /* Visual style for current page in navigation */
 .menu a[aria-current="page"] {
-    font-weight: bold;
-    text-decoration: underline;
+    background-color: black;
+    color: white;
+    padding: 0.25rem 0.5rem; /* Space around text inside the box */
+    /* box-shadow: -5px 5px 0 rgb(168, 0, 0); Hard drop shadow: left, down, no blur, red */
+    /* text-decoration: none; Remove underline */
+}
+
+/* Logo gets same style when on homepage */
+.logo[aria-current="page"] {
+    background-color: black;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    /* box-shadow: -5px 5px 0 rgb(168, 0, 0); */
+    text-decoration: none;
+    line-height: 1; /* Remove extra vertical space from line-height */
 }
 
 /* ============================================
@@ -222,4 +236,165 @@ nav[aria-label="breadcrumb"] a:hover {
 nav[aria-label="breadcrumb"] span[aria-current="page"] {
     color: #333;
     font-weight: normal;
+}
+
+/* ============================================
+   HOME PAGE LAYOUT
+   Two-column "print magazine" layout with cards
+   ============================================ */
+
+/* Override main element constraints for home page */
+main:has(.home-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+.home-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px 1fr 1fr;
+    gap: 0;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.home-intro {
+    grid-column: 2 / 3;
+    padding-right: 0;
+}
+
+.home-cards {
+    grid-column: 4 / 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 0;
+}
+
+/* Visually hidden heading for screen readers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.home-intro h1 {
+    margin-bottom: 1.5rem;
+}
+
+.home-text {
+    line-height: 1.6;
+}
+
+.home-text p {
+    margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   CARD COMPONENT
+   Square, clickable cards with color coding
+   ============================================ */
+
+.card {
+    display: block;
+    width: 280px;
+    height: 280px;
+    padding: 2rem;
+    text-decoration: none;
+    color: #000;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.card-description {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Card hover state */
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Card focus state for keyboard navigation */
+.card:focus {
+    outline: 3px solid #000;
+    outline-offset: 4px;
+}
+
+/* Color variants - WCAG AA compliant with good readability */
+.card-posts {
+    background-color: #FFE082; /* Light amber */
+    color: #000;
+}
+
+.card-projects {
+    background-color: #90CAF9; /* Light blue */
+    color: #000;
+}
+
+.card-links {
+    background-color: #A5D6A7; /* Light green */
+    color: #000;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        transition: none;
+    }
+}
+
+/* ============================================
+   MOBILE LAYOUT
+   Single column with 2-column card grid
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    .home-layout {
+        display: block;
+        padding: 0 2rem;
+    }
+
+    .home-intro {
+        margin-bottom: 3rem;
+    }
+
+    /* Single column stack for better mobile UX */
+    .home-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .card {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-description {
+        font-size: 0.9rem;
+    }
 }

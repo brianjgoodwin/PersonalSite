@@ -13,7 +13,7 @@
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <header class="header">
-        <a class="logo" href="<?= $site->url() ?>"><?= $site->title()->html() ?></a>
+        <a class="logo" href="<?= $site->url() ?>" <?= $page->isHomePage() ? 'aria-current="page"' : '' ?>><?= $site->title()->html() ?></a>
 
         <nav class="menu" aria-label="Main">
             <ul>
