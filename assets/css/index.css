@@ -238,6 +238,21 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
     font-weight: normal;
 }
 
+/* Breadcrumb padding for two-column layouts - aligns with grid */
+main:has(.home-layout) nav[aria-label="breadcrumb"],
+main:has(.about-layout) nav[aria-label="breadcrumb"] {
+    padding-left: 200px;
+}
+
+/* Mobile breadcrumb padding */
+@media (max-width: 768px) {
+    main:has(.home-layout) nav[aria-label="breadcrumb"],
+    main:has(.about-layout) nav[aria-label="breadcrumb"] {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
 /* ============================================
    HOME PAGE LAYOUT
    Two-column "print magazine" layout with cards
@@ -396,5 +411,81 @@ main:has(.home-layout) {
 
     .card-description {
         font-size: 0.9rem;
+    }
+}
+
+/* ============================================
+   ABOUT PAGE LAYOUT
+   Two-column "print magazine" layout with bio and links
+   ============================================ */
+
+/* Override main element constraints for about page */
+main:has(.about-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+.about-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px 1fr 1fr;
+    gap: 0;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.about-left {
+    grid-column: 2 / 3;
+    padding-right: 0;
+}
+
+.about-right {
+    grid-column: 4 / 5;
+    padding: 0;
+}
+
+.about-left h1 {
+    margin-bottom: 1.5rem;
+}
+
+.about-bio {
+    line-height: 1.6;
+}
+
+.about-bio p {
+    margin-bottom: 1.5rem;
+}
+
+.about-links h2 {
+    margin-bottom: 1rem;
+}
+
+.about-links ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+.about-links li {
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   ABOUT PAGE MOBILE LAYOUT
+   Single column stack
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    .about-layout {
+        display: block;
+        padding: 0 2rem;
+    }
+
+    .about-left {
+        margin-bottom: 3rem;
+    }
+
+    .about-right {
+        padding: 0;
     }
 }
