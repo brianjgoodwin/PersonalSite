@@ -38,10 +38,10 @@
             if (!$cardPage) continue; // Skip if page doesn't exist
         ?>
         <a href="<?= $cardPage->url() ?>"
-           class="card card-<?= esc($data['color']) ?>"
-           aria-label="<?= esc($data['title']) ?>: <?= esc($data['description']) ?>">
-            <h3 class="card-title"><?= esc($data['title']) ?></h3>
-            <p class="card-description"><?= esc($data['description']) ?></p>
+           class="card card-<?= html($data['color']) ?>"
+           aria-label="<?= html($data['title']) ?>: <?= html($data['description']) ?>">
+            <h3 class="card-title"><?= html($data['title']) ?></h3>
+            <p class="card-description"><?= html($data['description']) ?></p>
         </a>
         <?php endforeach ?>
     </nav>

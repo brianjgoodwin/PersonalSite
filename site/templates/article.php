@@ -7,7 +7,9 @@
     <h1><?= $page->title()->html() ?></h1>
     <?= $page->body()->kirbytext() ?>
 
-    <p class="back-link"><a href="<?= $page->parent()->url() ?>">← Back to Posts</a></p>
+    <?php if ($parent = $page->parent()): ?>
+    <p class="back-link"><a href="<?= $parent->url() ?>">← Back to <?= $parent->title()->html() ?></a></p>
+    <?php endif ?>
   </article>
 </div>
 

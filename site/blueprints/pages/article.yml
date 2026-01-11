@@ -18,6 +18,7 @@ columns:
             default: now
             time: true
             help: When this post was originally published
+            timezone: America/Los_Angeles
 
           excerpt:
             label: Excerpt
@@ -29,6 +30,16 @@ columns:
             label: Body
             type: textarea
             size: huge
+            help: Write in Markdown. Upload images below, then use image tags to reference them
+
+      images:
+        type: files
+        headline: Article Images
+        layout: cards
+        template: article-image
+        uploads:
+          template: article-image
+        help: Upload images for this article. Reference them in markdown using KirbyText image tags
 
   sidebar:
     width: 1/3

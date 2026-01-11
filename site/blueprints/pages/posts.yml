@@ -1,0 +1,34 @@
+title: Posts
+
+columns:
+  main:
+    width: 2/3
+    sections:
+      drafts:
+        type: pages
+        headline: Draft Articles
+        status: draft
+        template: article
+        info: "{{ page.date.toDate('M d, Y') }}"
+        sortBy: date desc
+        empty: No draft articles yet
+
+      listed:
+        type: pages
+        headline: Published Articles
+        status: listed
+        template: article
+        info: "{{ page.date.toDate('M d, Y') }}"
+        sortBy: date desc
+        empty: No published articles yet
+
+  sidebar:
+    width: 1/3
+    sections:
+      fields:
+        type: fields
+        fields:
+          body:
+            label: Intro Text
+            type: textarea
+            help: Optional text that appears above the posts listing. Supports Markdown.
