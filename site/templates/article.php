@@ -2,14 +2,13 @@
 
 <?php snippet('breadcrumb') ?>
 
-<section class="content article">
-  <article>
+<div class="article-layout">
+  <article class="article-content">
     <h1><?= $page->title()->html() ?></h1>
     <?= $page->body()->kirbytext() ?>
 
-    <a href="<?= $page->parent()->url() ?>">Back to Posts</a>
-
+    <p class="back-link"><a href="<?= $page->parent()->url() ?>">← Back to Posts</a></p>
   </article>
-</section>
+</div>
 
 <?php snippet('footer') ?>

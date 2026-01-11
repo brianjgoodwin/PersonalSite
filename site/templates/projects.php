@@ -2,8 +2,9 @@
 
 <?php snippet('breadcrumb') ?>
 
-    <h1><?= $page->title()->html() ?></h1>
-    <div>
+<div class="projects-layout">
+    <div class="projects-content">
+        <h1><?= $page->title()->html() ?></h1>
         <?= $page->body()->kirbytext() ?>
 
         <?php foreach ($page->children() as $project): ?>
@@ -11,7 +12,7 @@
             <h2><a href="<?= $project->url() ?>"><?= $project->title()->html() ?></a></h2>
             </article>
         <?php endforeach ?>
-        
     </div>
+</div>
 
-    <?php snippet('footer') ?>
+<?php snippet('footer') ?>

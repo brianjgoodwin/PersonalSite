@@ -2,7 +2,11 @@ Title: About
 
 ----
 
-Body: Hi, I'm Brian
+Leftcolumn: Hi, I'm Brian
+
+----
+
+Rightcolumn:
 
 ----
 

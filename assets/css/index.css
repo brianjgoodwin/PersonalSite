@@ -489,3 +489,313 @@ main:has(.about-layout) {
         padding: 0;
     }
 }
+
+/* ============================================
+   PROJECTS PAGE LAYOUT
+   Simple single column text
+   ============================================ */
+
+/* Override main element constraints for projects page */
+main:has(.projects-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+.projects-layout {
+    padding-left: 200px;
+}
+
+.projects-content {
+    max-width: 400px;
+}
+
+.projects-content h1 {
+    margin-bottom: 1.5rem;
+}
+
+.projects-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.projects-content h2 {
+    margin-bottom: 1rem;
+}
+
+.projects-content h2 a {
+    text-decoration: none;
+}
+
+.projects-content h2 a:hover {
+    text-decoration: underline;
+}
+
+/* Breadcrumb padding for projects page - aligns with text column */
+main:has(.projects-layout) nav[aria-label="breadcrumb"] {
+    padding-left: 200px;
+}
+
+/* ============================================
+   PROJECTS PAGE MOBILE LAYOUT
+   Single column with padding
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    main:has(.projects-layout) nav[aria-label="breadcrumb"] {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .projects-layout {
+        padding: 0 2rem;
+    }
+
+    .projects-content {
+        max-width: 100%;
+    }
+}
+
+/* ============================================
+   LINKS PAGE LAYOUT
+   Single intro text + two equal columns
+   ============================================ */
+
+/* Override main element constraints for links page */
+main:has(.links-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+.links-layout {
+    padding-left: 200px;
+}
+
+.links-intro {
+    max-width: 400px;
+    margin-bottom: 2rem;
+}
+
+.links-intro p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.links-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 400px;
+}
+
+.links-column ul,
+.links-column ol {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.links-column li {
+    margin-bottom: 0.5rem;
+}
+
+.links-column a {
+    text-decoration: none;
+}
+
+.links-column a:hover {
+    text-decoration: underline;
+}
+
+/* Breadcrumb padding for links page - aligns with text column */
+main:has(.links-layout) nav[aria-label="breadcrumb"] {
+    padding-left: 200px;
+}
+
+/* ============================================
+   LINKS PAGE MOBILE LAYOUT
+   Single column stack
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    main:has(.links-layout) nav[aria-label="breadcrumb"] {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .links-layout {
+        padding: 0 2rem;
+    }
+
+    .links-intro {
+        max-width: 100%;
+    }
+
+    .links-columns {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+}
+
+/* ============================================
+   POSTS & ARTICLES - MAGAZINE LAYOUT
+   Narrow text column with wide images
+   ============================================ */
+
+/* Override main element constraints for posts pages */
+main:has(.posts-layout),
+main:has(.article-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+/* Breadcrumb padding for posts pages - aligns with text column */
+main:has(.posts-layout) nav[aria-label="breadcrumb"],
+main:has(.article-layout) nav[aria-label="breadcrumb"] {
+    padding-left: 200px;
+}
+
+/* Posts listing page */
+.posts-layout {
+    padding-left: 200px;
+}
+
+.posts-content {
+    max-width: 400px;
+}
+
+.posts-content h1 {
+    margin-bottom: 1.5rem;
+}
+
+.posts-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.post-preview {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.post-preview:last-of-type {
+    border-bottom: none;
+}
+
+.post-preview h2 {
+    margin-bottom: 1rem;
+}
+
+.post-preview h2 a {
+    text-decoration: none;
+}
+
+.post-preview h2 a:hover {
+    text-decoration: underline;
+}
+
+.pagination {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.pagination a {
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+/* Individual article page */
+.article-layout {
+    padding-left: 200px;
+}
+
+.article-content {
+    max-width: 400px;
+}
+
+.article-content h1 {
+    margin-bottom: 1.5rem;
+}
+
+.article-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.article-content h2,
+.article-content h3,
+.article-content h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.article-content ul,
+.article-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+}
+
+.article-content li {
+    margin-bottom: 0.5rem;
+}
+
+/* Wide images that span across the magazine layout */
+.article-content img,
+.posts-content img,
+.post-preview img {
+    max-width: 800px;
+    height: auto;
+    margin: 2rem 0;
+    display: block;
+}
+
+/* Back link */
+.back-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.back-link a {
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   POSTS & ARTICLES MOBILE LAYOUT
+   Single column with padding
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    main:has(.posts-layout) nav[aria-label="breadcrumb"],
+    main:has(.article-layout) nav[aria-label="breadcrumb"] {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .posts-layout,
+    .article-layout {
+        padding: 0 2rem;
+    }
+
+    .posts-content,
+    .article-content {
+        max-width: 100%;
+    }
+
+    .article-content img,
+    .posts-content img,
+    .post-preview img {
+        max-width: 100%;
+    }
+}
