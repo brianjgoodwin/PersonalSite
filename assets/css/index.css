@@ -378,16 +378,17 @@ main:has(.home-layout) {
 
 /* ============================================
    CARD COMPONENT
-   Square, clickable cards with color coding
+   Rectangular cards with themed hover shadows
    ============================================ */
 
 .card {
     display: block;
     width: 280px;
-    height: 280px;
     padding: 2rem;
     text-decoration: none;
     color: #000;
+    background-color: white;
+    border: 2px solid #e0e0e0;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -403,16 +404,28 @@ main:has(.home-layout) {
     margin: 0;
 }
 
-/* Card hover state */
+/* Card hover state - subtle lift */
 .card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Card focus state for keyboard navigation */
 .card:focus {
     outline: 3px solid #000;
     outline-offset: 4px;
+}
+
+/* Themed hover shadows based on destination */
+.card[data-theme="posts"]:hover {
+    box-shadow: 0 4px 12px var(--color-posts);
+}
+
+.card[data-theme="projects"]:hover {
+    box-shadow: 0 4px 12px var(--color-projects);
+}
+
+.card[data-theme="links"]:hover {
+    box-shadow: 0 4px 12px var(--color-links);
 }
 
 /* Color variants - WCAG AA compliant with good readability */

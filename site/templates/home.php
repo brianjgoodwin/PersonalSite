@@ -16,19 +16,19 @@
             [
                 'slug' => 'posts',
                 'title' => 'Posts',
-                'description' => 'Writing about technology, design, and things I find interesting.',
+                'description' => 'Only the best posts! At least they\'re free.',
                 'color' => 'posts'
             ],
             [
                 'slug' => 'projects',
                 'title' => 'Projects',
-                'description' => 'Things I\'ve built, experiments, and works in progress.',
+                'description' => 'Art. Apps. Experiments.',
                 'color' => 'projects'
             ],
             [
                 'slug' => 'links',
                 'title' => 'Links',
-                'description' => 'A curated collection of websites, newsletters, and resources I enjoy.',
+                'description' => 'Blogrolls are back! You heard it here.',
                 'color' => 'links'
             ]
         ];
@@ -38,7 +38,8 @@
             if (!$cardPage) continue; // Skip if page doesn't exist
         ?>
         <a href="<?= $cardPage->url() ?>"
-           class="card card-<?= html($data['color']) ?>"
+           class="card"
+           data-theme="<?= html($data['slug']) ?>"
            aria-label="<?= html($data['title']) ?>: <?= html($data['description']) ?>">
             <h3 class="card-title"><?= html($data['title']) ?></h3>
             <p class="card-description"><?= html($data['description']) ?></p>
