@@ -11,3 +11,7 @@ Rightcolumn:
 ----
 
 Uuid: About001
+
+----
+
+Text: How now, brown cow?
