@@ -6,6 +6,19 @@
     box-sizing: border-box;
 }
 
+/* ============================================
+   THEME COLORS
+   Apple Rainbow logo colors for section theming
+   ============================================ */
+
+:root {
+    --color-home: #E03A3E;      /* Red */
+    --color-about: #F5821F;     /* Orange */
+    --color-posts: #FDB827;     /* Yellow */
+    --color-projects: #009DDC;  /* Blue */
+    --color-links: #61BB46;     /* Green */
+}
+
 html {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
         Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -16,7 +29,6 @@ a {
 }
 
 body {
-    padding: 3rem;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -27,13 +39,20 @@ body {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 2rem;
+  justify-content: space-between; /* Spread logo and nav apart with space between */
+  align-items: baseline;
+  margin-bottom: 0rem;
+  padding: 2rem 3rem 0 3rem; /* top right bottom left */
 }
 
 .logo {
     display: flex;
     font-weight: bold;
+    line-height: 1;
+}
+
+.menu {
+    line-height: 1;
 }
 
 menu {
@@ -55,7 +74,10 @@ menu {
 
 main {
     flex-grow: 1;
-    margin-bottom: 3rem;
+    max-width: 600px;
+    margin: 0 auto 3rem auto; /* Center horizontally, 3rem bottom margin */
+    width: 100%; /* Allow it to be responsive on small screens */
+    padding: 0 3rem; /* Left and right padding */
 }
 
 main h1 {
@@ -92,6 +114,7 @@ footer {
     text-align: right;
     margin-top: auto;
     color: #666;
+    padding: 0 3rem 3rem 3rem; /* top right bottom left */
 }
 
 /* ============================================
@@ -167,8 +190,44 @@ select:focus-visible {
 
 /* Visual style for current page in navigation */
 .menu a[aria-current="page"] {
-    font-weight: bold;
-    text-decoration: underline;
+    background-color: black;
+    color: white;
+    padding: 0.25rem 0.5rem; /* Space around text inside the box */
+}
+
+/* Logo gets same style when on homepage */
+.logo[aria-current="page"] {
+    background-color: black;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    text-decoration: none;
+    line-height: 1; /* Remove extra vertical space from line-height */
+}
+
+/* Colored underlines based on section theme */
+[data-section="home"] .logo[aria-current="page"],
+[data-section="home"] .menu a[aria-current="page"] {
+    box-shadow: 0 3px 0 0 var(--color-home);
+}
+
+[data-section="about"] .logo[aria-current="page"],
+[data-section="about"] .menu a[aria-current="page"] {
+    box-shadow: 0 3px 0 0 var(--color-about);
+}
+
+[data-section="posts"] .logo[aria-current="page"],
+[data-section="posts"] .menu a[aria-current="page"] {
+    box-shadow: 0 3px 0 0 var(--color-posts);
+}
+
+[data-section="projects"] .logo[aria-current="page"],
+[data-section="projects"] .menu a[aria-current="page"] {
+    box-shadow: 0 3px 0 0 var(--color-projects);
+}
+
+[data-section="links"] .logo[aria-current="page"],
+[data-section="links"] .menu a[aria-current="page"] {
+    box-shadow: 0 3px 0 0 var(--color-links);
 }
 
 /* ============================================
@@ -218,4 +277,603 @@ nav[aria-label="breadcrumb"] a:hover {
 nav[aria-label="breadcrumb"] span[aria-current="page"] {
     color: #333;
     font-weight: normal;
+}
+
+/* Breadcrumb padding for two-column layouts - aligns with grid */
+main:has(.home-layout) nav[aria-label="breadcrumb"],
+main:has(.about-layout) nav[aria-label="breadcrumb"] {
+    padding-left: 200px;
+}
+
+/* Mobile breadcrumb padding */
+@media (max-width: 768px) {
+    main:has(.home-layout) nav[aria-label="breadcrumb"],
+    main:has(.about-layout) nav[aria-label="breadcrumb"] {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+/* ============================================
+   HEADER MOBILE LAYOUT
+   Stacked: logo on top, nav below spanning full width
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .menu ul {
+        width: 100%;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .menu ul li {
+        margin-left: 0;
+    }
+}
+
+/* ============================================
+   HOME PAGE LAYOUT
+   Two-column "print magazine" layout with cards
+   ============================================ */
+
+/* Override main element constraints for home page */
+main:has(.home-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+.home-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px 1fr 1fr;
+    gap: 0;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.home-intro {
+    grid-column: 2 / 3;
+    padding-right: 0;
+}
+
+.home-cards {
+    grid-column: 4 / 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 0;
+}
+
+/* Visually hidden heading for screen readers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.home-intro h1 {
+    margin-bottom: 1.5rem;
+}
+
+.home-text {
+    line-height: 1.6;
+}
+
+.home-text p {
+    margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   CARD COMPONENT
+   Rectangular cards with themed hover shadows
+   ============================================ */
+
+.card {
+    display: block;
+    width: 280px;
+    padding: 2rem;
+    text-decoration: none;
+    color: #000;
+    background-color: white;
+    border: 2px solid #e0e0e0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.card-description {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Card hover state - subtle lift */
+.card:hover {
+    transform: translateY(-4px);
+}
+
+/* Card focus state for keyboard navigation */
+.card:focus {
+    outline: 3px solid #000;
+    outline-offset: 4px;
+}
+
+/* Themed hover shadows based on destination */
+.card[data-theme="posts"]:hover {
+    box-shadow: 0 4px 12px var(--color-posts);
+}
+
+.card[data-theme="projects"]:hover {
+    box-shadow: 0 4px 12px var(--color-projects);
+}
+
+.card[data-theme="links"]:hover {
+    box-shadow: 0 4px 12px var(--color-links);
+}
+
+/* Color variants - WCAG AA compliant with good readability */
+.card-posts {
+    background-color: #FFE082; /* Light amber */
+    color: #000;
+}
+
+.card-projects {
+    background-color: #90CAF9; /* Light blue */
+    color: #000;
+}
+
+.card-links {
+    background-color: #A5D6A7; /* Light green */
+    color: #000;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .card {
+        transition: none;
+    }
+}
+
+/* ============================================
+   MOBILE LAYOUT
+   Single column with 2-column card grid
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    .home-layout {
+        display: block;
+        padding: 0 2rem;
+    }
+
+    .home-intro {
+        margin-bottom: 3rem;
+    }
+
+    /* Single column stack for better mobile UX */
+    .home-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .card {
+        width: 100%;
+        height: auto;
+        min-height: 200px;
+        padding: 1.5rem;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .card-description {
+        font-size: 0.9rem;
+    }
+}
+
+/* ============================================
+   ABOUT PAGE LAYOUT
+   Two-column "print magazine" layout with bio and links
+   ============================================ */
+
+/* Override main element constraints for about page */
+main:has(.about-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+.about-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px 1fr 1fr;
+    gap: 0;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.about-left {
+    grid-column: 2 / 3;
+    padding-right: 0;
+}
+
+.about-right {
+    grid-column: 4 / 5;
+    padding: 0;
+}
+
+.about-left h1 {
+    margin-bottom: 1.5rem;
+}
+
+.about-bio {
+    line-height: 1.6;
+}
+
+.about-bio p {
+    margin-bottom: 1.5rem;
+}
+
+.about-links h2 {
+    margin-bottom: 1rem;
+}
+
+.about-links ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+.about-links li {
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================
+   ABOUT PAGE MOBILE LAYOUT
+   Single column stack
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    .about-layout {
+        display: block;
+        padding: 0 2rem;
+    }
+
+    .about-left {
+        margin-bottom: 3rem;
+    }
+
+    .about-right {
+        padding: 0;
+    }
+}
+
+/* ============================================
+   PROJECTS PAGE LAYOUT
+   Simple single column text
+   ============================================ */
+
+/* Override main element constraints for projects page */
+main:has(.projects-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+.projects-layout {
+    padding-left: 200px;
+}
+
+.projects-content {
+    max-width: 400px;
+}
+
+.projects-content h1 {
+    margin-bottom: 1.5rem;
+}
+
+.projects-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.projects-content h2 {
+    margin-bottom: 1rem;
+}
+
+.projects-content h2 a {
+    text-decoration: none;
+}
+
+.projects-content h2 a:hover {
+    text-decoration: underline;
+}
+
+/* Breadcrumb padding for projects page - aligns with text column */
+main:has(.projects-layout) nav[aria-label="breadcrumb"] {
+    padding-left: 200px;
+}
+
+/* ============================================
+   PROJECTS PAGE MOBILE LAYOUT
+   Single column with padding
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    main:has(.projects-layout) nav[aria-label="breadcrumb"] {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .projects-layout {
+        padding: 0 2rem;
+    }
+
+    .projects-content {
+        max-width: 100%;
+    }
+}
+
+/* ============================================
+   LINKS PAGE LAYOUT
+   Single intro text + two equal columns
+   ============================================ */
+
+/* Override main element constraints for links page */
+main:has(.links-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+.links-layout {
+    padding-left: 200px;
+}
+
+.links-intro {
+    max-width: 400px;
+    margin-bottom: 2rem;
+}
+
+.links-intro p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.links-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 400px;
+}
+
+.links-column ul,
+.links-column ol {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.links-column li {
+    margin-bottom: 0.5rem;
+}
+
+.links-column a {
+    text-decoration: none;
+}
+
+.links-column a:hover {
+    text-decoration: underline;
+}
+
+/* Breadcrumb padding for links page - aligns with text column */
+main:has(.links-layout) nav[aria-label="breadcrumb"] {
+    padding-left: 200px;
+}
+
+/* ============================================
+   LINKS PAGE MOBILE LAYOUT
+   Single column stack
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    main:has(.links-layout) nav[aria-label="breadcrumb"] {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .links-layout {
+        padding: 0 2rem;
+    }
+
+    .links-intro {
+        max-width: 100%;
+    }
+
+    .links-columns {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+}
+
+/* ============================================
+   POSTS & ARTICLES - MAGAZINE LAYOUT
+   Narrow text column with wide images
+   ============================================ */
+
+/* Override main element constraints for posts pages */
+main:has(.posts-layout),
+main:has(.article-layout) {
+    max-width: none;
+    padding: 0;
+}
+
+/* Breadcrumb padding for posts pages - aligns with text column */
+main:has(.posts-layout) nav[aria-label="breadcrumb"],
+main:has(.article-layout) nav[aria-label="breadcrumb"] {
+    padding-left: 200px;
+}
+
+/* Posts listing page */
+.posts-layout {
+    padding-left: 200px;
+}
+
+.posts-content {
+    max-width: 400px;
+}
+
+.posts-content h1 {
+    margin-bottom: 1.5rem;
+}
+
+.posts-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.post-preview {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.post-preview:last-of-type {
+    border-bottom: none;
+}
+
+.post-preview h2 {
+    margin-bottom: 1rem;
+}
+
+.post-preview h2 a {
+    text-decoration: none;
+}
+
+.post-preview h2 a:hover {
+    text-decoration: underline;
+}
+
+.pagination {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.pagination a {
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+/* Individual article page */
+.article-layout {
+    padding-left: 200px;
+}
+
+.article-content {
+    max-width: 400px;
+}
+
+.article-content h1 {
+    margin-bottom: 1.5rem;
+}
+
+.article-content p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.article-content h2,
+.article-content h3,
+.article-content h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.article-content ul,
+.article-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+}
+
+.article-content li {
+    margin-bottom: 0.5rem;
+}
+
+/* Wide images that span across the magazine layout */
+.article-content img,
+.posts-content img,
+.post-preview img {
+    max-width: 800px;
+    height: auto;
+    margin: 2rem 0;
+    display: block;
+}
+
+/* Back link */
+.back-link {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.back-link a {
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   POSTS & ARTICLES MOBILE LAYOUT
+   Single column with padding
+   Breakpoint: 768px
+   ============================================ */
+
+@media (max-width: 768px) {
+    main:has(.posts-layout) nav[aria-label="breadcrumb"],
+    main:has(.article-layout) nav[aria-label="breadcrumb"] {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+
+    .posts-layout,
+    .article-layout {
+        padding: 0 2rem;
+    }
+
+    .posts-content,
+    .article-content {
+        max-width: 100%;
+    }
+
+    .article-content img,
+    .posts-content img,
+    .post-preview img {
+        max-width: 100%;
+    }
 }

@@ -4,12 +4,14 @@ My personal website built with [Kirby CMS](https://getkirby.com).
 
 ## Features
 
-- **Blog** - Posts with drafts, featured posts, cover images, and RSS feed
-- **Multiple Pages** - About, Projects, Links, and Now pages
-- **Responsive Design** - Three-layer background design with mobile-friendly navigation
-- **Color-Coded Pages** - Each section has its own unique color theme
+- **Posts** - Articles with draft/published workflow, date sorting, and RSS feed
+- **Magazine Layout** - Swiss-inspired design with narrow text columns (400px) and wide images (800px)
+- **Image Management** - Upload images to articles with alt text and captions, reference via KirbyText
+- **Content Sections** - Home (with color-coded cards), About, Posts, Projects, Links, and Now pages
+- **Accessibility** - Skip navigation, ARIA landmarks, keyboard focus indicators
+- **Responsive Design** - Mobile-friendly with 768px breakpoint
 - **User Roles** - Admin and read-only access levels
-- **Utility Pages** - RSS feed, sitemap.xml, and privacy policy
+- **Utility Pages** - RSS feed, sitemap.xml, breadcrumb navigation
 
 ## Built With
 

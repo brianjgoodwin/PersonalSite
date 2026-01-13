@@ -1,0 +1,17 @@
+title: Article Image
+
+accept:
+  mime: image/jpeg, image/png, image/gif, image/svg+xml, image/webp
+  maxsize: 5000000  # 5MB max file size
+
+fields:
+  alt:
+    label: Alt Text
+    type: text
+    help: Describe the image for accessibility and SEO (required for screen readers)
+
+  caption:
+    label: Caption
+    type: textarea
+    size: small
+    help: Optional caption that can be displayed below the image

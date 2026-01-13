@@ -2,41 +2,41 @@
 
 <?php snippet('breadcrumb') ?>
 
-<section class="content blog">
+<div class="posts-layout">
+  <div class="posts-content">
+    <h1><?= $page->title()->html() ?></h1>
+    <?= $page->body()->kirbytext() ?>
 
-  <h1><?= $page->title()->html() ?></h1>
-  <?= $page->body()->kirbytext() ?>
+    <?php
+    $articles = $page->children()->listed()->flip()->paginate(5);
+    foreach($articles as $article):
+    ?>
 
-  <?php
-  $articles = $page->children()->listed()->flip()->paginate(5);
-  foreach($articles as $article):
-  ?>
+    <article class="post-preview">
+      <h2><a href="<?= $article->url() ?>"><?= $article->title()->html() ?></a></h2>
+      <?= $article->body()->kirbytext() ?>
+    </article>
 
-  <article>
-    <h2><a href="<?= $article->url() ?>"><?= $article->title()->html() ?></a></h2>
-    <?= $article->body()->kirbytext() ?>
-  </article>
+    <?php endforeach ?>
 
-  <?php endforeach ?>
+    <?php if ($articles->pagination()->hasPages()): ?>
+      <nav class="pagination" aria-label="Posts pagination">
 
-  <?php if ($articles->pagination()->hasPages()): ?>
-    <nav class="pagination" aria-label="Posts pagination">
+        <?php if ($articles->pagination()->hasNextPage()): ?>
+        <a class="next" href="<?= $articles->pagination()->nextPageURL() ?>" aria-label="Go to older posts">
+          ‹ older posts
+        </a>
+        <?php endif ?>
 
-      <?php if ($articles->pagination()->hasNextPage()): ?>
-      <a class="next" href="<?= $articles->pagination()->nextPageURL() ?>" aria-label="Go to older posts">
-        ‹ older posts
-      </a>
-      <?php endif ?>
+        <?php if ($articles->pagination()->hasPrevPage()): ?>
+        <a class="prev" href="<?= $articles->pagination()->prevPageURL() ?>" aria-label="Go to newer posts">
+          newer posts ›
+        </a>
+        <?php endif ?>
 
-      <?php if ($articles->pagination()->hasPrevPage()): ?>
-      <a class="prev" href="<?= $articles->pagination()->prevPageURL() ?>" aria-label="Go to newer posts">
-        newer posts ›
-      </a>
-      <?php endif ?>
-
-    </nav>
-  <?php endif ?>
-
-</section>
+      </nav>
+    <?php endif ?>
+  </div>
+</div>
 
 <?php snippet('footer') ?>

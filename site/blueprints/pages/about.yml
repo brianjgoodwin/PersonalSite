@@ -1,0 +1,23 @@
+title: About
+
+fields:
+  title:
+    label: Page Title
+    type: text
+    help: This appears as the H1 on your about page
+
+  breadcrumbTitle:
+    label: Breadcrumb Title
+    type: text
+    default: About
+    help: How this page appears in breadcrumbs
+
+  leftColumn:
+    label: Left Column (Bio Text)
+    type: textarea
+    help: 2-4 paragraphs of informal bio text. Supports Markdown.
+
+  rightColumn:
+    label: Right Column (Links)
+    type: textarea
+    help: Lists of links around the internet. Supports Markdown for lists and links.

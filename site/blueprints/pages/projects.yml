@@ -1,0 +1,7 @@
+title: Projects
+
+fields:
+  body:
+    label: Content
+    type: textarea
+    help: Projects content. Supports Markdown.

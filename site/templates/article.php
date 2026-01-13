@@ -2,14 +2,15 @@
 
 <?php snippet('breadcrumb') ?>
 
-<section class="content article">
-  <article>
+<div class="article-layout">
+  <article class="article-content">
     <h1><?= $page->title()->html() ?></h1>
     <?= $page->body()->kirbytext() ?>
 
-    <a href="<?= $page->parent()->url() ?>">Back to Posts</a>
-
+    <?php if ($parent = $page->parent()): ?>
+    <p class="back-link"><a href="<?= $parent->url() ?>">← Back to <?= $parent->title()->html() ?></a></p>
+    <?php endif ?>
   </article>
-</section>
+</div>
 
 <?php snippet('footer') ?>

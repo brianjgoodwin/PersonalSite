@@ -13,5 +13,6 @@ fields:
     help: How this page appears in breadcrumbs (defaults to "Home")
 
   body:
-    label: Text
+    label: Intro Text
     type: textarea
+    help: The welcome text that appears in the left column on desktop
