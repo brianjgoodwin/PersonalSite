@@ -1,0 +1,21 @@
+Title: About
+
+----
+
+Breadcrumbtitle: About
+
+----
+
+Leftcolumn: Hi, I’m Brian.
+
+----
+
+Rightcolumn:
+
+[LinkedIn](#)
+[GitHub](#)
+[Letterboxd](https://letterboxd.com/brianjgoodwin/)
+
+----
+
+Lock: hiZUhZxs

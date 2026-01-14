@@ -2,16 +2,16 @@ Title: About
 
 ----
 
-Leftcolumn: Hi, I'm Brian
+Breadcrumbtitle: About
+
+----
+
+Leftcolumn: Hi, I’m Brian.
 
 ----
 
 Rightcolumn:
 
-----
-
-Uuid: About001
-
-----
-
-Text: How now, brown cow?
+[LinkedIn](#)
+[GitHub](#)
+[Letterboxd](https://letterboxd.com/brianjgoodwin/)
