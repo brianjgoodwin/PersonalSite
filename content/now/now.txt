@@ -11,6 +11,7 @@ Body:
 ## What I'm doing now
 
 ### Working on
+Work stuff. Sales reporting at a small company. 
 
 ### Learning
 I’ve been learning a lot and refreshing a lot of my knowledge about servers and building and hosting websites. I’ve loved learning about [Kirby CMS](https://getkirby.com/), which runs this site. 
@@ -18,9 +19,9 @@ I’ve been learning a lot and refreshing a lot of my knowledge about servers an
 ### Reading
 Lately, a lot of technical documentation for Kirby CMS. And re-reading some favorite Agathe Christie novels.
 
----
-
 This is a [now page](https://nownownow.com/about), and if you have your own site, [you should make one](https://nownownow.com/about), too.
+
+---
 
 Last updated: Jan 15, 2026
 
