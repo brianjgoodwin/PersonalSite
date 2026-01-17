@@ -1,0 +1,9 @@
+Title: Style Guide
+
+----
+
+Content: Design system, typography, colors, and component styling guidelines.
+
+----
+
+Uuid: docs-section-style-guide

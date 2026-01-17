@@ -1,0 +1,46 @@
+title: Documentation Section
+
+icon: 📄
+
+status:
+  draft: false
+  listed: false
+  unlisted: true
+
+options:
+  status:
+    listed: false
+    unlisted: true
+  changeTemplate: false
+  delete: true
+
+columns:
+  main:
+    width: 2/3
+    sections:
+      content:
+        type: fields
+        fields:
+          content:
+            label: Documentation Content
+            type: writer
+            marks:
+              - bold
+              - italic
+              - link
+            nodes:
+              - heading
+              - paragraph
+            help: Click into the editor area below to start formatting your documentation
+
+  sidebar:
+    width: 1/3
+    sections:
+      meta:
+        type: fields
+        fields:
+          title:
+            label: Section Title
+            type: text
+            required: true
+            help: e.g., "Developer", "Style Guide", or "Brand"

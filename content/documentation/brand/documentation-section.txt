@@ -1,0 +1,9 @@
+Title: Brand
+
+----
+
+Content: Brand guidelines, voice and tone, messaging, and visual identity.
+
+----
+
+Uuid: docs-section-brand

@@ -1,0 +1,16 @@
+{
+  "name": "brianardoin/cache-invalidation",
+  "description": "Automatically clears the page cache when content changes",
+  "version": "1.0.0",
+  "type": "kirby-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Brian Goodwin",
+      "email": "brian@brianjgoodwin.net"
+    }
+  ],
+  "require": {
+    "getkirby/cms": "^5.0"
+  }
+}
