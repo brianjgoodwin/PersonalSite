@@ -8,13 +8,17 @@ I’m a bumpkin from a small town, and I’ve learned so much by reading interes
 
 So here are my favorite sites and newsletters. There are no affiliate links or anything like that. I just like these websites and writers and think you should read them.
 
-----
-
-Leftlinks:
-
-## Technology
+## Technology 
 [Daring Fireball](#)
 [The Verge](#)
+
+[Kottke]()
+
+[Swiss Miss](https://www.swiss-miss.com)
+
+----
+
+Leftlinks: ## Technology
 
 ----
 
