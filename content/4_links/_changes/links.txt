@@ -18,7 +18,11 @@ Leftlinks:
 
 ----
 
-Rightlinks: 
+Rightlinks:
+
+## Technology
+[Daring Fireball](#)
+[The Verge](#)
 
 ----
 
