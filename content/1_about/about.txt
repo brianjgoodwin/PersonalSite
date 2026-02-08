@@ -6,12 +6,14 @@ Breadcrumbtitle: About
 
 ----
 
-Leftcolumn: Hi, I’m Brian.
+Leftcolumn:
 
-----
-
-Rightcolumn:
+Hi, I’m Brian.
 
 [LinkedIn](#)
 [GitHub](#)
 [Letterboxd](https://letterboxd.com/brianjgoodwin/)
+
+----
+
+Rightcolumn: 
