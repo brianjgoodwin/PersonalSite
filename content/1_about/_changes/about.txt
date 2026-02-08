@@ -8,20 +8,23 @@ Breadcrumbtitle: About
 
 Leftcolumn:
 
-Hi, I’m Brian.
+Hi, I’m Brian. I'm a regular dude. Not really. I'm about to say that a computer changed my life. Buckle up.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Technology has been a part of my life from a very young. My first computer was an Apple Macintosh SE/30. That little toaster box computer changed my life, shooting a sense of wonder, curiosity, and power through my little brain like lighting. I was a decent, but unremarkable math student as a child. I earned a Bachelor's degree from the University of Michigan in 2009, dual concentrations in English Language & Literature and History of Art. I spent my 20s working a number of very interesting but poorly-paid jobs and taking self-paced online courses in technology and computer science after work. And having adventures and growing up and looking at art. I've spent my 30s working in the non-profit sector. I query databases for a living. And that's about all I'll say about work on the internet, a policy that has served me well so far in life. I'll be 40 this year. Outside of work, I do a lot of stuff with computers. And art. And computer-art. And fitness. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
+If you're on this site, you either know me in real life or you want to know more about me. This is where I post about my interests and talk about things I'm making (past, present, and future tenses). It's also a bit of special interest - technology has been a big part of my life and career. 
+
+## Social Media
+I am not active on social media, by which I mean any Meta-owned service or X, formerly known as Twitter. I am not accepting (or even seeing, in most cases) new friend requests. I still control my accounts but they are dormant.
+
+----
+
+Rightcolumn:
 
 ## Online Profiles
 [LinkedIn](https://www.linkedin.com/in/brian-j-goodwin/)
 [GitHub](https://github.com/brianjgoodwin)
 [Letterboxd](https://letterboxd.com/brianjgoodwin/)
-
-----
-
-Rightcolumn: 
 
 ----
 
