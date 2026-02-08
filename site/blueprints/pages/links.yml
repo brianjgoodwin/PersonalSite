@@ -6,12 +6,7 @@ fields:
     type: textarea
     help: Introductory text that appears at the top. Supports Markdown.
 
-  leftLinks:
-    label: Left Links
+  secondaryBox:
+    label: Secondary Box
     type: textarea
-    help: Links for the left column. Supports Markdown for lists and links.
-
-  rightLinks:
-    label: Right Links
-    type: textarea
-    help: Links for the right column. Supports Markdown for lists and links.
+    help: Content for the sidebar box. Supports Markdown for lists and links.

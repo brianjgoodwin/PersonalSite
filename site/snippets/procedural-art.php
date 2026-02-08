@@ -78,7 +78,7 @@ $seed = crc32($page->url());
     const rand = mulberry32(seed);
 
     // Background
-    ctx.fillStyle = '#eae6dd';
+    ctx.fillStyle = '#dcdcdc78';
     ctx.fillRect(0, 0, w, h);
 
     // Draw 3 simple geometric shapes using theme color
