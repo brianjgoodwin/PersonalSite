@@ -12,7 +12,7 @@ Excerpt:
 
 Body:
 
-I've had this domain for years. It just redirected to my [micro blog](https://bgoodwin.micro.blog). I figured putting something together over the holiday season (never my favorite time of year) would be a fun distraction. Hacking together a barely working piece of junk was never on the table, but I figured I'd throw together a minimal little site with links to my apps and my Github and LinkedIn profiles and call it a day. 
+I've had this domain for years. It just redirected to my [micro blog](https://bgoodwin.micro.blog). I figured putting something together over the holiday season (never my favorite time of year) would be a fun distraction. Hacking together a barely working piece of junk was never on the table, but I figured I'd throw together a minimal little Wordpress site with links to my apps, my Github and my LinkedIn profiles and call it a day. 
 
 I ended up spending month of nights and weekends working on this. You could just chalk that up to my poor time management, and that would be fair. But there was something deeper going on. I wasn't making a website, I was working my way through some very big feelings about some things that have been an important part of my life from a very young age: technology and the internet itself.
 
@@ -21,6 +21,8 @@ So what changed?
 First, the value of having a place on the internet that is truly, fully *mine* went up mid-project. "Big Tech" (which is just shorthand for a handful of large American tech companies each having the power and ethics of the [East India Company](https://en.wikipedia.org/wiki/East_India_Company) at its peak) is having *a moment*. I'll save those thoughts for a future post, but this site is built with [Kirby CMS](https://getkirby.com), an open source content management system made in Europe. 
 
 Second, the simple practice of building this website with open source technologies and extricating my brain from "Big Tech" and the ways of thinking it forces on users has been so incredibly liberating. It reawakened a love for technology, the **open** internet, and just making cool things, beautiful things, useful things just because you can. It was an explosive feeling of joy flooding back after being slowly drained from my digital life over the last decade.
+
+It was worth it.
 
 ----
 
