@@ -292,7 +292,7 @@ select:focus-visible {
 
 /* Container for breadcrumb */
 nav[aria-label="breadcrumb"] {
-    margin-bottom: 1.5rem;
+    margin-bottom: calc(var(--base-unit) * 0.5);
     font-size: 0.9em;
     color: #666;
 }
@@ -397,8 +397,8 @@ main:has(.site-main) {
         var(--col-secondary)
         minmax(var(--min-right-pad), 1fr);
     grid-template-rows: minmax(0, 1fr); /* Allow row to grow and fill viewport */
-    padding-top: var(--section-gap);
-    padding-bottom: var(--section-gap);
+    /* padding-top: calc(var(--section-gap) * 0.5); */
+     padding-bottom: calc(var(--section-gap) * 0.25);
 }
 
 .col-left-pad { grid-column: 1; }
@@ -483,7 +483,7 @@ h1, h2, h3, h4, h5, h6 {
     min-height: calc(var(--base-unit) * 4);
     position: relative;
     overflow: hidden;
-    background-color: #eae6dd;
+    background-color: #eae6dd12;
 }
 
 .art-container canvas {
@@ -492,12 +492,11 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
 }
 
-/* Home Cards in Secondary Column */
+/* Home Cards in Primary Column */
 .home-cards {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+    gap: calc(var(--base-unit) * 0.35);
     padding: 0;
 }
 
@@ -530,6 +529,10 @@ h1, h2, h3, h4, h5, h6 {
         flex: 0 0 auto; /* Don't grow on mobile */
         min-height: var(--art-min-height);
         max-height: var(--art-min-height); /* Cap at 3X base-unit */
+    }
+
+    .card {
+        padding: calc(var(--base-unit) * 0.2);
     }
 }
 
@@ -593,54 +596,43 @@ main:has(.home-layout) {
 
 /* ============================================
    CARD COMPONENT
-   Rectangular cards with themed hover shadows
+   Full-width cards with left-aligned text
    ============================================ */
 
 .card {
     display: block;
-    width: 280px;
-    padding: 2rem;
+    width: 100%;
+    padding: calc(var(--base-unit) * 0.25);
     text-decoration: none;
     color: #000;
     background-color: white;
     border: 2px solid #e0e0e0;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: left;
+    transition: background-color 0.2s ease;
 }
 
 .card-title {
-    font-size: 1.75rem;
+    font-family: var(--ff-display);
+    font-size: var(--font-lg);
     font-weight: bold;
-    margin-bottom: 1rem;
+    margin-bottom: calc(var(--base-unit) * 0.1);
 }
 
 .card-description {
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: var(--font-body);
+    line-height: var(--leading);
     margin: 0;
 }
 
-/* Card hover state - subtle lift */
+/* Card hover state - subtle darken */
 .card:hover {
-    transform: translateY(-4px);
+    background-color: #f5f5f5;
 }
 
 /* Card focus state for keyboard navigation */
 .card:focus {
     outline: 3px solid #000;
     outline-offset: 4px;
-}
-
-/* Themed hover shadows based on destination */
-.card[data-theme="posts"]:hover {
-    box-shadow: 0 4px 12px var(--color-posts);
-}
-
-.card[data-theme="projects"]:hover {
-    box-shadow: 0 4px 12px var(--color-projects);
-}
-
-.card[data-theme="links"]:hover {
-    box-shadow: 0 4px 12px var(--color-links);
 }
 
 /* Color variants - WCAG AA compliant with good readability */
