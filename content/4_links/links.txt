@@ -2,11 +2,47 @@ Title: Links
 
 ----
 
-Introtext: 
+Introtext:
+
+I’m a bumpkin from a small town, and I’ve learned so much by reading interesting things online. I was in college during the peak of the blogging era, and I spent hours and hours following blogrolls from here to there and all over the internet finding new perspectives and interests.
+
+So here are my favorites. There are no affiliate links or anything like that. I just like these websites and writers and think you should read them.
+
+## Technology 
+[Daring Fireball](https://daringfireball.net)
+[The Verge](https://www.theverge.com)
+[The Register](https://www.theregister.com)
+[Slashdot](https://slashdot.org)
+[Om my Om](https://om.co)
+[Anil Dash](https://www.anildash.com)
+[Michael Tsai](https://mjtsai.com)
+[Hypercritical](https://hypercritical.co)
+
+## Not Technology
+[kottke.org](https://kottke.org) 
+[Sentiers](https://sentiers.media)
+[Swiss Miss](https://www.swiss-miss.com)
+[She's a Beast](https://www.shesabeast.co)
+
+## News
+[Foreign Affairs ](https://www.foreignaffairs.com)
+[The Guardian](https://www.theguardian.com/)
+[Jewish Currents](https://jewishcurrents.org)
+[The Atlantic](https://www.theatlantic.com)
+
+## Podcasts
+[The Flop House](https://www.flophousepodcast.com)
+[Maintenance Phase](https://www.maintenancephase.com)
+[If Books Could Kill](https://www.ifbookspod.com)
+Several shows on [The Incomparable](https://www.theincomparable.com)
 
 ----
 
-Secondarybox: 
+Leftlinks: 
+
+----
+
+Rightlinks: 
 
 ----
 
