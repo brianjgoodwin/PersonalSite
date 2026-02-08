@@ -246,6 +246,15 @@ select:focus-visible {
     /* Remove z-index: 1 - not needed with new approach */
 }
 
+/* Focus indicator for active navigation - white outline with black stroke */
+/* Works on both black background and colored parallellogram behind it */
+.menu a[aria-current="page"]:focus-visible,
+.logo[aria-current="page"]:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #000; /* Black stroke around the white outline */
+}
+
 /* 3D parallellogram effect using pseudo-element */
 /* Using ::before instead of ::after and positioning behind with transform */
 .menu a[aria-current="page"]::before,
