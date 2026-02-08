@@ -10,13 +10,17 @@ Leftcolumn:
 
 Hi, I’m Brian.
 
-[LinkedIn](#)
-[GitHub](#)
+[LinkedIn](https://www.linkedin.com/in/brian-j-goodwin/)
+[GitHub](https://github.com/brianjgoodwin)
 [Letterboxd](https://letterboxd.com/brianjgoodwin/)
 
 ----
 
 Rightcolumn: 
+
+----
+
+Uuid: ld3rcbcuxi919ysg
 
 ----
 
