@@ -7,21 +7,59 @@
 }
 
 /* ============================================
-   THEME COLORS
-   Apple Rainbow logo colors for section theming
+   RELATIONAL DESIGN SYSTEM
+   Based on prototype - everything flows from root values
    ============================================ */
 
 :root {
+    /* ---- ROOT VALUES ---- */
+    --base-unit: 80px;          /* X — the spatial root */
+    --base-font: 17px;          /* typographic root */
+
+    /* ---- LAYOUT (fluid responsive via clamp) ---- */
+    /* Fluidly scales from compact (1X) at 1120px to spacious (3X/1.5X) at 1560px */
+    --left-pad: clamp(calc(var(--base-unit) * 1), 10vw, calc(var(--base-unit) * 3));
+    --col-primary: calc(var(--base-unit) * 6);
+    --center-pad: clamp(calc(var(--base-unit) * 1), 5vw, calc(var(--base-unit) * 1.5));
+    --col-secondary: calc(var(--base-unit) * 6);
+    --min-right-pad: clamp(calc(var(--base-unit) * 1), 10vw, calc(var(--base-unit) * 3));
+
+    /* ---- VERTICAL RHYTHM ---- */
+    --section-gap: calc(var(--base-unit) * 0.5);
+
+    /* ---- HEADER HEIGHTS (responsive) ---- */
+    --header-height-mobile: var(--base-unit);           /* 1X = 80px */
+    --header-height-tablet: calc(var(--base-unit) * 1.5); /* 1.5X = 120px */
+    --header-height-desktop: calc(var(--base-unit) * 2); /* 2X = 160px */
+
+    /* ---- TYPOGRAPHY (relational) ---- */
+    --ff-display: Georgia, 'Times New Roman', serif;
+    --ff-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-xs: calc(var(--base-font) * 0.7);
+    --font-sm: calc(var(--base-font) * 0.82);
+    --font-body: var(--base-font);
+    --font-lg: calc(var(--base-font) * 1.35);
+    --font-xl: calc(var(--base-font) * 2.4);
+    --font-xxl: calc(var(--base-font) * 4);
+    --leading: 1.55;
+
+    /* ---- THEME COLORS (Apple Rainbow) ---- */
     --color-home: #E03A3E;      /* Red */
     --color-about: #F5821F;     /* Orange */
     --color-posts: #FDB827;     /* Yellow */
     --color-projects: #009DDC;  /* Blue */
     --color-links: #61BB46;     /* Green */
+
+    /* ---- MOBILE ---- */
+    --mobile-pad: calc(var(--base-unit) * 0.35);
+    --art-min-height: calc(var(--base-unit) * 3);
 }
 
 html {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: var(--base-font);
+    font-family: var(--ff-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -29,29 +67,36 @@ a {
 }
 
 body {
+    font-family: var(--ff-body);
+    font-size: var(--font-body);
+    line-height: var(--leading);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    line-height: 1.6;
 }
 
 .header {
-  position: relative;
+  /* Removed position: relative to prevent stacking context issues */
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between; /* Spread logo and nav apart with space between */
-  align-items: baseline;
-  margin-bottom: 0rem;
-  padding: 2rem 3rem 0 3rem; /* top right bottom left */
+  flex-wrap: nowrap; /* Single-line layout */
+  justify-content: space-between;
+  align-items: center; /* Vertically center items */
+  height: var(--header-height-mobile);
+  padding-left: var(--left-pad);
+  padding-right: var(--left-pad);
 }
 
 .logo {
-    display: flex;
+    font-family: var(--ff-display);
+    font-size: var(--font-lg);
     font-weight: bold;
     line-height: 1;
 }
 
 .menu {
+    font-family: var(--ff-body);
+    font-size: var(--font-lg);
+    font-weight: normal;
     line-height: 1;
 }
 
@@ -184,50 +229,60 @@ select:focus-visible {
 }
 
 /* ============================================
-   CURRENT PAGE INDICATOR
-   Shows which navigation item is active
+   CURRENT PAGE INDICATOR - 3D PARALLELLOGRAM
+   Shows active navigation with themed 3D effect
    ============================================ */
 
-/* Visual style for current page in navigation */
-.menu a[aria-current="page"] {
-    background-color: black;
-    color: white;
-    padding: 0.25rem 0.5rem; /* Space around text inside the box */
-}
-
-/* Logo gets same style when on homepage */
+/* Base style for active navigation items */
+.menu a[aria-current="page"],
 .logo[aria-current="page"] {
+    display: inline-block;
+    position: relative;
     background-color: black;
     color: white;
-    padding: 0.25rem 0.5rem;
+    padding: 0.35rem 0.65rem;
     text-decoration: none;
-    line-height: 1; /* Remove extra vertical space from line-height */
+    line-height: 1;
+    /* Remove z-index: 1 - not needed with new approach */
 }
 
-/* Colored underlines based on section theme */
-[data-section="home"] .logo[aria-current="page"],
-[data-section="home"] .menu a[aria-current="page"] {
-    box-shadow: 0 3px 0 0 var(--color-home);
+/* 3D parallellogram effect using pseudo-element */
+/* Using ::before instead of ::after and positioning behind with transform */
+.menu a[aria-current="page"]::before,
+.logo[aria-current="page"]::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: -6px;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
 }
 
-[data-section="about"] .logo[aria-current="page"],
-[data-section="about"] .menu a[aria-current="page"] {
-    box-shadow: 0 3px 0 0 var(--color-about);
+/* Theme colors for parallellogram effect */
+[data-section="home"] .logo[aria-current="page"]::before,
+[data-section="home"] .menu a[aria-current="page"]::before {
+    background-color: var(--color-home);
 }
 
-[data-section="posts"] .logo[aria-current="page"],
-[data-section="posts"] .menu a[aria-current="page"] {
-    box-shadow: 0 3px 0 0 var(--color-posts);
+[data-section="about"] .logo[aria-current="page"]::before,
+[data-section="about"] .menu a[aria-current="page"]::before {
+    background-color: var(--color-about);
 }
 
-[data-section="projects"] .logo[aria-current="page"],
-[data-section="projects"] .menu a[aria-current="page"] {
-    box-shadow: 0 3px 0 0 var(--color-projects);
+[data-section="posts"] .logo[aria-current="page"]::before,
+[data-section="posts"] .menu a[aria-current="page"]::before {
+    background-color: var(--color-posts);
 }
 
-[data-section="links"] .logo[aria-current="page"],
-[data-section="links"] .menu a[aria-current="page"] {
-    box-shadow: 0 3px 0 0 var(--color-links);
+[data-section="projects"] .logo[aria-current="page"]::before,
+[data-section="projects"] .menu a[aria-current="page"]::before {
+    background-color: var(--color-projects);
+}
+
+[data-section="links"] .logo[aria-current="page"]::before,
+[data-section="links"] .menu a[aria-current="page"]::before {
+    background-color: var(--color-links);
 }
 
 /* ============================================
@@ -295,31 +350,191 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
 }
 
 /* ============================================
-   HEADER MOBILE LAYOUT
-   Stacked: logo on top, nav below spanning full width
-   Breakpoint: 768px
+   HEADER RESPONSIVE HEIGHTS
+   1X mobile, 1.5X tablet, 2X desktop
    ============================================ */
 
-@media (max-width: 768px) {
+/* Tablet: 1120px - 1560px */
+@media (min-width: 1120px) {
     .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+        height: var(--header-height-tablet);
     }
+}
 
-    .menu ul {
-        width: 100%;
-        justify-content: space-between;
-        gap: 1rem;
+/* Desktop: 1560px+ */
+@media (min-width: 1560px) {
+    .header {
+        height: var(--header-height-desktop);
     }
+}
 
-    .menu ul li {
-        margin-left: 0;
+/* Mobile: match grid padding */
+@media (max-width: 1119px) {
+    .header {
+        padding-left: var(--mobile-pad);
+        padding-right: var(--mobile-pad);
     }
 }
 
 /* ============================================
-   HOME PAGE LAYOUT
+   UNIFIED GRID LAYOUT
+   Relational two-column system for all pages
+   ============================================ */
+
+/* Override main element constraints for unified grid */
+main:has(.site-main) {
+    max-width: none;
+    padding: 0;
+}
+
+.site-main {
+    flex: 1;
+    display: grid;
+    grid-template-columns:
+        var(--left-pad)
+        var(--col-primary)
+        var(--center-pad)
+        var(--col-secondary)
+        minmax(var(--min-right-pad), 1fr);
+    grid-template-rows: minmax(0, 1fr); /* Allow row to grow and fill viewport */
+    padding-top: var(--section-gap);
+    padding-bottom: var(--section-gap);
+}
+
+.col-left-pad { grid-column: 1; }
+.col-primary { grid-column: 2; }
+.col-center-pad { grid-column: 3; }
+.col-secondary { grid-column: 4; }
+.col-right-pad { grid-column: 5; }
+
+/* Typography — Serif for headings, sans for body */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--ff-display);
+}
+
+.col-primary h1 {
+    font-family: var(--ff-display);
+    font-size: var(--font-xl);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: calc(var(--base-unit) * 0.35);
+}
+
+.col-primary h2 {
+    font-family: var(--ff-display);
+    font-size: var(--font-lg);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-top: calc(var(--base-unit) * 0.6);
+    margin-bottom: calc(var(--base-unit) * 0.2);
+}
+
+.col-primary p {
+    margin-bottom: calc(var(--base-unit) * 0.2);
+    max-width: 38em;
+}
+
+/* Secondary Column — Sidebar + Art */
+.col-secondary {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--base-unit) * 0.35);
+}
+
+/* Sidebar Text Box — Content on top of art */
+.sidebar-box {
+    font-size: var(--font-sm);
+    line-height: 1.5;
+    color: #666;
+    padding: calc(var(--base-unit) * 0.25);
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e0e0e0;
+}
+
+/* Links columns within sidebar */
+.sidebar-box .links-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(var(--base-unit) * 0.35);
+}
+
+.sidebar-box .links-column ul,
+.sidebar-box .links-column ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-box .links-column li {
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-box .links-column a {
+    text-decoration: none;
+}
+
+.sidebar-box .links-column a:hover {
+    text-decoration: underline;
+}
+
+/* Procedural Art Container */
+.art-container {
+    flex: 1;
+    min-height: calc(var(--base-unit) * 4);
+    position: relative;
+    overflow: hidden;
+    background-color: #eae6dd;
+}
+
+.art-container canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Home Cards in Secondary Column */
+.home-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 0;
+}
+
+/* Mobile — Stack below 1120px */
+@media (max-width: 1119px) {
+    .site-main {
+        display: flex;
+        flex-direction: column;
+        padding: var(--mobile-pad);
+        gap: var(--section-gap);
+    }
+
+    .col-left-pad,
+    .col-center-pad,
+    .col-right-pad {
+        display: none;
+    }
+
+    .col-primary { order: 1; }
+    .col-secondary {
+        order: 2;
+        flex: 0 0 auto; /* Don't grow on mobile */
+    }
+
+    .col-primary h1 {
+        font-size: calc(var(--font-xl) * 0.65);
+    }
+
+    .art-container {
+        flex: 0 0 auto; /* Don't grow on mobile */
+        min-height: var(--art-min-height);
+        max-height: var(--art-min-height); /* Cap at 3X base-unit */
+    }
+}
+
+/* ============================================
+   HOME PAGE LAYOUT (OLD - FOR BACKWARD COMPATIBILITY)
    Two-column "print magazine" layout with cards
    ============================================ */
 

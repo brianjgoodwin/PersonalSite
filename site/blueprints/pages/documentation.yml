@@ -1,0 +1,43 @@
+title: Documentation
+
+icon: 📚
+
+options:
+  status:
+    listed: false
+    unlisted: true
+  changeTemplate: false
+  delete: false
+
+columns:
+  main:
+    width: 2/3
+    sections:
+      panelInfo:
+        type: info
+        text: |
+          This is a **Panel-only** documentation area for Developer docs, Style Guide, and Brand guidelines.
+
+          These pages are **unlisted** and will NOT appear on the frontend site or in navigation.
+          Content is git-tracked for version control.
+
+      sections:
+        type: pages
+        headline: Documentation Sections
+        layout: cards
+        status: unlisted
+        template: documentation-section
+        info: "{{ page.children.count }} pages"
+        empty: No documentation sections yet. Click "Add" to create Developer, Style Guide, or Brand sections.
+        help: Create three sections to organize your internal documentation
+
+  sidebar:
+    width: 1/3
+    sections:
+      fields:
+        type: fields
+        fields:
+          title:
+            label: Title
+            type: text
+            default: Documentation
