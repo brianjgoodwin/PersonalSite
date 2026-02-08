@@ -1,9 +1,9 @@
 <?php snippet('header') ?>
 
-<?php snippet('breadcrumb') ?>
+<?php snippet('layout', [
+  'showBreadcrumb' => true,
 
-<div class="posts-layout">
-  <div class="posts-content">
+  'primary' => function() use ($page) { ?>
     <h1><?= $page->title()->html() ?></h1>
     <?= $page->body()->kirbytext() ?>
 
@@ -36,7 +36,11 @@
 
       </nav>
     <?php endif ?>
-  </div>
-</div>
+  <?php },
+
+  'secondary' => function() { ?>
+    <?php snippet('procedural-art') ?>
+  <?php }
+]) ?>
 
 <?php snippet('footer') ?>
