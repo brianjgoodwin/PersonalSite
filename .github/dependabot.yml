@@ -9,9 +9,6 @@ updates:
       time: "09:00"
       timezone: "America/Los_Angeles"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "composer"
     commit-message:
       prefix: "chore"
       include: "scope"
