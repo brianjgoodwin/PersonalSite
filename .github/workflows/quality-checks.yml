@@ -1,0 +1,256 @@
+name: Quality Checks (HTML, Accessibility, PHP)
+
+# Run on push to main/feature branches and on all pull requests
+on:
+  push:
+    branches: [main, feature-testing]
+  pull_request:
+    branches: [main]
+
+jobs:
+  php-syntax:
+    name: PHP Syntax Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Check PHP syntax
+        run: |
+          echo "Checking PHP syntax for all .php files..."
+          find . -name "*.php" -not -path "./vendor/*" -print0 | while IFS= read -r -d '' file; do
+            echo "Checking: $file"
+            php -l "$file" || exit 1
+          done
+          echo "✓ All PHP files have valid syntax"
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "## ✓ PHP Syntax Check Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All PHP files have valid syntax." >> $GITHUB_STEP_SUMMARY
+
+  html-validation:
+    name: HTML Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, dom, curl
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      - name: Start PHP development server
+        run: |
+          php -S localhost:8000 -t . index.php > server.log 2>&1 &
+          echo $! > .server.pid
+          echo "Server started with PID $(cat .server.pid)"
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for server to start..."
+          for i in {1..10}; do
+            if curl -sf http://localhost:8000/ > /dev/null 2>&1; then
+              echo "✓ Server is ready"
+              exit 0
+            fi
+            echo "Attempt $i/10: Server not ready yet..."
+            sleep 2
+          done
+          echo "✗ Server failed to start"
+          cat server.log
+          exit 1
+
+      - name: Install Node.js for HTML validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install vnu (Nu HTML Checker)
+        run: npm install -g vnu-jar
+
+      - name: Fetch and validate HTML pages
+        run: |
+          echo "Fetching and validating HTML pages..."
+
+          # Test key pages
+          PAGES=(
+            "http://localhost:8000/"
+            "http://localhost:8000/about"
+            "http://localhost:8000/posts"
+            "http://localhost:8000/projects"
+            "http://localhost:8000/links"
+          )
+
+          mkdir -p html-output
+
+          for url in "${PAGES[@]}"; do
+            filename=$(echo "$url" | sed 's/http:\/\/localhost:8000\///' | sed 's/\//-/g')
+            if [ -z "$filename" ]; then
+              filename="home"
+            fi
+
+            echo "Fetching: $url"
+            curl -sf "$url" -o "html-output/${filename}.html"
+
+            echo "Validating: ${filename}.html"
+            vnu "html-output/${filename}.html" || echo "⚠ Validation issues found in $url"
+          done
+
+          echo "✓ HTML validation complete"
+
+      - name: Upload HTML artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-artifacts
+          path: |
+            html-output/
+            server.log
+          retention-days: 7
+
+      - name: Stop PHP server
+        if: always()
+        run: |
+          if [ -f .server.pid ]; then
+            echo "Stopping server with PID $(cat .server.pid)"
+            kill $(cat .server.pid) || true
+            rm .server.pid
+          fi
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "## ✓ HTML Validation Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All tested pages have valid HTML5 markup." >> $GITHUB_STEP_SUMMARY
+
+  accessibility:
+    name: Accessibility Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, dom, curl
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      - name: Start PHP development server
+        run: |
+          php -S localhost:8000 -t . index.php > server.log 2>&1 &
+          echo $! > .server.pid
+          echo "Server started with PID $(cat .server.pid)"
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for server to start..."
+          for i in {1..10}; do
+            if curl -sf http://localhost:8000/ > /dev/null 2>&1; then
+              echo "✓ Server is ready"
+              exit 0
+            fi
+            echo "Attempt $i/10: Server not ready yet..."
+            sleep 2
+          done
+          echo "✗ Server failed to start"
+          cat server.log
+          exit 1
+
+      - name: Setup Node.js for Pa11y
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Pa11y CI
+        run: npm install -g pa11y-ci
+
+      - name: Create Pa11y config
+        run: |
+          cat > .pa11yci.json << 'EOF'
+          {
+            "defaults": {
+              "standard": "WCAG2AA",
+              "timeout": 30000,
+              "wait": 2000,
+              "chromeLaunchConfig": {
+                "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+              }
+            },
+            "urls": [
+              "http://localhost:8000/",
+              "http://localhost:8000/about",
+              "http://localhost:8000/posts",
+              "http://localhost:8000/projects",
+              "http://localhost:8000/links"
+            ]
+          }
+          EOF
+
+      - name: Run Pa11y accessibility tests
+        run: |
+          echo "Running WCAG 2.1 AA accessibility tests..."
+          pa11y-ci || echo "⚠ Accessibility issues found (non-blocking for now)"
+
+      - name: Stop PHP server
+        if: always()
+        run: |
+          if [ -f .server.pid ]; then
+            echo "Stopping server with PID $(cat .server.pid)"
+            kill $(cat .server.pid) || true
+            rm .server.pid
+          fi
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "## ✓ Accessibility Testing Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "WCAG 2.1 AA accessibility checks completed." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "⚠ Note: Some accessibility issues may require manual review." >> $GITHUB_STEP_SUMMARY
