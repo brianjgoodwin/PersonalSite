@@ -383,6 +383,18 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
         padding-left: var(--mobile-pad);
         padding-right: var(--mobile-pad);
     }
+
+    /* Increase touch target size for WCAG 2.5.5 (minimum 44×44px) */
+    .menu a,
+    .logo {
+        padding: 0.65rem 0.75rem;
+    }
+
+    /* Maintain proper padding for active navigation on mobile */
+    .menu a[aria-current="page"],
+    .logo[aria-current="page"] {
+        padding: 0.65rem 0.75rem;
+    }
 }
 
 /* ============================================
