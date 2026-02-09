@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page->title()->html() ?> | <?= $site->title()->html() ?></title>
     <?= css('assets/css/index.css') ?>
+    <?= js('assets/js/menu.js', ['defer' => true]) ?>
 
 </head>
 <?php
@@ -28,7 +29,12 @@ $sectionSlug = $section->slug();
     <header class="header">
         <a class="logo" href="<?= $site->url() ?>" <?= $page->isHomePage() ? 'aria-current="page"' : '' ?>><?= $site->title()->html() ?></a>
 
-        <nav class="menu" aria-label="Main">
+        <!-- Mobile menu toggle button -->
+        <button class="menu-toggle" aria-expanded="false" aria-controls="main-menu" aria-label="Toggle navigation menu">
+            <span class="menu-toggle-icon" aria-hidden="true"></span>
+        </button>
+
+        <nav class="menu" id="main-menu" aria-label="Main">
             <ul>
                 <?php foreach ($site->children()->listed() as $item): ?>
                 <li>

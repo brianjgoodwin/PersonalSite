@@ -243,7 +243,34 @@ select:focus-visible {
     padding: 0.35rem 0.65rem;
     text-decoration: none;
     line-height: 1;
-    /* Remove z-index: 1 - not needed with new approach */
+    /* Add 3px colored stripe on right edge */
+    border-right: 3px solid transparent;
+}
+
+/* Theme color stripe for each section */
+[data-section="home"] .logo[aria-current="page"],
+[data-section="home"] .menu a[aria-current="page"] {
+    border-right-color: var(--color-home);
+}
+
+[data-section="about"] .logo[aria-current="page"],
+[data-section="about"] .menu a[aria-current="page"] {
+    border-right-color: var(--color-about);
+}
+
+[data-section="posts"] .logo[aria-current="page"],
+[data-section="posts"] .menu a[aria-current="page"] {
+    border-right-color: var(--color-posts);
+}
+
+[data-section="projects"] .logo[aria-current="page"],
+[data-section="projects"] .menu a[aria-current="page"] {
+    border-right-color: var(--color-projects);
+}
+
+[data-section="links"] .logo[aria-current="page"],
+[data-section="links"] .menu a[aria-current="page"] {
+    border-right-color: var(--color-links);
 }
 
 /* Focus indicator for active navigation - white outline with black stroke */
@@ -377,11 +404,95 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
     }
 }
 
-/* Mobile: match grid padding */
+/* ============================================
+   MOBILE NAVIGATION MENU
+   Hamburger menu with slide-in behavior
+   ============================================ */
+
+/* Hide hamburger button on desktop */
+.menu-toggle {
+    display: none;
+}
+
+/* Mobile: show hamburger, hide menu by default */
 @media (max-width: 1119px) {
     .header {
         padding-left: var(--mobile-pad);
         padding-right: var(--mobile-pad);
+    }
+
+    /* Show hamburger button */
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        order: 3; /* Position after menu */
+    }
+
+    /* Hamburger icon - three horizontal lines */
+    .menu-toggle-icon {
+        position: relative;
+        width: 24px;
+        height: 2px;
+        background-color: #000;
+        display: block;
+    }
+
+    /* Top and bottom lines */
+    .menu-toggle-icon::before,
+    .menu-toggle-icon::after {
+        content: '';
+        position: absolute;
+        width: 24px;
+        height: 2px;
+        background-color: #000;
+    }
+
+    .menu-toggle-icon::before {
+        top: -8px;
+    }
+
+    .menu-toggle-icon::after {
+        top: 8px;
+    }
+
+    /* Hide menu by default on mobile */
+    .menu {
+        position: absolute;
+        top: var(--header-height-mobile);
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        border-bottom: 2px solid #000;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    /* Show menu when expanded */
+    .menu[aria-hidden="false"] {
+        max-height: 400px; /* Large enough for all menu items */
+    }
+
+    /* Stack menu items vertically */
+    .menu ul {
+        flex-direction: column;
+        padding: var(--mobile-pad);
+    }
+
+    .menu ul li {
+        margin-left: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .menu ul li:last-child {
+        margin-bottom: 0;
     }
 
     /* Increase touch target size for WCAG 2.5.5 (minimum 44×44px) */
@@ -394,6 +505,13 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
     .menu a[aria-current="page"],
     .logo[aria-current="page"] {
         padding: 0.65rem 0.75rem;
+    }
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .menu {
+        transition: none;
     }
 }
 
