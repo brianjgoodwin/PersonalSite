@@ -52,6 +52,10 @@ return [
         'safe' => false
     ],
 
+    // Sitemap Configuration
+    // Pages to exclude from sitemap.xml
+    'sitemap.ignore' => ['error', 'documentation'],
+
     // Page Caching - Improves performance by caching rendered pages
     // DISABLED during inline-styles refactoring for immediate CSS updates
     'cache' => [
