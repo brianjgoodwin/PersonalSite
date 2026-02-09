@@ -1,0 +1,175 @@
+name: Validate RSS Feed & Sitemap
+
+# Run on push to main/feature branches and on all pull requests
+on:
+  push:
+    branches: [main, feature-testing]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-feeds:
+    name: Validate RSS & Sitemap XML
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, dom, curl
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      - name: Start PHP development server
+        run: |
+          php -S localhost:8000 > server.log 2>&1 &
+          echo $! > .server.pid
+          echo "Server started with PID $(cat .server.pid)"
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for server to start..."
+          for i in {1..10}; do
+            if curl -sf http://localhost:8000/ > /dev/null 2>&1; then
+              echo "✓ Server is ready"
+              exit 0
+            fi
+            echo "Attempt $i/10: Server not ready yet..."
+            sleep 2
+          done
+          echo "✗ Server failed to start"
+          cat server.log
+          exit 1
+
+      - name: Validate RSS feed XML structure
+        run: |
+          echo "Fetching RSS feed from http://localhost:8000/feed.xml"
+          curl -sf http://localhost:8000/feed.xml -o feed.xml
+
+          echo "Validating XML structure with xmllint..."
+          xmllint --noout feed.xml
+
+          echo "✓ RSS feed is valid XML"
+
+      - name: Check RSS required elements
+        run: |
+          echo "Checking for required RSS 2.0 elements..."
+
+          # Channel-level required elements
+          grep -q "<title>" feed.xml || (echo "✗ Missing <title>" && exit 1)
+          grep -q "<link>" feed.xml || (echo "✗ Missing <link>" && exit 1)
+          grep -q "<description>" feed.xml || (echo "✗ Missing <description>" && exit 1)
+
+          # Check for items
+          grep -q "<item>" feed.xml || (echo "✗ No <item> elements found" && exit 1)
+
+          echo "✓ All required RSS elements present"
+
+      - name: Validate RSS feed structure
+        run: |
+          echo "Checking RSS feed structure..."
+
+          # Check RSS version
+          grep -q 'rss version="2.0"' feed.xml || (echo "✗ Invalid RSS version" && exit 1)
+
+          # Check for proper namespaces
+          grep -q 'xmlns:atom="http://www.w3.org/2005/Atom"' feed.xml || (echo "⚠ Missing Atom namespace" && exit 0)
+
+          # Check for self-referencing link
+          grep -q 'atom:link.*rel="self"' feed.xml || (echo "⚠ Missing atom:link self reference" && exit 0)
+
+          echo "✓ RSS feed structure looks good"
+
+      - name: Count RSS feed items
+        run: |
+          ITEM_COUNT=$(grep -c "<item>" feed.xml || echo "0")
+          echo "📊 RSS feed contains $ITEM_COUNT items"
+
+          if [ "$ITEM_COUNT" -eq 0 ]; then
+            echo "⚠ Warning: RSS feed has no items"
+          else
+            echo "✓ RSS feed has content"
+          fi
+
+      - name: Validate sitemap.xml structure
+        run: |
+          echo "Fetching sitemap from http://localhost:8000/sitemap.xml"
+          curl -sf http://localhost:8000/sitemap.xml -o sitemap.xml
+
+          echo "Validating sitemap XML structure..."
+          xmllint --noout sitemap.xml
+
+          echo "✓ Sitemap is valid XML"
+
+      - name: Check sitemap required elements
+        run: |
+          echo "Checking sitemap structure..."
+
+          # Check for urlset element with proper namespace
+          grep -q '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' sitemap.xml || (echo "✗ Invalid sitemap namespace" && exit 1)
+
+          # Check for URL entries
+          grep -q "<loc>" sitemap.xml || (echo "✗ No <loc> elements found" && exit 1)
+
+          echo "✓ Sitemap structure is valid"
+
+      - name: Count sitemap URLs
+        run: |
+          URL_COUNT=$(grep -c "<loc>" sitemap.xml || echo "0")
+          echo "📊 Sitemap contains $URL_COUNT URLs"
+
+          if [ "$URL_COUNT" -eq 0 ]; then
+            echo "✗ Error: Sitemap has no URLs"
+            exit 1
+          else
+            echo "✓ Sitemap has content"
+          fi
+
+      - name: Upload feed artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: feed-artifacts
+          path: |
+            feed.xml
+            sitemap.xml
+            server.log
+          retention-days: 7
+
+      - name: Stop PHP server
+        if: always()
+        run: |
+          if [ -f .server.pid ]; then
+            echo "Stopping server with PID $(cat .server.pid)"
+            kill $(cat .server.pid) || true
+            rm .server.pid
+          fi
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "## ✓ Feed Validation Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ RSS feed XML is well-formed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ All required RSS elements present" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ Sitemap XML is well-formed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ Sitemap contains URLs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Feeds are ready for production! 🚀" >> $GITHUB_STEP_SUMMARY
