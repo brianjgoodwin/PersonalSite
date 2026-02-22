@@ -139,7 +139,7 @@ return [
         // Content Security Policy - Allows YouTube/Vimeo embeds
         'Content-Security-Policy' => implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline'",
+            "script-src 'self' 'unsafe-inline' https://scripts.simpleanalyticscdn.com",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: https:",
             "font-src 'self' data:",
