@@ -8,6 +8,9 @@
     <?= css('assets/css/index.css') ?>
     <?= js('assets/js/menu.js', ['defer' => true]) ?>
 
+    <!-- 100% privacy-first analytics -->
+    <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+
 </head>
 <?php
 // Determine the current section (top-level page) for theming
