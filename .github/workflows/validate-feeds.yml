@@ -175,4 +175,4 @@ jobs:
           echo "- ✓ Sitemap XML is well-formed" >> $GITHUB_STEP_SUMMARY
           echo "- ✓ Sitemap contains URLs" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Feeds are ready for production! 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "Feeds are ready for production!" >> $GITHUB_STEP_SUMMARY

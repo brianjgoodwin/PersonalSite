@@ -1,0 +1,33 @@
+# Lychee link checker configuration
+# Used by the check-links GitHub Actions workflow and for local development
+# Docs: https://lychee.cli.rs/usage/config/
+
+# Display
+verbose = "info"
+no_progress = true
+
+# Requests
+timeout = 30
+max_retries = 3
+max_concurrency = 8
+user_agent = "Mozilla/5.0 (compatible; lychee/0.18; +https://github.com/lycheeverse/lychee)"
+
+# Accept 429 (rate limited) — throttled is not broken
+accept = [200, 206, 429]
+
+# Exclusions
+# - LinkedIn blocks automated requests (returns 999)
+# - Simple Analytics CDN is a script URL, not navigable
+# - Panel routes are not public
+exclude = [
+    "^https://www\\.linkedin\\.com",
+    "^https://scripts\\.simpleanalyticscdn\\.com",
+    "^http://localhost:\\d+/panel",
+]
+
+include_mail = false
+
+# Remap production domain to localhost for local testing
+remap = [
+    "https://brianjgoodwin.net http://localhost:8000",
+]

@@ -1,0 +1,172 @@
+name: Check Links
+
+on:
+  push:
+    branches: [main, feature-testing]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-links:
+    name: Check Broken Links
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, dom, curl
+          coverage: none
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+      - name: Start PHP development server
+        run: |
+          php -S localhost:8000 kirby/router.php > server.log 2>&1 &
+          echo $! > .server.pid
+          echo "Server started with PID $(cat .server.pid)"
+
+      - name: Wait for server to be ready
+        run: |
+          echo "Waiting for server to start..."
+          for i in {1..10}; do
+            if curl -sf http://localhost:8000/ > /dev/null 2>&1; then
+              echo "Server is ready"
+              exit 0
+            fi
+            echo "Attempt $i/10: Server not ready yet..."
+            sleep 2
+          done
+          echo "Server failed to start"
+          cat server.log
+          exit 1
+
+      - name: Install lychee
+        run: |
+          curl -sSfL https://github.com/lycheeverse/lychee/releases/latest/download/lychee-x86_64-unknown-linux-gnu.tar.gz \
+            | tar xz -C /usr/local/bin
+          lychee --version
+
+      - name: Cache lychee results
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: lychee-cache-${{ github.sha }}
+          restore-keys: lychee-cache-
+
+      - name: Verify sitemap is accessible
+        run: |
+          echo "Fetching sitemap from local server..."
+          curl -sf http://localhost:8000/sitemap.xml -o sitemap-check.xml
+          URL_COUNT=$(grep -c "<loc>" sitemap-check.xml || echo "0")
+          echo "Sitemap contains $URL_COUNT URLs"
+          if [ "$URL_COUNT" -eq 0 ]; then
+            echo "Error: Sitemap has no URLs to check"
+            exit 1
+          fi
+          echo "sitemap_urls=$URL_COUNT" >> $GITHUB_ENV
+          rm sitemap-check.xml
+
+      - name: Check links
+        id: lychee
+        run: |
+          set +e
+          lychee \
+            --cache \
+            --max-cache-age 1d \
+            --format markdown \
+            --output lychee-report.md \
+            "http://localhost:8000/sitemap.xml"
+          LYCHEE_EXIT=$?
+          set -e
+
+          echo "exit_code=$LYCHEE_EXIT" >> $GITHUB_OUTPUT
+
+          if [ $LYCHEE_EXIT -eq 0 ]; then
+            echo "All links are valid"
+          else
+            echo "Lychee exited with code $LYCHEE_EXIT — see report for details"
+          fi
+
+      - name: Analyze results
+        id: analyze
+        if: steps.lychee.outputs.exit_code != '0'
+        run: |
+          echo "Analyzing link check results..."
+
+          INTERNAL_FAILURES=0
+          if grep -q "http://localhost:8000" lychee-report.md 2>/dev/null; then
+            INTERNAL_FAILURES=$(grep -c "http://localhost:8000" lychee-report.md || echo "0")
+          fi
+
+          echo "internal_failures=$INTERNAL_FAILURES" >> $GITHUB_OUTPUT
+
+          if [ "$INTERNAL_FAILURES" -gt 0 ]; then
+            echo "Found $INTERNAL_FAILURES internal broken link(s)"
+            echo "has_internal_failures=true" >> $GITHUB_OUTPUT
+          else
+            echo "No internal link failures — external issues only (non-blocking)"
+            echo "has_internal_failures=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Summary
+        if: always() && (steps.lychee.outcome == 'success' || steps.lychee.outcome == 'failure')
+        run: |
+          EXIT_CODE="${{ steps.lychee.outputs.exit_code }}"
+          HAS_INTERNAL="${{ steps.analyze.outputs.has_internal_failures }}"
+
+          if [ "$EXIT_CODE" = "0" ]; then
+            echo "## Link Check: All Clear" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "All links across ${{ env.sitemap_urls }} pages are valid." >> $GITHUB_STEP_SUMMARY
+          else
+            if [ "$HAS_INTERNAL" = "true" ]; then
+              echo "## Link Check: Internal Broken Links Found" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "## Link Check: External Issues Only (non-blocking)" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+            cat lychee-report.md >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Fail on internal broken links
+        if: steps.analyze.outputs.has_internal_failures == 'true'
+        run: |
+          echo "Failing: internal broken links detected."
+          echo "These are links within the site that returned errors."
+          exit 1
+
+      - name: Upload report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-check-report
+          path: |
+            lychee-report.md
+            server.log
+          retention-days: 7
+
+      - name: Stop PHP server
+        if: always()
+        run: |
+          if [ -f .server.pid ]; then
+            echo "Stopping server with PID $(cat .server.pid)"
+            kill $(cat .server.pid) || true
+            rm .server.pid
+          fi
