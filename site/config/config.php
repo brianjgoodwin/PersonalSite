@@ -57,10 +57,10 @@ return [
     'sitemap.ignore' => ['error', 'documentation'],
 
     // Page Caching - Improves performance by caching rendered pages
-    // DISABLED during inline-styles refactoring for immediate CSS updates
+    // Cache invalidation handled by site plugin (flushes on content changes)
     'cache' => [
         'pages' => [
-            'active' => false,
+            'active' => true,
             'ignore' => function ($page) {
                 try {
                     // Never cache panel or authenticated pages
