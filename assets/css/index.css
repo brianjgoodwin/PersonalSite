@@ -524,6 +524,9 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
 main:has(.site-main) {
     max-width: none;
     padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .site-main {
@@ -623,6 +626,7 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     overflow: hidden;
     background-color: #eae6dd12;
+    border: 1px solid #CBCBCB;
 }
 
 .art-container canvas {

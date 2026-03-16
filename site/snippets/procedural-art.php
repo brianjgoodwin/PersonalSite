@@ -6,8 +6,9 @@
  * Uses page URL as seed for consistency across visits
  *
  * Features:
- * - 3 simple geometric shapes per page
- * - Color from current section's theme (Apple Rainbow colors)
+ * - Grid-influenced composition with 15-40 shapes
+ * - Mix of circles and rotated squares
+ * - Theme color dominant (70%) with palette accents (30%)
  * - Page-seeded randomness (same art on each visit to same page)
  * - Height adapts to primary column content on desktop
  * - Fixed max-height (3X base-unit) on mobile
@@ -53,6 +54,18 @@ $seed = crc32($page->url());
 
   const themeColor = themeColors[section] || '#E03A3E';
 
+  // Shared color palette (for accents)
+  const palette = [
+    '#E03A3E',  // red
+    '#F5821F',  // orange
+    '#FDB827',  // yellow
+    '#009DDC',  // blue
+    '#61BB46',  // green
+    '#1a1a1a',  // black
+    '#f5f3ef',  // off-white
+    '#8a8578'   // gray
+  ];
+
   function resize() {
     const rect = canvas.parentElement.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -77,40 +90,76 @@ $seed = crc32($page->url());
   function draw(w, h) {
     const rand = mulberry32(seed);
 
-    // Background
-    ctx.fillStyle = '#dcdcdc78';
+    // Clear canvas
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, w, h);
 
-    // Draw 3 simple geometric shapes using theme color
-    for (let i = 0; i < 3; i++) {
-      const shapeType = Math.floor(rand() * 3);
-      const x = rand() * w;
-      const y = (rand() * 0.8 + 0.1 * i) * h; // Distribute vertically
-      const size = (rand() * 0.3 + 0.2) * Math.min(w, h);
+    // ============================================
+    // GENERATIVE ART - Grid-influenced composition
+    // ============================================
 
-      ctx.fillStyle = themeColor;
-      ctx.globalAlpha = rand() * 0.3 + 0.5; // Vary opacity (0.5-0.8)
+    // How many shapes (15–40)
+    const count = Math.floor(rand() * 26) + 15;
 
-      if (shapeType === 0) {
-        // Circle
+    // Optional grid influence (sometimes shapes cluster to a grid, sometimes fully free)
+    const useGrid = rand() > 0.5;
+    const gridCols = Math.floor(rand() * 4) + 3; // 3-6 columns
+    const gridRows = Math.ceil(gridCols * (h / w)); // Scale rows based on aspect ratio
+    const cellWidth = w / gridCols;
+    const cellHeight = h / gridRows;
+
+    for (let i = 0; i < count; i++) {
+      // Color selection - theme color dominant (70%), palette accents (30%)
+      let color;
+      if (rand() > 0.3) {
+        color = themeColor; // Red dominant
+      } else {
+        color = palette[Math.floor(rand() * palette.length)];
+      }
+
+      const alpha = 0.35 + rand() * 0.55; // 0.35 - 0.9
+      const isCircle = rand() > 0.45;
+
+      // Position: grid-influenced or free
+      let x, y;
+      if (useGrid) {
+        // Snap loosely to grid with jitter
+        const col = Math.floor(rand() * gridCols);
+        const row = Math.floor(rand() * gridRows);
+        x = col * cellWidth + cellWidth / 2 + (rand() - 0.5) * cellWidth * 0.6;
+        y = row * cellHeight + cellHeight / 2 + (rand() - 0.5) * cellHeight * 0.6;
+      } else {
+        x = rand() * w;
+        y = rand() * h;
+      }
+
+      // Size: 3% - 28% of canvas
+      const maxDim = w * 0.28;
+      const minDim = w * 0.03;
+      const size = minDim + rand() * (maxDim - minDim);
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+
+      if (isCircle) {
         ctx.beginPath();
         ctx.arc(x, y, size / 2, 0, Math.PI * 2);
         ctx.fill();
-      } else if (shapeType === 1) {
-        // Rectangle
-        ctx.fillRect(x - size / 2, y - size / 2, size, size);
       } else {
-        // Triangle
-        ctx.beginPath();
-        ctx.moveTo(x, y - size / 2);
-        ctx.lineTo(x + size / 2, y + size / 2);
-        ctx.lineTo(x - size / 2, y + size / 2);
-        ctx.closePath();
-        ctx.fill();
+        // Square with optional rotation
+        const rotation = rand() * Math.PI * 0.5;
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.fillRect(-size / 2, -size / 2, size, size);
       }
+
+      ctx.restore();
     }
 
-    ctx.globalAlpha = 1;
+    // ============================================
+    // END GENERATIVE ART CODE
+    // ============================================
   }
 
   window.addEventListener('resize', resize);
