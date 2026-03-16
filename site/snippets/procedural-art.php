@@ -29,7 +29,7 @@ $sectionSlug = $section->slug();
 $seed = crc32($page->url());
 ?>
 
-<div class="art-container" data-section="<?= $sectionSlug ?>" data-seed="<?= $seed ?>">
+<div class="art-container" data-section="<?= esc($sectionSlug, 'attr') ?>" data-seed="<?= esc($seed, 'attr') ?>">
   <canvas id="art-canvas"></canvas>
 </div>
 
@@ -66,6 +66,16 @@ $seed = crc32($page->url());
     '#8a8578'   // gray
   ];
 
+  // Simple seedable PRNG (mulberry32)
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
   function resize() {
     const rect = canvas.parentElement.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
@@ -75,16 +85,6 @@ $seed = crc32($page->url());
     canvas.style.width = rect.width + 'px';
     canvas.style.height = rect.height + 'px';
     draw(rect.width, rect.height);
-  }
-
-  // Simple seedable PRNG (mulberry32)
-  function mulberry32(a) {
-    return function () {
-      a |= 0; a = a + 0x6D2B79F5 | 0;
-      let t = Math.imul(a ^ a >>> 15, 1 | a);
-      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    };
   }
 
   function draw(w, h) {
@@ -162,7 +162,14 @@ $seed = crc32($page->url());
     // ============================================
   }
 
-  window.addEventListener('resize', resize);
-  requestAnimationFrame(resize);
+  // Throttle resize events to prevent performance issues
+  let resizeTimeout;
+  function throttledResize() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resize, 150);
+  }
+
+  window.addEventListener('resize', throttledResize);
+  resize(); // Initial render
 })();
 </script>
