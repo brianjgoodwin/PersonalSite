@@ -1,7 +1,18 @@
 title: Projects
 
-fields:
-  body:
-    label: Content
-    type: textarea
-    help: Projects content. Supports Markdown.
+icon: code
+
+sections:
+  fields:
+    type: fields
+    fields:
+      body:
+        label: Content
+        type: textarea
+        help: Projects content. Supports Markdown.
+
+  projects:
+    type: pages
+    headline: Projects
+    template: project
+    layout: list

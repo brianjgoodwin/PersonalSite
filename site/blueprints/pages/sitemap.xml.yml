@@ -1,5 +1,7 @@
 title: Sitemap
 
+icon: sitemap
+
 fields:
   info:
     type: info
