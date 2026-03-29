@@ -1,5 +1,7 @@
 title: Home
 
+icon: home
+
 fields:
   title:
     label: Page Title

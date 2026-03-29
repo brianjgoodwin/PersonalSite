@@ -1,13 +1,23 @@
 <?php
 
 /**
- * Site Plugin: Cache Invalidation
+ * Site Plugin
  *
- * Automatically clears the page cache when content changes
- * to ensure users always see the latest version.
+ * - Custom Panel Dashboard: Two-column layout with recent content sections
+ * - Cache Invalidation: Automatically clears page cache on content changes
+ *
+ * Note: Cache invalidation currently flushes entire cache on any change.
+ * Consider implementing selective invalidation for better performance on larger sites.
  */
 
-Kirby::plugin('brianardoin/cache-invalidation', [
+Kirby::plugin('brianjgoodwin/site', [
+
+    // Custom Site Blueprint
+    'blueprints' => [
+        'site' => __DIR__ . '/../../blueprints/site.php'
+    ],
+
+    // Cache Invalidation Hooks
     'hooks' => [
         // Clear cache when any page is updated
         'page.update:after' => function ($newPage, $oldPage) {
