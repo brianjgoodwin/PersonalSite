@@ -27,10 +27,15 @@ $sectionSlug = $section->slug();
 
 // Generate seed from page URL for consistency
 $seed = crc32($page->url());
+
+// Cache busting for procedural art JS
+$artJsPath = kirby()->root('assets') . '/js/snippets/procedural-art.js';
+$artJsVersion = file_exists($artJsPath) ? filemtime($artJsPath) : '1';
+$artJsUrl = url('assets/js/snippets/procedural-art.js') . '?v=' . $artJsVersion;
 ?>
 
 <div class="art-container" data-section="<?= esc($sectionSlug, 'attr') ?>" data-seed="<?= esc($seed, 'attr') ?>">
   <canvas id="art-canvas"></canvas>
 </div>
 
-<?= js('assets/js/snippets/procedural-art.js', ['defer' => true]) ?>
+<script defer src="<?= $artJsUrl ?>"></script>
