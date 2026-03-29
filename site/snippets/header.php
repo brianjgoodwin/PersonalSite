@@ -5,8 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $page->title()->html() ?> | <?= $site->title()->html() ?></title>
-    <?= css('assets/css/index.css') ?>
-    <?= js('assets/js/menu.js', ['defer' => true]) ?>
+    <?php
+    // Cache busting: use file modification time as version
+    $cssPath = kirby()->root('assets') . '/css/index.css';
+    $cssVersion = file_exists($cssPath) ? filemtime($cssPath) : '1';
+    $cssUrl = url('assets/css/index.css') . '?v=' . $cssVersion;
+
+    $menuJsPath = kirby()->root('assets') . '/js/menu.js';
+    $menuJsVersion = file_exists($menuJsPath) ? filemtime($menuJsPath) : '1';
+    $menuJsUrl = url('assets/js/menu.js') . '?v=' . $menuJsVersion;
+    ?>
+
+    <!-- Preload critical CSS for faster rendering -->
+    <link rel="preload" href="<?= $cssUrl ?>" as="style">
+
+    <!-- Versioned assets with automatic cache busting -->
+    <link href="<?= $cssUrl ?>" rel="stylesheet">
+    <script defer src="<?= $menuJsUrl ?>"></script>
 
     <!-- 100% privacy-first analytics -->
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>

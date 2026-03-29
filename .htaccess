@@ -90,7 +90,7 @@ ExpiresByType image/gif "access plus 1 year"
 ExpiresByType image/webp "access plus 1 year"
 ExpiresByType image/svg+xml "access plus 1 year"
 
-# CSS and JavaScript - 1 week
-ExpiresByType text/css "access plus 1 week"
-ExpiresByType application/javascript "access plus 1 week"
+# CSS and JavaScript - 1 year (safe with @auto cache busting)
+ExpiresByType text/css "access plus 1 year"
+ExpiresByType application/javascript "access plus 1 year"
 </IfModule>
