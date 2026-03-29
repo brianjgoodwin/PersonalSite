@@ -38,31 +38,9 @@ Several shows on [The Incomparable](https://www.theincomparable.com)
 
 ----
 
-Leftlinks: 
+secondaryBox: 
 
-----
-
-Rightlinks: 
-
-----
-
-Body:
-
-## Technology
-- [Daring Fireball](https://daringfireball.net)
-- [The Register](https://www.theregister.com)
-- [The Verge](https://www.theverge.com)
-
-## Not Technology
-- [Kottke.org](https://kottke.org)
-- [Sentiers](https://sentiers.media)
-- [McSweeny's](https://www.mcsweeneys.net)
-
-## Newletters I Enjoy
-- [On my Om](https://om.co) by [Om Malik](https://om.co/about/)
-- [Roden](https://craigmod.com/roden/) by [Craig Mod](https://craigmod.com/about/)
-- [She's a Beast](https://www.shesabeast.co) by [Casey Johnston](https://www.shesabeast.co/about/)
-- [Citation Needed](https://www.citationneeded.news) by [Molly White](https://www.citationneeded.news/about/)
+[RSS](https://en.wikipedia.org/wiki/RSS), or Really Simple Syndication, is a great way to keep up with news and information from around the internet. [NetNewWire](https://netnewswire.com) is my RSS reader of choice. I see it as a way to keep the flow information distributed rather than concentrating in the hands of a handful of social media companies.
 
 ----
 
