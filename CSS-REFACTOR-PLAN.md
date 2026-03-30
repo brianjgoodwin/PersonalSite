@@ -66,6 +66,97 @@ Currently have multiple conflicting `main` styles:
 
 ---
 
+## Phase 1: Concrete Implementation Steps
+
+**Estimated time:** 2-3 hours
+**Risk:** Low (verified unused code)
+**Total lines to delete:** ~580 lines
+**Remaining CSS:** ~690 lines (45% reduction)
+
+### Step 1.1: Verify Current System (5 minutes)
+- ✅ **VERIFIED**: Current templates use `.site-main` layout snippet
+- ✅ **VERIFIED**: No templates reference legacy layout classes
+- ✅ **VERIFIED**: No templates use color card variants (`.card-posts`, `.card-projects`, `.card-links`)
+
+### Step 1.2: Delete Legacy Home Layout (10 minutes)
+**Delete lines 724-884** (161 lines)
+- Remove `.home-layout` grid system (lines 734-740)
+- Remove `.home-intro` styles (lines 742-779)
+- Remove duplicate `.home-cards` styles specific to old layout (lines 747-754)
+- Remove `.visually-hidden` utility (lines 757-767) - check if used elsewhere first
+- Remove mobile layout overrides for home (lines 851-884)
+
+### Step 1.3: Delete Legacy About Layout (10 minutes)
+**Delete lines 887-960** (74 lines)
+- Remove `main:has(.about-layout)` override (lines 892-895)
+- Remove `.about-layout` grid system (lines 897-903)
+- Remove `.about-left` and `.about-right` column styles (lines 905-925)
+- Remove `.about-links` styles (lines 927-940)
+- Remove mobile layout overrides for about (lines 947-960)
+
+### Step 1.4: Delete Legacy Projects Layout (10 minutes)
+**Delete lines 963-1026** (64 lines)
+- Remove `main:has(.projects-layout)` override (lines 968-971)
+- Remove `.projects-layout` and `.projects-content` styles (lines 973-1000)
+- Remove breadcrumb override for projects (lines 1003-1005)
+- Remove mobile layout overrides for projects (lines 1013-1026)
+
+### Step 1.5: Delete Legacy Links Layout (10 minutes)
+**Delete lines 1029-1108** (80 lines)
+- Remove `main:has(.links-layout)` override (lines 1034-1037)
+- Remove `.links-layout`, `.links-intro`, `.links-columns` styles (lines 1039-1077)
+- Remove breadcrumb override for links (lines 1080-1082)
+- Remove mobile layout overrides for links (lines 1090-1108)
+
+### Step 1.6: Delete Legacy Posts/Article Layout (15 minutes)
+**Delete lines 1110-1270** (161 lines)
+- Remove `main:has(.posts-layout)` and `main:has(.article-layout)` overrides (lines 1116-1120)
+- Remove breadcrumb overrides for posts/articles (lines 1123-1126)
+- Remove `.posts-layout` and `.posts-content` styles (lines 1129-1180)
+- Remove `.article-layout` and `.article-content` styles (lines 1183-1225)
+- Remove `.back-link` styles (lines 1228-1240)
+- Remove mobile layout overrides for posts/articles (lines 1248-1270)
+
+### Step 1.7: Delete Unused Card Color Variants (5 minutes)
+**Delete lines 822-836** (15 lines)
+- Remove `.card-posts` background style
+- Remove `.card-projects` background style
+- Remove `.card-links` background style
+- **Note:** Base `.card` styles remain (lines 786-820)
+
+### Step 1.8: Clean Up Legacy Breadcrumb Rules (5 minutes)
+**Delete lines 367-379** (13 lines)
+- Remove breadcrumb padding for `.home-layout` and `.about-layout`
+- **Note:** Breadcrumb base styles remain (lines 323-364)
+
+### Step 1.9: Consolidate Main Element Styles (10 minutes)
+**Review and clean up:**
+- Keep base `main` styles at lines 127-133 (for fallback/default pages)
+- Keep `main:has(.site-main)` override at lines 536-542 (current system)
+- **Delete conflicting overrides** created by legacy layouts (already covered in steps above)
+
+### Step 1.10: Test & Verify (30-60 minutes)
+1. **Visual verification** - Check all pages in browser:
+   - Home page (/)
+   - About page (/about)
+   - Posts listing (/posts)
+   - Individual post (/posts/[slug])
+   - Projects page (/projects)
+   - Links page (/links)
+
+2. **Responsive testing** - Test at breakpoints:
+   - Mobile: < 768px
+   - Tablet: 768-1199px
+   - Desktop: ≥ 1200px
+
+3. **Verify no console errors** in browser DevTools
+
+4. **Measure success:**
+   - CSS file should be reduced by ~580 lines (from 1270 to ~690 lines)
+   - All pages render correctly with unified grid system
+
+---
+
 ## Phase 2: Fix Core Architecture
 **Priority:** High
 **Estimated Time:** 4-6 hours
