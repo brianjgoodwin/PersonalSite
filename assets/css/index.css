@@ -559,7 +559,6 @@ main:has(.site-main) {
         display: grid;
         grid-template-columns: var(--col-width) var(--col-width);
         column-gap: var(--col-gap);
-        gap: initial;
         padding: 0;
         padding-bottom: calc(var(--section-gap) * 0.25);
     }
