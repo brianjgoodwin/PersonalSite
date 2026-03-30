@@ -16,13 +16,15 @@
     --base-unit: 80px;          /* X — the spatial root */
     --base-font: 17px;          /* typographic root */
 
-    /* ---- LAYOUT (fluid responsive via clamp) ---- */
-    /* Fluidly scales from compact (1X) at 1120px to spacious (3X/1.5X) at 1560px */
-    --left-pad: clamp(calc(var(--base-unit) * 1), 10vw, calc(var(--base-unit) * 3));
-    --col-primary: calc(var(--base-unit) * 6);
-    --center-pad: clamp(calc(var(--base-unit) * 1), 5vw, calc(var(--base-unit) * 1.5));
-    --col-secondary: calc(var(--base-unit) * 6);
-    --min-right-pad: clamp(calc(var(--base-unit) * 1), 10vw, calc(var(--base-unit) * 3));
+    /* ---- LAYOUT (max-width container with proportional columns) ---- */
+    /* Column width - 6X base unit (480px) */
+    --col-width: calc(var(--base-unit) * 6);
+    /* Gap between columns - 0.5 × column width (240px) */
+    --col-gap: calc(var(--col-width) * 0.5);
+    /* Total content width - col + gap + col (1200px) */
+    --content-max-width: calc((var(--col-width) * 2) + var(--col-gap));
+    /* Padding for smaller screens */
+    --content-padding: calc(var(--base-unit) * 1);
 
     /* ---- VERTICAL RHYTHM ---- */
     --section-gap: calc(var(--base-unit) * 0.5);
@@ -77,13 +79,13 @@ body {
 
 .header {
   /* Removed position: relative to prevent stacking context issues */
-  display: flex;
-  flex-wrap: nowrap; /* Single-line layout */
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: var(--col-width) var(--col-width);
+  column-gap: var(--col-gap);
   align-items: center; /* Vertically center items */
   height: var(--header-height-mobile);
-  padding-left: var(--left-pad);
-  padding-right: var(--left-pad);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
 }
 
 .logo {
@@ -91,6 +93,8 @@ body {
     font-size: var(--font-lg);
     font-weight: bold;
     line-height: 1;
+    grid-column: 1;
+    justify-self: start; /* Align to LEFT edge of left column */
 }
 
 .menu {
@@ -98,6 +102,9 @@ body {
     font-size: var(--font-lg);
     font-weight: normal;
     line-height: 1;
+    grid-column: 2;
+    justify-self: end; /* Align to RIGHT edge of right column */
+    text-align: right; /* Also right-align the text inside */
 }
 
 menu {
@@ -156,10 +163,21 @@ ul, ol {
 }
 
 footer {
-    text-align: right;
     margin-top: auto;
     color: #666;
-    padding: 0 3rem 3rem 3rem; /* top right bottom left */
+    max-width: var(--content-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 3rem;
+    display: grid;
+    grid-template-columns: var(--col-width) var(--col-width);
+    column-gap: var(--col-gap);
+}
+
+footer > * {
+    grid-column: 2;
+    justify-self: end; /* Align to RIGHT edge of right column */
+    text-align: right; /* Also right-align text inside */
 }
 
 /* ============================================
@@ -392,8 +410,27 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
 /* Mobile: show hamburger, hide menu by default */
 @media (max-width: 1119px) {
     .header {
+        display: flex !important;
+        grid-template-columns: none;
+        column-gap: 0;
+        justify-content: space-between;
         padding-left: var(--mobile-pad);
         padding-right: var(--mobile-pad);
+    }
+
+    .logo {
+        grid-column: auto;
+        justify-self: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .menu {
+        grid-column: auto;
+        justify-self: auto;
+        text-align: left;
+        margin: 0;
+        padding: 0;
     }
 
     /* Show hamburger button */
@@ -404,6 +441,7 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
         width: 44px;
         height: 44px;
         padding: 0;
+        margin: 0;
         background: none;
         border: none;
         cursor: pointer;
@@ -472,14 +510,12 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
     }
 
     /* Increase touch target size for WCAG 2.5.5 (minimum 44×44px) */
-    .menu a,
-    .logo {
+    .menu a {
         padding: 0.65rem 0.75rem;
     }
 
     /* Maintain proper padding for active navigation on mobile */
-    .menu a[aria-current="page"],
-    .logo[aria-current="page"] {
+    .menu a[aria-current="page"] {
         padding: 0.65rem 0.75rem;
     }
 }
@@ -493,7 +529,7 @@ main:has(.about-layout) nav[aria-label="breadcrumb"] {
 
 /* ============================================
    UNIFIED GRID LAYOUT
-   Relational two-column system for all pages
+   Max-width container with proportional two-column grid
    ============================================ */
 
 /* Override main element constraints for unified grid */
@@ -507,23 +543,21 @@ main:has(.site-main) {
 
 .site-main {
     flex: 1;
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding-bottom: calc(var(--section-gap) * 0.25);
     display: grid;
-    grid-template-columns:
-        var(--left-pad)
-        var(--col-primary)
-        var(--center-pad)
-        var(--col-secondary)
-        minmax(var(--min-right-pad), 1fr);
-    grid-template-rows: minmax(0, 1fr); /* Allow row to grow and fill viewport */
-    /* padding-top: calc(var(--section-gap) * 0.5); */
-     padding-bottom: calc(var(--section-gap) * 0.25);
+    grid-template-columns: var(--col-width) var(--col-width);
+    column-gap: var(--col-gap);
 }
 
-.col-left-pad { grid-column: 1; }
-.col-primary { grid-column: 2; }
-.col-center-pad { grid-column: 3; }
-.col-secondary { grid-column: 4; }
-.col-right-pad { grid-column: 5; }
+.col-primary {
+    grid-column: 1;
+}
+
+.col-secondary {
+    grid-column: 2;
+}
 
 /* Typography — Serif for headings, sans for body */
 h1, h2, h3, h4, h5, h6 {
@@ -619,8 +653,29 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 
+/* Add padding on screens smaller than content + breathing room */
+@media (max-width: 1279px) {
+    .header,
+    footer {
+        padding-left: var(--content-padding);
+        padding-right: var(--content-padding);
+    }
+}
+
 /* Mobile — Stack below 1120px */
 @media (max-width: 1119px) {
+    footer {
+        display: block;
+        padding-left: var(--mobile-pad);
+        padding-right: var(--mobile-pad);
+        text-align: right;
+    }
+
+    footer > * {
+        grid-column: auto;
+        justify-self: auto;
+    }
+
     .site-main {
         display: flex;
         flex-direction: column;
@@ -628,13 +683,10 @@ h1, h2, h3, h4, h5, h6 {
         gap: var(--section-gap);
     }
 
-    .col-left-pad,
-    .col-center-pad,
-    .col-right-pad {
-        display: none;
+    .col-primary {
+        order: 1;
     }
 
-    .col-primary { order: 1; }
     .col-secondary {
         order: 2;
         flex: 0 0 auto; /* Don't grow on mobile */

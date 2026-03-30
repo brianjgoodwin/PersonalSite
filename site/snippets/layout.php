@@ -25,8 +25,6 @@ $secondary = $secondary ?? null;
 ?>
 
 <div class="site-main">
-  <div class="col-left-pad"></div>
-
   <div class="col-primary">
     <?php if ($showBreadcrumb): ?>
       <?php snippet('breadcrumb') ?>
@@ -37,8 +35,6 @@ $secondary = $secondary ?? null;
     <?php endif ?>
   </div>
 
-  <div class="col-center-pad"></div>
-
   <?php if ($secondary): ?>
   <aside class="col-secondary">
     <?php if (is_callable($secondary)): ?>
@@ -46,6 +42,4 @@ $secondary = $secondary ?? null;
     <?php endif ?>
   </aside>
   <?php endif ?>
-
-  <div class="col-right-pad"></div>
 </div>
