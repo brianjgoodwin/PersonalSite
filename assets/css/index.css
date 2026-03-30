@@ -546,9 +546,22 @@ main:has(.site-main) {
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding-bottom: calc(var(--section-gap) * 0.25);
-    display: grid;
-    grid-template-columns: var(--col-width) var(--col-width);
-    column-gap: var(--col-gap);
+    /* Default: stack columns vertically for narrow viewports */
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap);
+    padding: var(--content-padding);
+}
+
+/* Enable grid only when viewport is wide enough for 1200px content */
+@media (min-width: 1200px) {
+    .site-main {
+        display: grid;
+        grid-template-columns: var(--col-width) var(--col-width);
+        column-gap: var(--col-gap);
+        padding: 0;
+        padding-bottom: calc(var(--section-gap) * 0.25);
+    }
 }
 
 .col-primary {
