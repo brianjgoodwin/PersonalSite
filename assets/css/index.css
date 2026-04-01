@@ -16,23 +16,21 @@
     --base-unit: 80px;          /* X — the spatial root */
     --base-font: 17px;          /* typographic root */
 
-    /* ---- LAYOUT (max-width container with proportional columns) ---- */
-    /* Column width - 6X base unit (480px) */
-    --col-width: calc(var(--base-unit) * 6);
-    /* Gap between columns - 0.5 × column width (240px) */
-    --col-gap: calc(var(--col-width) * 0.5);
-    /* Total content width - col + gap + col (1200px) */
-    --content-max-width: calc((var(--col-width) * 2) + var(--col-gap));
+    /* ---- LAYOUT (fluid grid with proportional columns) ---- */
     /* Padding for smaller screens */
     --content-padding: calc(var(--base-unit) * 1);
+    /* Column width - scales from iPad to desktop, accounting for padding */
+    --col-width: clamp(280px, calc((100vw - (var(--content-padding) * 2)) * 0.4), 480px);
+    /* Gap between columns - starts at 68px (2× horizontal padding at 768px), grows to 0.5× column width at 1280px+ */
+    --col-gap: clamp(68px, calc(30.5vw - 166px), calc(var(--col-width) * 0.5));
+    /* Total content width - col + gap + col (fluid: fits within viewport with padding) */
+    --content-max-width: calc((var(--col-width) * 2) + var(--col-gap));
 
     /* ---- VERTICAL RHYTHM ---- */
     --section-gap: calc(var(--base-unit) * 0.5);
 
-    /* ---- HEADER HEIGHTS (responsive) ---- */
-    --header-height-mobile: var(--base-unit);           /* 1X = 80px */
-    --header-height-tablet: calc(var(--base-unit) * 1.5); /* 1.5X = 120px */
-    --header-height-desktop: calc(var(--base-unit) * 2); /* 2X = 160px */
+    /* ---- HEADER PADDING (responsive) ---- */
+    --header-padding: var(--mobile-pad);  /* 28px top/bottom padding */
 
     /* ---- TYPOGRAPHY (relational) ---- */
     --ff-display: Georgia, 'Times New Roman', serif;
@@ -78,14 +76,15 @@ body {
 }
 
 .header {
-  /* Removed position: relative to prevent stacking context issues */
+  position: relative; /* For absolute positioning of mobile menu */
   display: grid;
   grid-template-columns: var(--col-width) var(--col-width);
   column-gap: var(--col-gap);
-  align-items: center; /* Vertically center items */
-  height: var(--header-height-mobile);
+  align-items: baseline; /* Align text baselines */
   max-width: var(--content-max-width);
   margin: 0 auto;
+  padding-top: var(--header-padding);
+  padding-bottom: var(--header-padding);
 }
 
 .logo {
@@ -265,10 +264,10 @@ select:focus-visible {
     border-right: 6px solid transparent;
 }
 
-/* Theme color stripe for each section (except home) */
+/* Theme color stripe for each section */
 [data-section="home"] .logo[aria-current="page"],
 [data-section="home"] .menu a[aria-current="page"] {
-    border-right: none;
+    border-right-color: var(--color-home);
 }
 
 [data-section="about"] .logo[aria-current="page"],
@@ -300,19 +299,6 @@ select:focus-visible {
     box-shadow: 0 0 0 5px #000; /* Black stroke around the white outline */
 }
 
-/* 3D parallellogram effect using pseudo-element - HOME ONLY */
-/* Using ::before instead of ::after and positioning behind with transform */
-[data-section="home"] .menu a[aria-current="page"]::before,
-[data-section="home"] .logo[aria-current="page"]::before {
-    content: '';
-    position: absolute;
-    top: 6px;
-    left: -6px;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-color: var(--color-home);
-}
 
 /* ============================================
    BREADCRUMB NAVIGATION
@@ -344,7 +330,7 @@ nav[aria-label="breadcrumb"] li {
 nav[aria-label="breadcrumb"] li:not(:last-child)::after {
     content: " / ";
     margin: 0 0.5rem;
-    color: #999;
+    color: #767676; /* 4.54:1 contrast ratio - WCAG AA compliant */
 }
 
 /* Links in breadcrumb */
@@ -364,25 +350,6 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
 }
 
 /* ============================================
-   HEADER RESPONSIVE HEIGHTS
-   1X mobile, 1.5X tablet, 2X desktop
-   ============================================ */
-
-/* Tablet: 1120px - 1560px */
-@media (min-width: 1120px) {
-    .header {
-        height: var(--header-height-tablet);
-    }
-}
-
-/* Desktop: 1560px+ */
-@media (min-width: 1560px) {
-    .header {
-        height: var(--header-height-desktop);
-    }
-}
-
-/* ============================================
    MOBILE NAVIGATION MENU
    Hamburger menu with slide-in behavior
    ============================================ */
@@ -393,24 +360,32 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
 }
 
 /* Mobile: show hamburger, hide menu by default */
-@media (max-width: 1119px) {
+@media (max-width: 767px) {
     .header {
         display: flex !important;
         grid-template-columns: none;
         column-gap: 0;
         justify-content: space-between;
+        align-items: baseline; /* Align text baselines */
+        /* Remove max-width constraint - span full viewport on mobile */
+        max-width: none;
+        margin: 0;
+        /* Add padding for edge spacing */
         padding-left: var(--mobile-pad);
         padding-right: var(--mobile-pad);
     }
 
     .logo {
+        /* Reset grid properties */
         grid-column: auto;
         justify-self: auto;
-        margin: 0;
+        /* Remove all padding and margins - header provides edge spacing */
         padding: 0;
+        margin: 0;
     }
 
     .menu {
+        /* Reset grid properties */
         grid-column: auto;
         justify-self: auto;
         text-align: left;
@@ -425,6 +400,7 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
         justify-content: center;
         width: 44px;
         height: 44px;
+        /* Remove all padding and margins - let flexbox handle positioning */
         padding: 0;
         margin: 0;
         background: none;
@@ -464,19 +440,22 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
     /* Hide menu by default on mobile */
     .menu {
         position: absolute;
-        top: var(--header-height-mobile);
+        top: 100%; /* Position below header, regardless of its height */
         left: 0;
         right: 0;
         background-color: #fff;
         border-bottom: 2px solid #000;
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.3s ease;
+        visibility: hidden;
+        transition: max-height 0.3s ease, visibility 0s 0.3s;
     }
 
     /* Show menu when expanded */
     .menu[aria-hidden="false"] {
         max-height: 400px; /* Large enough for all menu items */
+        visibility: visible;
+        transition: max-height 0.3s ease, visibility 0s 0s; /* Immediate visibility when showing */
     }
 
     /* Stack menu items vertically */
@@ -527,7 +506,6 @@ main:has(.site-main) {
 }
 
 .site-main {
-    flex: 1;
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding-bottom: calc(var(--section-gap) * 0.25);
@@ -535,17 +513,14 @@ main:has(.site-main) {
     display: flex;
     flex-direction: column;
     gap: var(--section-gap);
-    padding: var(--content-padding);
 }
 
-/* Enable grid only when viewport is wide enough for 1200px content */
-@media (min-width: 1200px) {
+/* Enable two-column grid at tablet/iPad width and above */
+@media (min-width: 768px) {
     .site-main {
         display: grid;
         grid-template-columns: var(--col-width) var(--col-width);
         column-gap: var(--col-gap);
-        padding: 0;
-        padding-bottom: calc(var(--section-gap) * 0.25);
     }
 }
 
@@ -651,19 +626,13 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0;
 }
 
-/* Add padding on screens smaller than content + breathing room */
-@media (max-width: 1279px) {
-    .header,
-    footer {
-        padding-left: var(--content-padding);
-        padding-right: var(--content-padding);
-    }
-}
-
-/* Mobile — Stack below 1120px */
-@media (max-width: 1119px) {
+/* Mobile — Stack below 768px */
+@media (max-width: 767px) {
     footer {
         display: block;
+        /* Remove max-width constraint - span full viewport on mobile */
+        max-width: none;
+        margin: 0;
         padding-left: var(--mobile-pad);
         padding-right: var(--mobile-pad);
         text-align: right;
@@ -677,6 +646,9 @@ h1, h2, h3, h4, h5, h6 {
     .site-main {
         display: flex;
         flex-direction: column;
+        /* Remove max-width constraint - span full viewport on mobile */
+        max-width: none;
+        margin: 0;
         padding: var(--mobile-pad);
         gap: var(--section-gap);
     }
@@ -705,8 +677,9 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* Visually hidden heading for screen readers */
-.visually-hidden {
+/* Visually hidden content for screen readers */
+.visually-hidden,
+.sr-only {
     position: absolute;
     width: 1px;
     height: 1px;
