@@ -44,6 +44,9 @@ $sectionSlug = $section->slug();
     <!-- Skip link - first focusable element for keyboard users -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
+    <!-- Live region for screen reader announcements -->
+    <div aria-live="polite" aria-atomic="true" class="sr-only" id="menu-status"></div>
+
     <header class="header">
         <a class="logo" href="<?= $site->url() ?>" <?= $page->isHomePage() ? 'aria-current="page"' : '' ?>><?= $site->title()->html() ?></a>
 
