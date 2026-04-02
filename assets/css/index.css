@@ -999,5 +999,78 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+/* ============================================
+   RELATED POSTS SECTION
+   Display posts linked to a project
+   ============================================ */
+
+.related-posts {
+    margin-top: calc(var(--base-unit) * 0.8);
+    padding-top: calc(var(--base-unit) * 0.6);
+    border-top: 2px solid #e0e0e0;
+}
+
+.related-posts h2 {
+    font-family: var(--ff-display);
+    font-size: var(--font-lg);
+    margin-bottom: calc(var(--base-unit) * 0.4);
+    line-height: 1.15;
+}
+
+.related-posts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--base-unit) * 0.3);
+}
+
+.related-post-card {
+    padding: calc(var(--base-unit) * 0.25);
+    border: 2px solid #e0e0e0;
+    background-color: white;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.related-post-card:hover {
+    border-color: #000;
+    background-color: #fafafa;
+}
+
+.related-post-title {
+    font-family: var(--ff-display);
+    font-size: var(--font-lg);
+    font-weight: bold;
+    margin: 0 0 calc(var(--base-unit) * 0.1) 0;
+    line-height: 1.2;
+}
+
+.related-post-title a {
+    text-decoration: none;
+    color: #000;
+}
+
+.related-post-title a:hover {
+    text-decoration: underline;
+}
+
+.related-post-date {
+    display: block;
+    font-size: var(--font-sm);
+    color: #666;
+    margin-bottom: calc(var(--base-unit) * 0.15);
+}
+
+.related-post-excerpt {
+    margin: 0;
+    line-height: var(--leading);
+    color: #333;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .related-post-card {
+        transition: none;
+    }
+}
+
 
 
