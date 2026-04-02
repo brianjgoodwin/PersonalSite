@@ -14,6 +14,16 @@
     $menuJsPath = kirby()->root('assets') . '/js/menu.js';
     $menuJsVersion = file_exists($menuJsPath) ? filemtime($menuJsPath) : '1';
     $menuJsUrl = url('assets/js/menu.js') . '?v=' . $menuJsVersion;
+
+    $breadcrumbJsPath = kirby()->root('assets') . '/js/breadcrumb-nav.js';
+    $breadcrumbJsVersion = file_exists($breadcrumbJsPath) ? filemtime($breadcrumbJsPath) : '1';
+    $breadcrumbJsUrl = url('assets/js/breadcrumb-nav.js') . '?v=' . $breadcrumbJsVersion;
+
+    // Gallery JavaScript (only load on project pages)
+    $galleryJsPath = kirby()->root('assets') . '/js/gallery.js';
+    $galleryJsVersion = file_exists($galleryJsPath) ? filemtime($galleryJsPath) : '1';
+    $galleryJsUrl = url('assets/js/gallery.js') . '?v=' . $galleryJsVersion;
+    $isProjectPage = $page->intendedTemplate()->name() === 'project';
     ?>
 
     <!-- Preload critical CSS for faster rendering -->
@@ -22,6 +32,10 @@
     <!-- Versioned assets with automatic cache busting -->
     <link href="<?= $cssUrl ?>" rel="stylesheet">
     <script defer src="<?= $menuJsUrl ?>"></script>
+    <script defer src="<?= $breadcrumbJsUrl ?>"></script>
+    <?php if ($isProjectPage): ?>
+    <script defer src="<?= $galleryJsUrl ?>"></script>
+    <?php endif ?>
 
     <!-- 100% privacy-first analytics -->
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>

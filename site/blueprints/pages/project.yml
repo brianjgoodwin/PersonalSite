@@ -23,12 +23,29 @@ columns:
             label: Body
             type: textarea
             size: huge
+
+      gallery:
+        type: files
+        headline: Gallery Images
+        layout: cards
+        template: gallery-image
+        uploads:
+          template: gallery-image
+        help: Upload images for horizontal scrolling gallery. Images display in order uploaded.
+
   sidebar:
     width: 1/3
     sections:
+      meta:
+        type: fields
+        fields:
+          coverImage:
+            label: Cover Image
+            type: files
+            max: 1
+            help: Square image for project card thumbnail (120×120px recommended)
+
       pages:
         type: pages
         template: project
-      files:
-        type: files
 
