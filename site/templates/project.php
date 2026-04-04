@@ -2,7 +2,10 @@
 
 <?php
 // Get layout option from blueprint (defaults to two-column)
-$layout = $page->layout()->isNotEmpty() ? $page->layout()->value() : 'two-column';
+$layout = $page->layout()->or('two-column')->value();
+// Whitelist allowed values to prevent XSS
+$allowedLayouts = ['two-column', 'one-column'];
+$layout = in_array($layout, $allowedLayouts, true) ? $layout : 'two-column';
 $layoutClass = 'layout-' . $layout;
 ?>
 

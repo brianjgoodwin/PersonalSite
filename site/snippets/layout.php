@@ -26,7 +26,7 @@ $secondary = $secondary ?? null;
 $layoutClass = $layoutClass ?? '';
 ?>
 
-<div class="site-main <?= $layoutClass ?>">
+<div class="site-main <?= esc($layoutClass, 'attr') ?>">
   <div class="col-primary">
     <?php if ($showBreadcrumb): ?>
       <?php snippet('breadcrumb') ?>

@@ -1138,11 +1138,6 @@ h1, h2, h3, h4, h5, h6 {
         max-width: none;
         padding: var(--mobile-pad);
     }
-
-    .site-main.layout-one-column .gallery {
-        margin-left: calc(var(--mobile-pad) * -1);
-        margin-right: calc(var(--mobile-pad) * -1);
-    }
 }
 
 
