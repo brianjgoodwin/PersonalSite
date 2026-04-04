@@ -10,6 +10,29 @@
     const PRIVACY_PATH = '/privacy';
 
     /**
+     * Sanitize text content to prevent any potential XSS
+     * Strips HTML tags and limits length
+     */
+    const sanitizeText = (text) => {
+        if (!text || typeof text !== 'string') return '';
+        // Remove any HTML tags and trim whitespace
+        const stripped = text.replace(/<[^>]*>/g, '').trim();
+        // Limit length to reasonable breadcrumb size
+        return stripped.substring(0, 100);
+    };
+
+    /**
+     * Validate that path is a safe internal path
+     */
+    const isValidPath = (path) => {
+        if (!path || typeof path !== 'string') return false;
+        // Must start with / and not contain dangerous characters
+        return path.startsWith('/') &&
+               !/[<>'"\\]/.test(path) &&
+               path.length < 200;
+    };
+
+    /**
      * Store current page info before navigating away
      */
     const trackNavigation = () => {
@@ -22,16 +45,22 @@
                 // Don't track if it's the same page
                 if (link.pathname === window.location.pathname) return;
 
-                // Store current page information
-                const currentPageData = {
-                    path: window.location.pathname,
-                    title: document.querySelector('.col-primary h1')?.textContent ||
-                           document.querySelector('h1')?.textContent ||
-                           document.title.split('|')[0].trim(),
-                    timestamp: Date.now()
-                };
+                // Get raw data from DOM
+                const rawPath = window.location.pathname;
+                const rawTitle = document.querySelector('.col-primary h1')?.textContent ||
+                                 document.querySelector('h1')?.textContent ||
+                                 document.title.split('|')[0].trim();
 
-                sessionStorage.setItem(STORAGE_KEY, JSON.stringify(currentPageData));
+                // Only store if path and title are valid
+                if (isValidPath(rawPath) && rawTitle) {
+                    const currentPageData = {
+                        path: rawPath,
+                        title: sanitizeText(rawTitle),
+                        timestamp: Date.now()
+                    };
+
+                    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(currentPageData));
+                }
             });
         });
     };
@@ -61,6 +90,11 @@
             const breadcrumbList = breadcrumbNav.querySelector('ol');
             const breadcrumbItems = breadcrumbList.querySelectorAll('li');
 
+            // Validate and sanitize data before use
+            if (!isValidPath(referrerData.path) || !referrerData.title) {
+                return; // Invalid data, don't update breadcrumb
+            }
+
             // Privacy page should show: Home / [Referrer] / Privacy
             if (breadcrumbItems.length >= 2) {
                 const firstCrumb = breadcrumbItems[0];
@@ -71,7 +105,7 @@
                     const referrerCrumb = document.createElement('li');
                     const referrerLink = document.createElement('a');
                     referrerLink.href = referrerData.path;
-                    referrerLink.textContent = referrerData.title;
+                    referrerLink.textContent = sanitizeText(referrerData.title);
                     referrerCrumb.appendChild(referrerLink);
 
                     // Insert referrer breadcrumb between Home and Privacy
