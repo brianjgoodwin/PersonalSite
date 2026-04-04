@@ -1,0 +1,33 @@
+Title: Jot - Text Editor
+
+----
+
+Breadcrumbtitle: 
+
+----
+
+Body: **Jot - Test Editor** is simple, macOS text editor.
+
+----
+
+Layout: two-column
+
+----
+
+Sidebarenabled: false
+
+----
+
+Sidebarcontent: 
+
+----
+
+Coverimage: 
+
+----
+
+Uuid: hnsqaw4igb53mjif
+
+----
+
+Lock: hiZUhZxs
