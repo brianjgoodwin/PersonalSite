@@ -14,6 +14,7 @@
  *       // Secondary column content (optional)
  *     },
  *     'showBreadcrumb' => true,
+ *     'layoutClass' => 'layout-one-column', // Optional layout modifier class
  *   ])
  *
  * If no secondary column is provided, primary column will span full width
@@ -22,9 +23,10 @@
 $showBreadcrumb = $showBreadcrumb ?? false;
 $primary = $primary ?? null;
 $secondary = $secondary ?? null;
+$layoutClass = $layoutClass ?? '';
 ?>
 
-<div class="site-main">
+<div class="site-main <?= esc($layoutClass, 'attr') ?>">
   <div class="col-primary">
     <?php if ($showBreadcrumb): ?>
       <?php snippet('breadcrumb') ?>

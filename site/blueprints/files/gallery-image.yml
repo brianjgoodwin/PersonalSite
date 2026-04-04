@@ -1,0 +1,36 @@
+title: Gallery Image
+
+accept:
+  mime: image/jpeg, image/png, image/gif, image/svg+xml, image/webp
+  maxsize: 10000000  # 10MB max file size (larger for high-res gallery images)
+
+columns:
+  main:
+    width: 2/3
+    fields:
+      info:
+        type: info
+        text: |
+          Use the breadcrumb navigation above to return to the project page.
+
+      alt:
+        label: Alt Text
+        type: text
+        required: true
+        help: Describe the image for accessibility (required for screen readers)
+
+      caption:
+        label: Caption
+        type: textarea
+        size: small
+        help: Optional caption displayed below image in expanded view
+
+  sidebar:
+    width: 1/3
+    fields:
+      preview:
+        type: info
+        text: |
+          **Image Preview**
+
+          The preview appears here in the Panel sidebar.

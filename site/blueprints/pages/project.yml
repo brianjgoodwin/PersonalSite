@@ -23,12 +23,57 @@ columns:
             label: Body
             type: textarea
             size: huge
+
+      gallery:
+        type: files
+        headline: Gallery Images
+        layout: cards
+        template: gallery-image
+        uploads:
+          template: gallery-image
+        help: Upload images for horizontal scrolling gallery. Images display in order uploaded.
+
   sidebar:
     width: 1/3
     sections:
+      meta:
+        type: fields
+        fields:
+          layout:
+            label: Page Layout
+            type: select
+            options:
+              two-column: Two-Column (Standard)
+              one-column: One-Column (Article Style)
+            default: two-column
+            help: Choose layout style for this project page
+            width: 1/1
+
+          sidebarEnabled:
+            label: Show Sidebar Box
+            type: toggle
+            default: false
+            help: Display optional sidebar box (two-column layout only)
+            when:
+              layout: two-column
+            width: 1/2
+
+          sidebarContent:
+            label: Sidebar Box Content
+            type: textarea
+            size: medium
+            help: Content for the sidebar box (supports Kirbytext)
+            when:
+              sidebarEnabled: true
+            width: 1/1
+
+          coverImage:
+            label: Cover Image
+            type: files
+            max: 1
+            help: Square image for project card thumbnail (120×120px recommended)
+
       pages:
         type: pages
         template: project
-      files:
-        type: files
 

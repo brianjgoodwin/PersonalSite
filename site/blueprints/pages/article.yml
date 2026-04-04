@@ -53,3 +53,12 @@ columns:
             label: Breadcrumb Title
             type: text
             help: Optional - how this appears in breadcrumbs (defaults to page title)
+
+          relatedProject:
+            label: Related Project
+            type: select
+            options: query
+            query: site.find("projects").children
+            default: ""
+            empty: None (not linked to a project)
+            help: Optional - link this post to a project. It will appear in the project's "Related Posts" section.
