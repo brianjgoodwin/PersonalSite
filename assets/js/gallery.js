@@ -62,6 +62,7 @@
         </button>
         <img src="" alt="">
         <div class="gallery-modal-caption"></div>
+        <div class="sr-only" aria-live="polite" aria-atomic="true"></div>
       </div>
     `;
 
@@ -72,12 +73,20 @@
     let currentIndex = startIndex;
     const modalImg = modal.querySelector('img');
     const modalCaption = modal.querySelector('.gallery-modal-caption');
+    const liveRegion = modal.querySelector('[aria-live]');
     const closeBtn = modal.querySelector('.gallery-close');
     const prevBtn = modal.querySelector('.gallery-prev');
     const nextBtn = modal.querySelector('.gallery-next');
 
     // Store the element that opened the modal for focus restoration
     const triggerElement = items[currentIndex];
+
+    // Get all focusable elements in modal for focus trap
+    const focusableElements = modal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
 
     // Show modal
     modal.setAttribute('aria-hidden', 'false');
@@ -115,6 +124,12 @@
       // Update button states
       prevBtn.disabled = currentIndex === 0;
       nextBtn.disabled = currentIndex === items.length - 1;
+
+      // Announce image position to screen readers
+      if (liveRegion) {
+        const announcement = `Image ${currentIndex + 1} of ${items.length}`;
+        liveRegion.textContent = announcement;
+      }
     }
 
     function showPrev() {
@@ -154,6 +169,24 @@
     }
 
     function handleKeydown(e) {
+      // Focus trap
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          // Shift + Tab
+          if (document.activeElement === firstFocusable) {
+            lastFocusable.focus();
+            e.preventDefault();
+          }
+        } else {
+          // Tab
+          if (document.activeElement === lastFocusable) {
+            firstFocusable.focus();
+            e.preventDefault();
+          }
+        }
+      }
+
+      // Navigation
       switch(e.key) {
         case 'Escape':
           closeModal();

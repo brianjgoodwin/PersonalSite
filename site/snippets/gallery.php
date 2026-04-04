@@ -13,13 +13,12 @@ if ($images->count() === 0) return;
 ?>
 
 <div class="gallery">
-  <div class="gallery-scroll" role="region" aria-label="Image gallery">
+  <div class="gallery-scroll" role="region" aria-label="Image gallery (<?= $images->count() ?> images)">
     <?php foreach ($images as $image): ?>
       <button
         class="gallery-item"
         type="button"
         aria-label="View larger: <?= $image->alt()->or($image->filename())->html() ?>"
-        tabindex="0"
       >
         <img
           src="<?= $image->url() ?>"

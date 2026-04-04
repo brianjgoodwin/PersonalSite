@@ -44,17 +44,19 @@ $layoutClass = 'layout-' . $layout;
           <div class="related-posts-grid">
             <?php foreach ($relatedPosts as $post): ?>
               <article class="related-post-card">
-                <h3 class="related-post-title">
-                  <a href="<?= $post->url() ?>"><?= $post->title()->html() ?></a>
-                </h3>
-                <time class="related-post-date" datetime="<?= $post->date()->toDate('c') ?>">
-                  <?= $post->date()->toDate('F j, Y') ?>
-                </time>
-                <?php if ($post->excerpt()->isNotEmpty()): ?>
-                  <p class="related-post-excerpt"><?= $post->excerpt()->html() ?></p>
-                <?php else: ?>
-                  <p class="related-post-excerpt"><?= $post->body()->excerpt(150) ?></p>
-                <?php endif ?>
+                <a href="<?= $post->url() ?>" class="related-post-card-link">
+                  <h3 class="related-post-title">
+                    <?= $post->title()->html() ?>
+                  </h3>
+                  <time class="related-post-date" datetime="<?= $post->date()->toDate('c') ?>">
+                    <?= $post->date()->toDate('F j, Y') ?>
+                  </time>
+                  <?php if ($post->excerpt()->isNotEmpty()): ?>
+                    <p class="related-post-excerpt"><?= $post->excerpt()->html() ?></p>
+                  <?php else: ?>
+                    <p class="related-post-excerpt"><?= $post->body()->excerpt(150) ?></p>
+                  <?php endif ?>
+                </a>
               </article>
             <?php endforeach ?>
           </div>
@@ -74,9 +76,9 @@ $layoutClass = 'layout-' . $layout;
         $page->sidebarEnabled()->toBool() &&
         $page->sidebarContent()->isNotEmpty()):
     ?>
-      <div class="sidebar-box">
+      <aside class="sidebar-box" aria-label="Project information">
         <?= $page->sidebarContent()->kirbytext() ?>
-      </div>
+      </aside>
     <?php endif ?>
 
     <?php snippet('procedural-art') ?>
