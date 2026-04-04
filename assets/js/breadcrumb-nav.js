@@ -49,7 +49,7 @@
             // Only track internal links (same origin)
             if (link.origin !== window.location.origin) return;
 
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function() {
                 // Don't track if it's the same page
                 if (link.pathname === window.location.pathname) return;
 
