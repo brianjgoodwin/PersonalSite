@@ -1,7 +1,14 @@
 <?php snippet('header') ?>
 
+<?php
+// Get layout option from blueprint (defaults to two-column)
+$layout = $page->layout()->isNotEmpty() ? $page->layout()->value() : 'two-column';
+$layoutClass = 'layout-' . $layout;
+?>
+
 <?php snippet('layout', [
   'showBreadcrumb' => true,
+  'layoutClass' => $layoutClass,
 
   'primary' => function() use ($page) { ?>
     <article class="project-content">

@@ -39,6 +39,16 @@ columns:
       meta:
         type: fields
         fields:
+          layout:
+            label: Page Layout
+            type: select
+            options:
+              two-column: Two-Column (Standard)
+              one-column: One-Column (Article Style)
+            default: two-column
+            help: Choose layout style for this project page
+            width: 1/1
+
           coverImage:
             label: Cover Image
             type: files

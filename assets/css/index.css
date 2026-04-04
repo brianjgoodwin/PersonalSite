@@ -1072,5 +1072,78 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+/* ============================================
+   ONE-COLUMN LAYOUT (ARTICLE STYLE)
+   Centered content with wider text column
+   ============================================ */
+
+.site-main.layout-one-column {
+    /* Single centered column - no grid */
+    display: block;
+    max-width: calc(var(--col-width) * 1.5); /* ~720px max */
+    margin: 0 auto;
+    padding: 0 var(--mobile-pad);
+}
+
+.site-main.layout-one-column .col-primary {
+    /* No grid column needed */
+    grid-column: auto;
+    max-width: none;
+}
+
+.site-main.layout-one-column .col-secondary {
+    /* Hide secondary column in one-column layout */
+    display: none;
+}
+
+/* Typography adjustments for one-column */
+.site-main.layout-one-column .col-primary h1 {
+    font-family: var(--ff-display);
+    font-size: var(--font-xl);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: calc(var(--base-unit) * 0.4);
+}
+
+.site-main.layout-one-column .col-primary h2 {
+    font-family: var(--ff-display);
+    font-size: var(--font-lg);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-top: calc(var(--base-unit) * 0.6);
+    margin-bottom: calc(var(--base-unit) * 0.2);
+}
+
+.site-main.layout-one-column .col-primary p {
+    margin-bottom: calc(var(--base-unit) * 0.25);
+    max-width: none; /* Full width of container */
+}
+
+/* Gallery in one-column can optionally break out to full viewport width */
+.site-main.layout-one-column .gallery {
+    margin-left: calc(var(--mobile-pad) * -1);
+    margin-right: calc(var(--mobile-pad) * -1);
+    padding-left: var(--mobile-pad);
+    padding-right: var(--mobile-pad);
+}
+
+/* Related posts in one-column layout */
+.site-main.layout-one-column .related-posts {
+    margin-top: calc(var(--base-unit) * 0.8);
+}
+
+/* Mobile adjustments for one-column */
+@media (max-width: 767px) {
+    .site-main.layout-one-column {
+        max-width: none;
+        padding: var(--mobile-pad);
+    }
+
+    .site-main.layout-one-column .gallery {
+        margin-left: calc(var(--mobile-pad) * -1);
+        margin-right: calc(var(--mobile-pad) * -1);
+    }
+}
+
 
 
