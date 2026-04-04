@@ -22,7 +22,7 @@ Sidebarcontent:
 
 ----
 
-Coverimage: 
+Coverimage: - file://im71taccwtjtqoay
 
 ----
 
