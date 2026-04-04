@@ -1,0 +1,21 @@
+Title: Hi, I'm Brian
+
+----
+
+Breadcrumbtitle: Home
+
+----
+
+Body:
+
+This is my website. I made it myself. I like making stuff. Writing, art, software.
+
+Take a look around.
+
+----
+
+Uuid: 4fmrqbdxvekzdwz3
+
+----
+
+Lock: hiZUhZxs
