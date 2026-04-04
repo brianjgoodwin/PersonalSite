@@ -64,7 +64,18 @@ $layoutClass = 'layout-' . $layout;
     </article>
   <?php },
 
-  'secondary' => function() use ($page) { ?>
+  'secondary' => function() use ($page, $layout) { ?>
+    <?php
+    // Only show sidebar box in two-column layout
+    if ($layout === 'two-column' &&
+        $page->sidebarEnabled()->toBool() &&
+        $page->sidebarContent()->isNotEmpty()):
+    ?>
+      <div class="sidebar-box">
+        <?= $page->sidebarContent()->kirbytext() ?>
+      </div>
+    <?php endif ?>
+
     <?php snippet('procedural-art') ?>
   <?php }
 ]) ?>

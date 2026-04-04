@@ -49,6 +49,24 @@ columns:
             help: Choose layout style for this project page
             width: 1/1
 
+          sidebarEnabled:
+            label: Show Sidebar Box
+            type: toggle
+            default: false
+            help: Display optional sidebar box (two-column layout only)
+            when:
+              layout: two-column
+            width: 1/2
+
+          sidebarContent:
+            label: Sidebar Box Content
+            type: textarea
+            size: medium
+            help: Content for the sidebar box (supports Kirbytext)
+            when:
+              sidebarEnabled: true
+            width: 1/1
+
           coverImage:
             label: Cover Image
             type: files
