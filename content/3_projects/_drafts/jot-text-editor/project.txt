@@ -1,0 +1,29 @@
+Title: Jot - Text Editor
+
+----
+
+Breadcrumbtitle: 
+
+----
+
+Body: 
+
+----
+
+Layout: two-column
+
+----
+
+Sidebarenabled: false
+
+----
+
+Sidebarcontent: 
+
+----
+
+Coverimage: 
+
+----
+
+Uuid: hnsqaw4igb53mjif
