@@ -6,7 +6,7 @@ Breadcrumbtitle:
 
 ----
 
-Body: 
+Body: **Jot - Test Editor** is simple, macOS text editor.
 
 ----
 
@@ -22,7 +22,7 @@ Sidebarcontent:
 
 ----
 
-Coverimage: 
+Coverimage: - file://vl5otm8qkv0xlv54
 
 ----
 
