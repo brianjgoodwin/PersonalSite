@@ -15,10 +15,18 @@
      */
     const sanitizeText = (text) => {
         if (!text || typeof text !== 'string') return '';
-        // Remove any HTML tags and trim whitespace
-        const stripped = text.replace(/<[^>]*>/g, '').trim();
-        // Limit length to reasonable breadcrumb size
-        return stripped.substring(0, 100);
+
+        // Iteratively remove HTML tags until none remain
+        // This prevents incomplete sanitization from nested tags like <script<script>>
+        let sanitized = text;
+        let previous;
+        do {
+            previous = sanitized;
+            sanitized = sanitized.replace(/<[^>]*>/g, '');
+        } while (sanitized !== previous);
+
+        // Trim whitespace and limit length to reasonable breadcrumb size
+        return sanitized.trim().substring(0, 100);
     };
 
     /**
