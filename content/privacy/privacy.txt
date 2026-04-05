@@ -2,9 +2,15 @@ Title: Privacy
 
 ----
 
-Body: This website does not collect, store, or share any personal information.
+Breadcrumbtitle: 
 
-The site is hosted on [Hetzner](https://www.hetzner.com) servers in Europe 🇫🇮 and powered by [Kirby CMS](https://getkirby.com), an open-source CMS built with a focus on [user privacy](https://getkirby.com/docs/guide/kirby-and-privacy).
+----
+
+Body:
+
+This website does not collect, store, or share any personal information.
+
+The site is hosted on [Hetzner](https://www.hetzner.com) servers in Europe 🇫🇮 and powered by [Kirby CMS](https://getkirby.com), an open-source CMS built with a focus on [user privacy](https://getkirby.com/docs/guide/kirby-and-privacy). Minimal analytics are handled by [Simple Analytics](https://www.simpleanalytics.com),  an EU-based company providing simple, GDPR-compliant analytics.
 
 ----
 
