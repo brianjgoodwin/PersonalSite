@@ -449,6 +449,7 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
         overflow: hidden;
         visibility: hidden;
         transition: max-height 0.3s ease, visibility 0s 0.3s;
+        z-index: 100; /* Ensure menu appears above page content */
     }
 
     /* Show menu when expanded */
