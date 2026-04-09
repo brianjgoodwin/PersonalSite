@@ -49,6 +49,7 @@
     --color-posts: #FDB827;     /* Yellow */
     --color-projects: #009DDC;  /* Blue */
     --color-links: #61BB46;     /* Green */
+    --color-purple: #8B5CF6;    /* Purple */
 
     /* ---- MOBILE ---- */
     --mobile-pad: calc(var(--base-unit) * 0.35);
@@ -1146,5 +1147,105 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+/* ============================================
+   PROCEDURAL ART SHOWCASE
+   Art-book layout: text left, canvas right
+   ============================================ */
 
+main:has(.art-showcase) {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+}
+
+.art-showcase {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding-top: var(--header-padding);
+    padding-bottom: calc(var(--section-gap) * 0.25);
+}
+
+.art-showcase-title {
+    font-family: var(--ff-display);
+    font-size: var(--font-xl);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: calc(var(--base-unit) * 0.5);
+}
+
+/* Desktop: 2-column grid, one row per section */
+@media (min-width: 768px) {
+    .art-showcase {
+        display: grid;
+        grid-template-columns: var(--col-width) var(--col-width);
+        column-gap: var(--col-gap);
+    }
+
+    /* Breadcrumb and title span both columns */
+    .art-showcase > nav[aria-label="breadcrumb"],
+    .art-showcase-title {
+        grid-column: 1 / -1;
+    }
+
+    .art-showcase-section {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: start;
+        padding-bottom: calc(var(--base-unit) * 0.75);
+    }
+
+    .art-showcase-text {
+        grid-column: 1;
+    }
+
+    .art-showcase-canvas {
+        grid-column: 2;
+        aspect-ratio: 1;
+        min-height: 0;
+    }
+}
+
+/* Mobile: stack text then canvas per section */
+@media (max-width: 767px) {
+    .art-showcase {
+        display: flex;
+        flex-direction: column;
+        padding: var(--mobile-pad);
+        gap: calc(var(--base-unit) * 0.35);
+        max-width: none;
+        margin: 0;
+    }
+
+    .art-showcase-section {
+        display: flex;
+        flex-direction: column;
+        gap: calc(var(--base-unit) * 0.25);
+        padding-bottom: calc(var(--base-unit) * 0.5);
+    }
+
+    .art-showcase-canvas {
+        flex: 0 0 auto;
+        min-height: var(--art-min-height);
+        max-height: var(--art-min-height);
+    }
+
+    .art-showcase-title {
+        font-size: calc(var(--font-xl) * 0.65);
+    }
+}
+
+/* Typography within showcase */
+.art-showcase-text h2 {
+    font-family: var(--ff-display);
+    font-size: var(--font-lg);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: calc(var(--base-unit) * 0.2);
+}
+
+.art-showcase-text p {
+    margin-bottom: calc(var(--base-unit) * 0.2);
+    max-width: 38em;
+}
 
