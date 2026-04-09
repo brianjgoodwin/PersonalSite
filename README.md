@@ -1,41 +1,63 @@
-# Personal Website
+# brianjgoodwin.net
 
-My personal website built with [Kirby CMS](https://getkirby.com).
+My personal website built with [Kirby CMS](https://getkirby.com) (v5).
 
 ## Features
 
-- **Posts** - Articles with draft/published workflow, date sorting, and RSS feed
-- **Magazine Layout** - Swiss-inspired design with narrow text columns (400px) and wide images (800px)
-- **Image Management** - Upload images to articles with alt text and captions, reference via KirbyText
-- **Content Sections** - Home (with color-coded cards), About, Posts, Projects, Links, Now, and Privacy pages
-- **Accessibility** - Skip navigation, ARIA landmarks, keyboard focus indicators
-- **Responsive Design** - Mobile-friendly with 768px breakpoint
-- **User Roles** - Admin and read-only access levels
-- **Utility Pages** - RSS feed, sitemap.xml, breadcrumb navigation
+- **Magazine Layout** -- Swiss-inspired design with narrow text columns and wide images
+- **Procedural Art** -- Canvas-based generative geometric art sidebar, seeded by page URL for consistency
+- **Image Gallery** -- Horizontal scroll gallery with modal viewer
+- **Posts** -- Articles with draft/published workflow, date sorting, and RSS feed
+- **Projects** -- Portfolio section for showcasing work
+- **Content Sections** -- Home, About, Posts, Projects, Links, Now, and Privacy pages
+- **Accessibility** -- Skip navigation, ARIA landmarks, keyboard focus indicators
+- **Responsive Design** -- Mobile-friendly with hamburger menu
+- **Caching** -- Page caching with automatic invalidation on content changes, smart HTTP cache headers per content type
+- **Security Headers** -- CSP, X-Frame-Options, XSS protection, referrer policy
+- **SEO** -- Sitemap.xml, RSS/Atom feed, robots.txt (blocks AI scrapers, allows major search engines)
+- **Automated Deployment** -- GitHub Actions pipeline: deploy via SSH, clear nginx/Cloudflare caches, warm cache from sitemap
 
-## Built With
+## Tech Stack
 
-- **[Kirby CMS](https://getkirby.com)** - File-based content management system
-- **[Kirby Git Content Plugin](https://github.com/thathoff/kirby-git-content)** - Automatic git commits for Panel changes
-- Custom templates and blueprints for content management
+- **[Kirby CMS 5](https://getkirby.com)** -- File-based CMS (PHP 8.2+)
+- **[Kirby Git Content](https://github.com/thathoff/kirby-git-content)** -- Auto-commits Panel changes to git
+- **Custom Site Plugin** -- Panel dashboard and cache invalidation hooks
+- **Cloudflare** -- CDN and caching layer
+- **nginx** -- Web server
+- **GitHub Actions** -- CI/CD (deploy, link checking, feed validation)
 
 ## Local Development
 
 1. Clone this repository
 2. Run `composer install` to install dependencies
-3. Configure your local environment in `site/config/config.php`
-4. Run `composer start` to start the local development server at http://localhost:8000
+3. Run `composer start` to start the development server at http://localhost:8000
 
-## About Kirby
+Git content syncing is automatically disabled on localhost.
 
-Kirby is a file-based CMS that doesn't require a database. Content is stored in text files and folders, making it easy to version control and deploy.
+## Project Structure
 
-**Resources:**
-- [Kirby Documentation](https://getkirby.com/docs)
-- [Kirby Forum](https://forum.getkirby.com)
-- [Kirby Discord](https://chat.getkirby.com)
+```
+assets/            CSS, JS (menu, gallery, breadcrumb nav, procedural art)
+content/           File-based content (text files and media)
+site/
+  blueprints/      Panel field definitions
+  config/          Kirby configuration (routes, caching, security, git plugin)
+  plugins/         Site plugin (dashboard, cache hooks) + git-content
+  snippets/        Reusable components (header, footer, gallery, feed, sitemap)
+  templates/       Page templates (home, about, article, posts, projects, links)
+```
+
+## Deployment
+
+Merging to `main` triggers a GitHub Actions workflow that:
+
+1. Deploys code to the production server via SSH
+2. Clears Kirby, nginx, and Cloudflare caches
+3. Warms the page cache by crawling the sitemap
+
+See [`.github/DEPLOYMENT.md`](.github/DEPLOYMENT.md) for setup details.
 
 ## License
 
-- Code: Custom templates and configuration
+- Site code: Custom templates and configuration
 - CMS: [Kirby License](https://getkirby.com/license)

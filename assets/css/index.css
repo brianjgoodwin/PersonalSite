@@ -366,13 +366,14 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
         grid-template-columns: none;
         column-gap: 0;
         justify-content: space-between;
-        align-items: baseline; /* Align text baselines */
+        align-items: center;
         /* Remove max-width constraint - span full viewport on mobile */
         max-width: none;
         margin: 0;
         /* Add padding for edge spacing */
         padding-left: var(--mobile-pad);
         padding-right: var(--mobile-pad);
+        padding-bottom: 0;
     }
 
     .logo {
