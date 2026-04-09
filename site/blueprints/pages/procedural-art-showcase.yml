@@ -1,0 +1,67 @@
+title: Procedural Art Showcase
+
+icon: palette
+
+sections:
+  fields:
+    type: fields
+    fields:
+      coverImage:
+        label: Cover Image
+        type: files
+        max: 1
+        help: Square image for project card thumbnail (120x120px recommended)
+
+      redTitle:
+        label: Red Section Title
+        type: text
+        width: 1/1
+      redBody:
+        label: Red Section Body
+        type: textarea
+        size: medium
+
+      orangeTitle:
+        label: Orange Section Title
+        type: text
+        width: 1/1
+      orangeBody:
+        label: Orange Section Body
+        type: textarea
+        size: medium
+
+      yellowTitle:
+        label: Yellow Section Title
+        type: text
+        width: 1/1
+      yellowBody:
+        label: Yellow Section Body
+        type: textarea
+        size: medium
+
+      blueTitle:
+        label: Blue Section Title
+        type: text
+        width: 1/1
+      blueBody:
+        label: Blue Section Body
+        type: textarea
+        size: medium
+
+      greenTitle:
+        label: Green Section Title
+        type: text
+        width: 1/1
+      greenBody:
+        label: Green Section Body
+        type: textarea
+        size: medium
+
+      purpleTitle:
+        label: Purple Section Title
+        type: text
+        width: 1/1
+      purpleBody:
+        label: Purple Section Body
+        type: textarea
+        size: medium

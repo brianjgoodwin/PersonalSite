@@ -1,0 +1,53 @@
+Title: Procedural Art
+
+----
+
+Redtitle: Red
+
+----
+
+Redbody:
+
+----
+
+Orangetitle: Orange
+
+----
+
+Orangebody:
+
+----
+
+Yellowtitle: Yellow
+
+----
+
+Yellowbody:
+
+----
+
+Bluetitle: Blue
+
+----
+
+Bluebody:
+
+----
+
+Greentitle: Green
+
+----
+
+Greenbody:
+
+----
+
+Purpletitle: Purple
+
+----
+
+Purplebody:
+
+----
+
+Uuid: procedural-art-showcase-001
