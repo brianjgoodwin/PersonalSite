@@ -2,7 +2,7 @@ Title: Procedural Art
 
 ----
 
-Coverimage: 
+Coverimage: - file://lu0zkrzqzhacydgn
 
 ----
 
