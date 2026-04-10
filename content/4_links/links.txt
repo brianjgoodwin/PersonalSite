@@ -38,9 +38,7 @@ Several shows on [The Incomparable](https://www.theincomparable.com)
 
 ----
 
-secondaryBox: 
-
-[RSS](https://en.wikipedia.org/wiki/RSS), or Really Simple Syndication, is a great way to keep up with news and information from around the internet. [NetNewWire](https://netnewswire.com) is my RSS reader of choice. I see it as a way to keep the flow information distributed rather than concentrated in the hands of a handful of social media companies.
+Secondarybox: [RSS](https://en.wikipedia.org/wiki/RSS), or Really Simple Syndication, is a great way to keep up with news and information from around the internet. [NetNewsWire](https://netnewswire.com) is my RSS reader of choice. I see it as a way to keep the flow information distributed rather than concentrated in the hands of a handful of social media companies.
 
 ----
 
