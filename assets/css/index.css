@@ -579,32 +579,6 @@ h1, h2, h3, h4, h5, h6 {
     border: 1px solid #e0e0e0;
 }
 
-/* Links columns within sidebar */
-.sidebar-box .links-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: calc(var(--base-unit) * 0.35);
-}
-
-.sidebar-box .links-column ul,
-.sidebar-box .links-column ol {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar-box .links-column li {
-    margin-bottom: 0.5rem;
-}
-
-.sidebar-box .links-column a {
-    text-decoration: none;
-}
-
-.sidebar-box .links-column a:hover {
-    text-decoration: underline;
-}
-
 /* Procedural Art Container */
 .art-container {
     flex: 1;
@@ -1024,10 +998,6 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     flex-direction: column;
     gap: calc(var(--base-unit) * 0.3);
-}
-
-.related-post-card {
-    /* Container only - no visual styling */
 }
 
 .related-post-card-link {
