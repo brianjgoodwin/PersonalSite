@@ -87,6 +87,12 @@
     --color-links: #61BB46;     /* Green */
     --color-purple: #8B5CF6;    /* Purple */
 
+    /* The active section's color, resolved from [data-section] below.
+       Lets any component theme itself without knowing which section it is
+       in. Falls back to home red on pages outside the five sections
+       (privacy, error). */
+    --color-section: var(--color-home);
+
     /* ---- MOBILE ---- */
     --mobile-pad: var(--space-sm);
     --art-min-height: calc(var(--base-unit) * 3);
@@ -239,24 +245,52 @@ h1 + * {
     margin-block-start: var(--flow-space-after-title);
 }
 
+/* ---- FOOTER ----
+   A full-bleed field in the section's theme color, closing the page. The
+   color spans the viewport; the content inside stays on the page grid.
+
+   Text sits in a white card rather than directly on the color. None of the
+   palette clears 4.5:1 against white text (yellow is ~1.7:1), so the card
+   is what makes this legible — the color becomes a field, not a text
+   background. */
 footer {
     margin-top: auto;
-    color: #666;
+    background-color: var(--color-section, var(--color-home));
+    padding-block: var(--space-lg);
+}
+
+/* Inner element carries the page grid, so the color can go full-bleed. */
+.footer-inner {
     max-width: var(--content-max-width);
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-bottom: var(--space-md);
+    margin-inline: auto;
     padding-inline: var(--page-pad);
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: var(--col-gap);
 }
 
-footer > * {
-    grid-column: 2;
-    justify-self: end; /* Align to RIGHT edge of right column */
-    text-align: right; /* Also right-align text inside */
+/* Left-aligned to the same edge as the logo and body text. Shrink-wrapped
+   so it reads as a label on the field rather than a panel. */
+.footer-card {
+    grid-column: 1;
+    justify-self: start;
+    background-color: #fff;
+    color: #333;
+    padding: var(--space-sm);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-sm);
+    font-size: var(--font-sm);
+}
+
+.footer-card p {
+    margin: 0;
+}
+
+.footer-card a {
+    color: #333;
 }
 
 /* ============================================
@@ -344,30 +378,19 @@ select:focus-visible {
     border-right: 6px solid transparent;
 }
 
-/* Theme color stripe for each section */
-[data-section="home"] .logo[aria-current="page"],
-[data-section="home"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-home);
-}
+/* Resolve the section's color once, then let components read it by name.
+   Previously each consumer repeated the full five-way [data-section] fan,
+   so adding a themed component meant five more rules. */
+[data-section="home"]     { --color-section: var(--color-home); }
+[data-section="about"]    { --color-section: var(--color-about); }
+[data-section="posts"]    { --color-section: var(--color-posts); }
+[data-section="projects"] { --color-section: var(--color-projects); }
+[data-section="links"]    { --color-section: var(--color-links); }
 
-[data-section="about"] .logo[aria-current="page"],
-[data-section="about"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-about);
-}
-
-[data-section="posts"] .logo[aria-current="page"],
-[data-section="posts"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-posts);
-}
-
-[data-section="projects"] .logo[aria-current="page"],
-[data-section="projects"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-projects);
-}
-
-[data-section="links"] .logo[aria-current="page"],
-[data-section="links"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-links);
+/* Theme color stripe on the active nav item */
+.logo[aria-current="page"],
+.menu a[aria-current="page"] {
+    border-right-color: var(--color-section);
 }
 
 /* Focus indicator for active navigation - white outline with black stroke */
@@ -713,19 +736,15 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Mobile — Stack below 768px */
 @media (max-width: 47.9375em) {
-    footer {
+    /* Single column: the card spans the width rather than sitting in a
+       two-up grid. The color band and its padding are unchanged. */
+    .footer-inner {
         display: block;
-        /* Remove max-width constraint - span full viewport on mobile */
-        max-width: none;
-        margin: 0;
-        padding-left: var(--mobile-pad);
-        padding-right: var(--mobile-pad);
-        text-align: right;
+        padding-inline: var(--mobile-pad);
     }
 
-    footer > * {
-        grid-column: auto;
-        justify-self: auto;
+    footer {
+        padding-block: var(--space-md);
     }
 
     .site-main {
