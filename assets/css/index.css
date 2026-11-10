@@ -16,15 +16,20 @@
     --base-unit: 80px;          /* X — the spatial root */
     --base-font: 16px;          /* typographic root */
 
-    /* ---- LAYOUT (fluid grid with proportional columns) ---- */
-    /* Padding for smaller screens */
-    --content-padding: calc(var(--base-unit) * 1);
-    /* Column width - scales from iPad to desktop, accounting for padding */
-    --col-width: clamp(280px, calc((100vw - (var(--content-padding) * 2)) * 0.4), 480px);
-    /* Gap between columns - starts at 68px (2× horizontal padding at 768px), grows to 0.5× column width at 1280px+ */
-    --col-gap: clamp(68px, calc(30.5vw - 166px), calc(var(--col-width) * 0.5));
-    /* Total content width - col + gap + col (fluid: fits within viewport with padding) */
-    --content-max-width: calc((var(--col-width) * 2) + var(--col-gap));
+    /* ---- LAYOUT ----
+       The page is the root, not the column. Columns are `1fr` — they take
+       whatever the page gives them — and text inside is capped by
+       --measure. Surplus past that cap becomes padding, not longer lines.
+
+       This inverts the old system, where --col-width was both the text
+       measure and the page's structural unit. That coupling clamped the
+       whole layout to reading width (nothing happened above 1440px) while
+       also squeezing columns to ~42 characters at iPad portrait. */
+    --page-max: 2000px;
+    --page-pad: var(--space-sm);
+    /* Floor for the gutter; surplus beyond it emerges from the measure cap. */
+    --col-gap: var(--space-md);
+    --content-max-width: var(--page-max);
 
     /* ---- SPACING SCALE ----
        Six steps, hand-picked to cover what the site actually uses.
@@ -106,13 +111,13 @@ body {
 .header {
   position: relative; /* For absolute positioning of mobile menu */
   display: grid;
-  grid-template-columns: var(--col-width) var(--col-width);
+  grid-template-columns: 1fr 1fr;
   column-gap: var(--col-gap);
   align-items: baseline; /* Align text baselines */
   max-width: var(--content-max-width);
+  width: 100%;
   margin: 0 auto;
-  padding-top: var(--header-padding);
-  padding-bottom: var(--header-padding);
+  padding: var(--header-padding) var(--page-pad);
 }
 
 .logo {
@@ -223,11 +228,13 @@ footer {
     margin-top: auto;
     color: #666;
     max-width: var(--content-max-width);
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     padding-bottom: var(--space-md);
+    padding-inline: var(--page-pad);
     display: grid;
-    grid-template-columns: var(--col-width) var(--col-width);
+    grid-template-columns: 1fr 1fr;
     column-gap: var(--col-gap);
 }
 
@@ -575,9 +582,13 @@ main:has(.site-main) {
 
 .site-main {
     max-width: var(--content-max-width);
+    /* Flex item: without this it shrink-wraps its content instead of
+       filling the page up to max-width. */
+    width: 100%;
     /* The header already carries padding-bottom, which is the whole gap. */
     margin: 0 auto;
     padding-bottom: calc(var(--section-gap) * 0.25);
+    padding-inline: var(--page-pad);
     /* Default: stack columns vertically for narrow viewports */
     display: flex;
     flex-direction: column;
@@ -588,17 +599,21 @@ main:has(.site-main) {
 @media (min-width: 768px) {
     .site-main {
         display: grid;
-        grid-template-columns: var(--col-width) var(--col-width);
+        grid-template-columns: 1fr 1fr;
         column-gap: var(--col-gap);
     }
 }
 
 .col-primary {
     grid-column: 1;
+    /* Grid items default to min-width:auto, so a long word or URL can push
+       the track wider than its share. */
+    min-width: 0;
 }
 
 .col-secondary {
     grid-column: 2;
+    min-width: 0;
 }
 
 /* Typography — Serif for headings, sans for body */
@@ -621,7 +636,31 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: -0.02em;
 }
 
-.col-primary p {
+/* ---- MEASURE APPLICATION ----
+   Cap prose at the measure; exempt the elements that want full width.
+   Stated affirmatively by element type rather than by an opt-out class:
+   Markdown already emits <figure> for a standalone image, <pre> for a
+   fenced block, <table> for a pipe table — the tag IS the signal.
+
+   Capped-by-default is the safer failure for a reading site. A tag nobody
+   anticipated gets a measure rather than silently running full width.
+
+   The `>` combinator confines this to the top of the stream, the only
+   level where "prose or wide thing" is a meaningful question — a <p>
+   inside a <blockquote> is not independently capped.
+
+   Surplus column width past the cap becomes padding. That is what lets
+   --page-max grow without lengthening lines.
+
+   This enumerates prose rather than exempting wide elements. #43 argued
+   the inverse (cap everything, exempt the known-wide) so a forgotten tag
+   fails safe. That holds when the content is one flat kirbytext stream,
+   but templates here nest prose at varying depths inside wrappers
+   (.about-bio, .article-content, .links-intro), so the exempt form needs
+   a selector per wrapper and rots as templates change. The prose tag set
+   is small and fixed — it is what Markdown emits — so listing it is the
+   more stable half. */
+.col-primary :is(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote) {
     max-width: var(--measure);
 }
 
@@ -1118,11 +1157,12 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 .site-main.layout-one-column {
-    /* Single centered column - no grid */
+    /* Single centered column - no grid. Width is the measure plus its
+       padding, so the text sets the page rather than the other way round. */
     display: block;
-    max-width: calc(var(--col-width) * 1.5); /* ~720px max */
+    max-width: calc(var(--measure) + (var(--page-pad) * 2));
     margin: 0 auto;
-    padding: 0 var(--mobile-pad);
+    padding: 0 var(--page-pad);
 }
 
 .site-main.layout-one-column .col-primary {
@@ -1136,18 +1176,16 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
-/* Typography adjustments for one-column.
-   Heading styles are inherited from .col-primary; only the measure differs. */
-.site-main.layout-one-column .col-primary p {
-    max-width: none; /* Full width of container */
+/* The container is already the measure here, so prose needs no further cap
+   — letting it fill the container is the measure. */
+.site-main.layout-one-column .col-primary :is(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote) {
+    max-width: none;
 }
 
-/* Gallery in one-column can optionally break out to full viewport width */
+/* Gallery in one-column breaks out past the page padding. */
 .site-main.layout-one-column .gallery {
-    margin-left: calc(var(--mobile-pad) * -1);
-    margin-right: calc(var(--mobile-pad) * -1);
-    padding-left: var(--mobile-pad);
-    padding-right: var(--mobile-pad);
+    margin-inline: calc(var(--page-pad) * -1);
+    padding-inline: var(--page-pad);
 }
 
 /* Related posts in one-column layout */
@@ -1193,7 +1231,7 @@ main:has(.art-showcase) {
 @media (min-width: 768px) {
     .art-showcase {
         display: grid;
-        grid-template-columns: var(--col-width) var(--col-width);
+        grid-template-columns: 1fr 1fr;
         column-gap: var(--col-gap);
     }
 
