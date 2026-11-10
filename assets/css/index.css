@@ -156,12 +156,12 @@ menu {
     margin-left: var(--space-sm);
 }
 
+/* No width constraint here — page width is set by the layout container
+   (.site-main / .art-showcase), which owns --page-max and --page-pad. */
 main {
     flex-grow: 1;
-    max-width: 600px;
-    margin: 0 auto var(--space-md) auto;
-    width: 100%; /* Allow it to be responsive on small screens */
-    padding: 0 var(--space-md);
+    display: flex;
+    flex-direction: column;
 }
 
 /* ---- FLOW SPACING ----
@@ -570,15 +570,6 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
    UNIFIED GRID LAYOUT
    Max-width container with proportional two-column grid
    ============================================ */
-
-/* Override main element constraints for unified grid */
-main:has(.site-main) {
-    max-width: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
 
 .site-main {
     max-width: var(--content-max-width);
@@ -1205,12 +1196,6 @@ h1, h2, h3, h4, h5, h6 {
    PROCEDURAL ART SHOWCASE
    Art-book layout: text left, canvas right
    ============================================ */
-
-main:has(.art-showcase) {
-    max-width: none;
-    padding: 0;
-    margin: 0;
-}
 
 .art-showcase {
     max-width: var(--content-max-width);
