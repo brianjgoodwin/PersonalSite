@@ -27,11 +27,11 @@ $layoutClass = $layoutClass ?? '';
 ?>
 
 <div class="site-main <?= esc($layoutClass, 'attr') ?>">
-  <div class="col-primary">
-    <?php if ($showBreadcrumb): ?>
-      <?php snippet('breadcrumb') ?>
-    <?php endif ?>
+  <?php if ($showBreadcrumb): ?>
+    <?php snippet('breadcrumb') ?>
+  <?php endif ?>
 
+  <div class="col-primary">
     <?php if (is_callable($primary)): ?>
       <?php $primary() ?>
     <?php endif ?>

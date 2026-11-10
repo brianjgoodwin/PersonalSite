@@ -26,11 +26,31 @@
     /* Total content width - col + gap + col (fluid: fits within viewport with padding) */
     --content-max-width: calc((var(--col-width) * 2) + var(--col-gap));
 
-    /* ---- VERTICAL RHYTHM ---- */
-    --section-gap: calc(var(--base-unit) * 0.5);
+    /* ---- SPACING SCALE ----
+       Six steps, hand-picked to cover what the site actually uses.
+       Not derived from a ratio: small UI padding resists ratios, and an
+       honest short list beats a generated scale with exceptions bolted on.
+       Use these by name. Reach for a raw calc() only for component SIZES
+       (thumbnail dimensions, canvas heights) — those aren't rhythm. */
+    --space-3xs: 4px;
+    --space-2xs: 8px;
+    --space-xs: 16px;
+    --space-sm: 24px;
+    --space-md: 40px;   /* = base-unit * 0.5 */
+    --space-lg: 64px;   /* section separation — borders, major breaks */
+
+    /* ---- VERTICAL RHYTHM ----
+       Flow spacing is proportional (em) so gaps scale with the type they
+       separate, and one-directional (margin-block-start only) so margins
+       never collapse against each other. */
+    --section-gap: var(--space-md);
+    --flow-space: 0.9em;               /* between body-level siblings */
+    --flow-space-heading: 1.6em;       /* above a heading — belongs to the section it opens */
+    --flow-space-after-heading: 0.6em; /* below a section heading — binds it to its own text */
+    --flow-space-after-title: 1.4em;   /* below a display-sized page title */
 
     /* ---- HEADER PADDING (responsive) ---- */
-    --header-padding: var(--mobile-pad);  /* 28px top/bottom padding */
+    --header-padding: var(--mobile-pad);
 
     /* ---- TYPOGRAPHY (relational) ---- */
     --ff-display: Georgia, 'Times New Roman', serif;
@@ -52,7 +72,7 @@
     --color-purple: #8B5CF6;    /* Purple */
 
     /* ---- MOBILE ---- */
-    --mobile-pad: calc(var(--base-unit) * 0.35);
+    --mobile-pad: var(--space-sm);
     --art-min-height: calc(var(--base-unit) * 3);
 }
 
@@ -121,45 +141,75 @@ menu {
 }
 
 .menu ul li {
-    margin-left: 1.5rem;
+    margin-left: var(--space-sm);
 }
 
 main {
     flex-grow: 1;
     max-width: 600px;
-    margin: 0 auto 3rem auto; /* Center horizontally, 3rem bottom margin */
+    margin: 0 auto var(--space-md) auto;
     width: 100%; /* Allow it to be responsive on small screens */
-    padding: 0 3rem; /* Left and right padding */
+    padding: 0 var(--space-md);
 }
 
-main h1 {
-    margin-bottom: 1.5rem;
-}
-
+/* ---- FLOW SPACING ----
+   Space goes between siblings, in one direction only. The owl selector
+   means the first child never carries a stray top margin and margins
+   never collapse — the gap you read is the value you set. */
 p {
     line-height: 1.5;
-    margin-bottom: 1.5rem;
 }
 
 h1 {
     font-size: 2em;
     font-weight: bold;
-    margin-bottom: 1.5rem;
 }
 
 h2 {
     font-size: 1.5em;
     font-weight: bold;
-    margin-bottom: 1.5rem;
-}
-
-h3, h4, h5, h6 {
-    margin-bottom: 1.5rem;
 }
 
 ul, ol {
     line-height: 1.5;
-    margin-bottom: 1.5rem;
+}
+
+p + *,
+ul + *,
+ol + *,
+blockquote + *,
+figure + *,
+pre + *,
+table + * {
+    margin-block-start: var(--flow-space);
+}
+
+/* Headings open a section, so they take the larger space above —
+   and override the flow value set by whatever preceded them. */
+* + h1,
+* + h2,
+* + h3,
+* + h4,
+* + h5,
+* + h6 {
+    margin-block-start: var(--flow-space-heading);
+}
+
+/* What follows a heading sits closer to it than to the previous section —
+   that proximity is what binds a heading to its own text. Resolves against
+   the following element's size, so it stays constant for body copy. */
+h2 + *,
+h3 + *,
+h4 + *,
+h5 + *,
+h6 + * {
+    margin-block-start: var(--flow-space-after-heading);
+}
+
+/* A page title is display-sized, so it needs more room beneath it than a
+   section heading does — otherwise body copy reads as glued to it. */
+h1 + * {
+    margin-block-start: var(--flow-space-after-title);
 }
 
 footer {
@@ -168,7 +218,7 @@ footer {
     max-width: var(--content-max-width);
     margin-left: auto;
     margin-right: auto;
-    padding-bottom: 3rem;
+    padding-bottom: var(--space-md);
     display: grid;
     grid-template-columns: var(--col-width) var(--col-width);
     column-gap: var(--col-gap);
@@ -258,7 +308,7 @@ select:focus-visible {
     position: relative;
     background-color: black;
     color: white;
-    padding: 0.35rem 0.65rem;
+    padding: var(--space-3xs) var(--space-2xs);
     text-decoration: none;
     line-height: 1;
     /* Add 6px colored stripe on right edge */
@@ -306,9 +356,16 @@ select:focus-visible {
    Traditional file-path style breadcrumb
    ============================================ */
 
-/* Container for breadcrumb */
+/* Container for breadcrumb.
+   Page-level navigation, not article content — it spans the grid and
+   aligns to the container edge (same edge as the logo above it) rather
+   than sitting inside the text column and inheriting its measure. */
 nav[aria-label="breadcrumb"] {
-    margin-bottom: calc(var(--base-unit) * 0.5);
+    grid-column: 1 / -1;
+    /* No bottom margin: as a direct child of .site-main the breadcrumb sits
+       in a flex/grid row, so the container's `gap` already supplies the
+       space below it. A margin here would stack on top of that. */
+    margin-bottom: 0;
     font-size: 0.9em;
     color: #666;
 }
@@ -330,7 +387,7 @@ nav[aria-label="breadcrumb"] li {
 /* Add separator after each item except the last */
 nav[aria-label="breadcrumb"] li:not(:last-child)::after {
     content: " / ";
-    margin: 0 0.5rem;
+    margin: 0 var(--space-2xs);
     color: #767676; /* 4.54:1 contrast ratio - WCAG AA compliant */
 }
 
@@ -469,21 +526,22 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
 
     .menu ul li {
         margin-left: 0;
-        margin-bottom: 0.5rem;
+        margin-bottom: var(--space-2xs);
     }
 
     .menu ul li:last-child {
         margin-bottom: 0;
     }
 
-    /* Increase touch target size for WCAG 2.5.5 (minimum 44×44px) */
+    /* Increase touch target size for WCAG 2.5.5 (minimum 44×44px).
+       16px vertical + ~26px line box = ~58px tall. */
     .menu a {
-        padding: 0.65rem 0.75rem;
+        padding: var(--space-xs);
     }
 
     /* Maintain proper padding for active navigation on mobile */
     .menu a[aria-current="page"] {
-        padding: 0.65rem 0.75rem;
+        padding: var(--space-xs);
     }
 }
 
@@ -510,6 +568,7 @@ main:has(.site-main) {
 
 .site-main {
     max-width: var(--content-max-width);
+    /* The header already carries padding-bottom, which is the whole gap. */
     margin: 0 auto;
     padding-bottom: calc(var(--section-gap) * 0.25);
     /* Default: stack columns vertically for narrow viewports */
@@ -540,12 +599,12 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--ff-display);
 }
 
+/* Display type only — spacing comes from the flow rules above. */
 .col-primary h1 {
     font-family: var(--ff-display);
     font-size: var(--font-xl);
     line-height: 1.05;
     letter-spacing: -0.025em;
-    margin-bottom: calc(var(--base-unit) * 0.35);
 }
 
 .col-primary h2 {
@@ -553,12 +612,9 @@ h1, h2, h3, h4, h5, h6 {
     font-size: var(--font-lg);
     line-height: 1.15;
     letter-spacing: -0.02em;
-    margin-top: calc(var(--base-unit) * 0.6);
-    margin-bottom: calc(var(--base-unit) * 0.2);
 }
 
 .col-primary p {
-    margin-bottom: calc(var(--base-unit) * 0.2);
     max-width: 38em;
 }
 
@@ -566,7 +622,7 @@ h1, h2, h3, h4, h5, h6 {
 .col-secondary {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--base-unit) * 0.35);
+    gap: var(--space-sm);
 }
 
 /* Sidebar Text Box — Content on top of art */
@@ -574,7 +630,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: var(--font-sm);
     line-height: 1.5;
     color: #666;
-    padding: calc(var(--base-unit) * 0.25);
+    padding: var(--space-sm);
     background-color: rgba(255, 255, 255, 0.95);
     border: 1px solid #e0e0e0;
 }
@@ -599,7 +655,7 @@ h1, h2, h3, h4, h5, h6 {
 .home-cards {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--base-unit) * 0.35);
+    gap: var(--space-sm);
     padding: 0;
 }
 
@@ -650,7 +706,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     .card {
-        padding: calc(var(--base-unit) * 0.2);
+        padding: var(--space-xs);
     }
 }
 
@@ -676,7 +732,7 @@ h1, h2, h3, h4, h5, h6 {
 .card {
     display: block;
     width: 100%;
-    padding: calc(var(--base-unit) * 0.25);
+    padding: var(--space-sm);
     text-decoration: none;
     color: #000;
     background-color: white;
@@ -689,7 +745,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--ff-display);
     font-size: var(--font-lg);
     font-weight: bold;
-    margin-bottom: calc(var(--base-unit) * 0.1);
+    margin-bottom: var(--space-2xs);
 }
 
 .card-description {
@@ -724,7 +780,7 @@ h1, h2, h3, h4, h5, h6 {
 .card-project {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: calc(var(--base-unit) * 0.25);
+    gap: var(--space-sm);
     align-items: center; /* Vertically center content */
 }
 
@@ -755,7 +811,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Adjust spacing for project cards */
 .card-project .card-title {
-    margin-bottom: calc(var(--base-unit) * 0.05);
+    margin-bottom: var(--space-3xs);
 }
 
 .card-project .card-description {
@@ -768,18 +824,18 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 .gallery {
-    margin-top: calc(var(--base-unit) * 0.5);
-    margin-bottom: calc(var(--base-unit) * 0.5);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-md);
 }
 
 .gallery-scroll {
     display: flex;
-    gap: calc(var(--base-unit) * 0.2);
+    gap: var(--space-xs);
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    padding-bottom: calc(var(--base-unit) * 0.15); /* Space for scrollbar */
+    padding-bottom: var(--space-2xs); /* Space for scrollbar */
 }
 
 /* Scrollbar styling */
@@ -862,7 +918,7 @@ h1, h2, h3, h4, h5, h6 {
 .gallery-modal-caption {
     color: #fff;
     text-align: center;
-    margin-top: calc(var(--base-unit) * 0.2);
+    margin-top: var(--space-xs);
     font-size: var(--font-sm);
     max-width: 600px;
     margin-left: auto;
@@ -982,27 +1038,27 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 .related-posts {
-    margin-top: calc(var(--base-unit) * 0.8);
-    padding-top: calc(var(--base-unit) * 0.6);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
     border-top: 2px solid #e0e0e0;
 }
 
 .related-posts h2 {
     font-family: var(--ff-display);
     font-size: var(--font-lg);
-    margin-bottom: calc(var(--base-unit) * 0.4);
+    margin-bottom: var(--space-md);
     line-height: 1.15;
 }
 
 .related-posts-grid {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--base-unit) * 0.3);
+    gap: var(--space-sm);
 }
 
 .related-post-card-link {
     display: block;
-    padding: calc(var(--base-unit) * 0.25);
+    padding: var(--space-sm);
     border: 2px solid #e0e0e0;
     background-color: white;
     text-decoration: none;
@@ -1024,7 +1080,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--ff-display);
     font-size: var(--font-lg);
     font-weight: bold;
-    margin: 0 0 calc(var(--base-unit) * 0.1) 0;
+    margin: 0 0 var(--space-2xs) 0;
     line-height: 1.2;
     color: #000;
 }
@@ -1033,7 +1089,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     font-size: var(--font-sm);
     color: #666;
-    margin-bottom: calc(var(--base-unit) * 0.15);
+    margin-bottom: var(--space-2xs);
 }
 
 .related-post-excerpt {
@@ -1073,26 +1129,9 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
-/* Typography adjustments for one-column */
-.site-main.layout-one-column .col-primary h1 {
-    font-family: var(--ff-display);
-    font-size: var(--font-xl);
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-    margin-bottom: calc(var(--base-unit) * 0.4);
-}
-
-.site-main.layout-one-column .col-primary h2 {
-    font-family: var(--ff-display);
-    font-size: var(--font-lg);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin-top: calc(var(--base-unit) * 0.6);
-    margin-bottom: calc(var(--base-unit) * 0.2);
-}
-
+/* Typography adjustments for one-column.
+   Heading styles are inherited from .col-primary; only the measure differs. */
 .site-main.layout-one-column .col-primary p {
-    margin-bottom: calc(var(--base-unit) * 0.25);
     max-width: none; /* Full width of container */
 }
 
@@ -1106,7 +1145,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Related posts in one-column layout */
 .site-main.layout-one-column .related-posts {
-    margin-top: calc(var(--base-unit) * 0.8);
+    margin-top: var(--space-lg);
 }
 
 /* Mobile adjustments for one-column */
@@ -1140,7 +1179,7 @@ main:has(.art-showcase) {
     font-size: var(--font-xl);
     line-height: 1.05;
     letter-spacing: -0.025em;
-    margin-bottom: calc(var(--base-unit) * 0.5);
+    margin-bottom: var(--space-md);
 }
 
 /* Desktop: 2-column grid, one row per section */
@@ -1151,8 +1190,7 @@ main:has(.art-showcase) {
         column-gap: var(--col-gap);
     }
 
-    /* Breadcrumb and title span both columns */
-    .art-showcase > nav[aria-label="breadcrumb"],
+    /* Title spans both columns (the breadcrumb does so globally). */
     .art-showcase-title {
         grid-column: 1 / -1;
     }
@@ -1162,7 +1200,7 @@ main:has(.art-showcase) {
         grid-column: 1 / -1;
         grid-template-columns: subgrid;
         align-items: start;
-        padding-bottom: calc(var(--base-unit) * 0.75);
+        padding-bottom: var(--space-lg);
     }
 
     .art-showcase-text {
@@ -1182,7 +1220,7 @@ main:has(.art-showcase) {
         display: flex;
         flex-direction: column;
         padding: var(--mobile-pad);
-        gap: calc(var(--base-unit) * 0.35);
+        gap: var(--space-sm);
         max-width: none;
         margin: 0;
     }
@@ -1190,8 +1228,8 @@ main:has(.art-showcase) {
     .art-showcase-section {
         display: flex;
         flex-direction: column;
-        gap: calc(var(--base-unit) * 0.25);
-        padding-bottom: calc(var(--base-unit) * 0.5);
+        gap: var(--space-sm);
+        padding-bottom: var(--space-md);
     }
 
     .art-showcase-canvas {
@@ -1211,11 +1249,11 @@ main:has(.art-showcase) {
     font-size: var(--font-lg);
     line-height: 1.05;
     letter-spacing: -0.025em;
-    margin-bottom: calc(var(--base-unit) * 0.2);
+    margin-bottom: var(--space-xs);
 }
 
 .art-showcase-text p {
-    margin-bottom: calc(var(--base-unit) * 0.2);
+    margin-bottom: var(--space-xs);
     max-width: 38em;
 }
 
