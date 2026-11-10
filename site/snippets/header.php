@@ -3,7 +3,34 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php
+    // Determine the current section (top-level page) for theming.
+    // Computed here rather than before <body> so the theme-color meta can
+    // use it — iOS tints its own browser chrome from that value, which is
+    // what keeps the footer colour from stopping at a white band.
+    if ($page->isHomePage()) {
+        $section = $page;
+    } else {
+        $section = $page;
+        while ($section->parent() && !$section->parent()->isHomePage()) {
+            $section = $section->parent();
+        }
+    }
+    $sectionSlug = $section->slug();
+
+    $sectionColors = [
+        'home'     => '#E03A3E',
+        'about'    => '#F5821F',
+        'posts'    => '#FDB827',
+        'projects' => '#009DDC',
+        'links'    => '#61BB46',
+    ];
+    $themeColor = $sectionColors[$sectionSlug] ?? $sectionColors['home'];
+    ?>
+    <!-- viewport-fit=cover makes env(safe-area-inset-*) resolve to real
+         values, so the footer can extend under the home indicator -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="<?= $themeColor ?>">
     <title><?= $page->title()->html() ?> | <?= $site->title()->html() ?></title>
     <?php
     // Cache busting: use file modification time as version
@@ -41,20 +68,7 @@
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 
 </head>
-<?php
-// Determine the current section (top-level page) for theming
-if ($page->isHomePage()) {
-    $section = $page;
-} else {
-    // Find the topmost parent that is a direct child of home
-    $section = $page;
-    while ($section->parent() && !$section->parent()->isHomePage()) {
-        $section = $section->parent();
-    }
-}
-$sectionSlug = $section->slug();
-?>
-<body data-section="<?= $sectionSlug ?>">
+<body data-section="<?= esc($sectionSlug, 'attr') ?>">
     <!-- Skip link - first focusable element for keyboard users -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 

@@ -108,6 +108,12 @@ html {
     font-family: var(--ff-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* iOS paints the overscroll ("rubber band") area from the root element.
+       Without this it shows white below the footer when you pull past the
+       bottom — and under iOS 26's translucent UI chrome, which samples
+       whatever is behind it. The page itself is white-on-white, so only the
+       bottom end of the scroll reveals the difference. */
+    background-color: var(--color-section, var(--color-home));
 }
 
 a {
@@ -121,6 +127,9 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* Keep the readable area white; the theme color on <html> shows only
+       in the overscroll area past the footer. */
+    background-color: #fff;
 }
 
 .header {
@@ -257,6 +266,10 @@ footer {
     margin-top: auto;
     background-color: var(--color-section, var(--color-home));
     padding-block: var(--space-lg);
+    /* Extend into the iOS home-indicator inset so the color reaches the
+       physical bottom of the screen rather than stopping at the safe area.
+       Falls back to the plain value everywhere else. */
+    padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
 }
 
 /* Inner element carries the page grid, so the color can go full-bleed. */
@@ -386,6 +399,16 @@ select:focus-visible {
 [data-section="posts"]    { --color-section: var(--color-posts); }
 [data-section="projects"] { --color-section: var(--color-projects); }
 [data-section="links"]    { --color-section: var(--color-links); }
+
+/* <html> is the parent of the [data-section] element, so it cannot inherit
+   the variable set there — :has() reaches back up. This matters because
+   iOS paints the overscroll area from the root: without it, pulling past
+   a green footer reveals red. */
+html:has([data-section="home"])     { --color-section: var(--color-home); }
+html:has([data-section="about"])    { --color-section: var(--color-about); }
+html:has([data-section="posts"])    { --color-section: var(--color-posts); }
+html:has([data-section="projects"]) { --color-section: var(--color-projects); }
+html:has([data-section="links"])    { --color-section: var(--color-links); }
 
 /* Theme color stripe on the active nav item */
 .logo[aria-current="page"],
