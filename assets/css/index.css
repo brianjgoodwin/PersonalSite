@@ -120,6 +120,22 @@ a {
     color: currentColor
 }
 
+/* ---- PAGE GRID ----
+   One definition of the two-column tracks, shared by everything that
+   aligns to them: header, footer, content, art showcase. #41 finding 3 —
+   previously declared in four places, so the tracks could drift apart.
+
+   Deliberately does NOT set `display`. Each component decides whether and
+   when it is a grid (the header and .site-main both switch to flex at
+   mobile), and an unconditional `display: grid` here would fight those
+   rules on equal specificity, where source order decides. The tracks are
+   the shared thing; the display mode is not. */
+.page-grid,
+.page-grid-wide {
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--col-gap);
+}
+
 body {
     font-family: var(--ff-body);
     font-size: var(--font-body);
@@ -135,8 +151,6 @@ body {
 .header {
   position: relative; /* For absolute positioning of mobile menu */
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: var(--col-gap);
   align-items: baseline; /* Align text baselines */
   max-width: var(--content-max-width);
   width: 100%;
@@ -274,13 +288,11 @@ footer {
 
 /* Inner element carries the page grid, so the color can go full-bleed. */
 .footer-inner {
+    display: grid;
     max-width: var(--content-max-width);
     width: 100%;
     margin-inline: auto;
     padding-inline: var(--page-pad);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: var(--col-gap);
 }
 
 /* Left-aligned to the same edge as the logo and body text. Shrink-wrapped
@@ -647,14 +659,17 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
     gap: var(--section-gap);
 }
 
-/* Enable two-column grid at tablet/iPad width and above */
+/* Two columns from the breakpoint up. Tracks come from .page-grid-wide. */
 @media (min-width: 48em) {
     .site-main {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        column-gap: var(--col-gap);
+    }
+
+    .art-showcase {
+        display: grid;
     }
 }
+
 
 .col-primary {
     grid-column: 1;
@@ -1271,12 +1286,6 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Desktop: 2-column grid, one row per section */
 @media (min-width: 48em) {
-    .art-showcase {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        column-gap: var(--col-gap);
-    }
-
     /* Title spans both columns (the breadcrumb does so globally). */
     .art-showcase-title {
         grid-column: 1 / -1;

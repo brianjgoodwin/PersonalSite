@@ -75,7 +75,7 @@
     <!-- Live region for screen reader announcements -->
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="menu-status"></div>
 
-    <header class="header">
+    <header class="header page-grid">
         <a class="logo" href="<?= $site->url() ?>" <?= $page->isHomePage() ? 'aria-current="page"' : '' ?>><?= $site->title()->html() ?></a>
 
         <!-- Mobile menu toggle button -->

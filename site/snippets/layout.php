@@ -26,7 +26,7 @@ $secondary = $secondary ?? null;
 $layoutClass = $layoutClass ?? '';
 ?>
 
-<div class="site-main <?= esc($layoutClass, 'attr') ?>">
+<div class="site-main page-grid-wide <?= esc($layoutClass, 'attr') ?>">
   <?php if ($showBreadcrumb): ?>
     <?php snippet('breadcrumb') ?>
   <?php endif ?>

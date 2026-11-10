@@ -1,6 +1,6 @@
 <?php snippet('header') ?>
 
-<div class="art-showcase">
+<div class="art-showcase page-grid-wide">
   <?php snippet('breadcrumb') ?>
 
   <h1 class="art-showcase-title"><?= $page->title()->html() ?></h1>
