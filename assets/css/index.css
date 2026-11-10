@@ -14,7 +14,11 @@
 :root {
     /* ---- ROOT VALUES ---- */
     --base-unit: 80px;          /* X — the spatial root */
-    --base-font: 16px;          /* typographic root */
+    /* Typographic root as a ratio of the reader's browser default (usually
+       16px), not a fixed pixel size — see the html rule below. 1 = 16px for
+       a default reader; a reader who sets 20px gets 20px. */
+    --base-font-scale: 1;
+    --base-font: 1rem;
 
     /* ---- LAYOUT ----
        The page is the root, not the column. Columns are `1fr` — they take
@@ -88,8 +92,13 @@
     --art-min-height: calc(var(--base-unit) * 3);
 }
 
+/* Percentage, not px: a px root font-size overrides the reader's browser
+   font-size preference entirely (WCAG 1.4.4). Someone who sets a 20px
+   default should get 20px here, scaled by --base-font-scale rather than
+   replaced by a fixed number. Browser zoom worked before this; the
+   font-size setting did not. */
 html {
-    font-size: var(--base-font);
+    font-size: calc(var(--base-font-scale) * 100%);
     font-family: var(--ff-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -168,6 +177,12 @@ main {
    Space goes between siblings, in one direction only. The owl selector
    means the first child never carries a stray top margin and margins
    never collapse — the gap you read is the value you set. */
+/* Long URLs and unbroken strings would otherwise overflow a narrow column
+   — the measure cap limits the box, not the word inside it. */
+p, li, blockquote, h1, h2, h3, h4, h5, h6, dd, dt, figcaption, td, th {
+    overflow-wrap: break-word;
+}
+
 p {
     line-height: 1.5;
 }
@@ -432,7 +447,7 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
 }
 
 /* Mobile: show hamburger, hide menu by default */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     .header {
         display: flex !important;
         grid-template-columns: none;
@@ -587,7 +602,7 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
 }
 
 /* Enable two-column grid at tablet/iPad width and above */
-@media (min-width: 768px) {
+@media (min-width: 48em) {
     .site-main {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -697,7 +712,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Mobile — Stack below 768px */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     footer {
         display: block;
         /* Remove max-width constraint - span full viewport on mobile */
@@ -1047,7 +1062,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Mobile adjustments */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     .gallery-item img {
         height: calc(var(--base-unit) * 2); /* Smaller on mobile: 160px */
     }
@@ -1185,7 +1200,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Mobile adjustments for one-column */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     .site-main.layout-one-column {
         max-width: none;
         padding: var(--mobile-pad);
@@ -1213,7 +1228,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Desktop: 2-column grid, one row per section */
-@media (min-width: 768px) {
+@media (min-width: 48em) {
     .art-showcase {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1245,7 +1260,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Mobile: stack text then canvas per section */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     .art-showcase {
         display: flex;
         flex-direction: column;
