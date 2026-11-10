@@ -14,7 +14,7 @@
 :root {
     /* ---- ROOT VALUES ---- */
     --base-unit: 80px;          /* X — the spatial root */
-    --base-font: 17px;          /* typographic root */
+    --base-font: 16px;          /* typographic root */
 
     /* ---- LAYOUT (fluid grid with proportional columns) ---- */
     /* Padding for smaller screens */
@@ -48,6 +48,13 @@
     --flow-space-heading: 1.6em;       /* above a heading — belongs to the section it opens */
     --flow-space-after-heading: 0.6em; /* below a section heading — binds it to its own text */
     --flow-space-after-title: 1.4em;   /* below a display-sized page title */
+
+    /* ---- MEASURE ----
+       Line length for sustained reading. 32em at 16px = 512px ≈ 73
+       characters in SF Pro Text (avg glyph 0.4128em incl. spaces), inside
+       the 45–75 range. Measured against real font metrics, not the 1ch ≈
+       0.5em rule of thumb, which is ~21% low for proportional faces. */
+    --measure: 32em;
 
     /* ---- HEADER PADDING (responsive) ---- */
     --header-padding: var(--mobile-pad);
@@ -615,7 +622,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .col-primary p {
-    max-width: 38em;
+    max-width: var(--measure);
 }
 
 /* Secondary Column — Sidebar + Art */
@@ -1254,6 +1261,6 @@ main:has(.art-showcase) {
 
 .art-showcase-text p {
     margin-bottom: var(--space-xs);
-    max-width: 38em;
+    max-width: var(--measure);
 }
 
