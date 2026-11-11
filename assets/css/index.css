@@ -120,6 +120,26 @@ a {
     color: currentColor
 }
 
+/* ---- REDUCED MOTION ----
+   One blanket rule rather than per-component overrides. This was previously
+   four separate blocks each naming specific selectors, which meant a new or
+   renamed component silently shipped unguarded — and two had already slipped
+   through (.gallery-close and .gallery-prev/.gallery-next kept their hover
+   transitions regardless of the preference).
+
+   Near-zero rather than `none` so transitionend/animationend still fire and
+   any JS waiting on them is not left hanging. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 /* ---- PAGE GRID ----
    One definition of the two-column tracks, shared by everything that
    aligns to them: header, footer, content, art showcase. #41 finding 3 —
@@ -628,13 +648,6 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
     }
 }
 
-/* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .menu {
-        transition: none;
-    }
-}
-
 /* ============================================
    UNIFIED GRID LAYOUT
    Max-width container with proportional two-column grid
@@ -870,13 +883,6 @@ h1, h2, h3, h4, h5, h6 {
     outline-offset: 4px;
 }
 
-/* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .card {
-        transition: none;
-    }
-}
-
 /* ============================================
    PROJECT CARDS
    Cards with square image box and text
@@ -928,9 +934,12 @@ h1, h2, h3, h4, h5, h6 {
    Lightweight gallery for app screenshots
    ============================================ */
 
+/* One-directional, like the rest of the flow system. The previous
+   two-directional version also won an unintended specificity fight: a
+   class selector beats `p + *`, so a gallery after a paragraph took 40px
+   rather than the flow value, by accident rather than by design. */
 .gallery {
-    margin-top: var(--space-md);
-    margin-bottom: var(--space-md);
+    margin-block-start: var(--space-md);
 }
 
 .gallery-scroll {
@@ -1104,16 +1113,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .gallery-scroll {
-        scroll-behavior: auto;
-    }
-
-    .gallery-item {
-        transition: none;
-    }
-}
-
 /* Mobile adjustments */
 @media (max-width: 47.9375em) {
     .gallery-item img {
@@ -1203,13 +1202,6 @@ h1, h2, h3, h4, h5, h6 {
     color: #333;
 }
 
-/* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .related-post-card-link {
-        transition: none;
-    }
-}
-
 /* ============================================
    ONE-COLUMN LAYOUT (ARTICLE STYLE)
    Centered content with wider text column
@@ -1270,6 +1262,10 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
     padding-top: var(--header-padding);
     padding-bottom: calc(var(--section-gap) * 0.25);
+    /* Matches .site-main. Without it, showcase content runs flush to the
+       viewport edge at any width below --page-max while every other
+       template is inset. */
+    padding-inline: var(--page-pad);
 }
 
 .art-showcase-title {
