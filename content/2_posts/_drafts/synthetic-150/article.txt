@@ -1,0 +1,19 @@
+Title: A Short Note
+
+----
+
+Date: 2026-03-01 09:00:00
+
+----
+
+Excerpt: Synthetic test post, roughly 150 words. Used for layout prototyping only.
+
+----
+
+Body:
+
+The hardest part of learning in public is admitting which parts you never understood. I am suspicious of any system that cannot explain why it chose the number it chose. There is a particular kind of satisfaction in a tool that does one thing and refuses to do anything else.
+
+I spent a long time believing that if I just read enough documentation the gaps would close on their own. There is a particular kind of satisfaction in a tool that does one thing and refuses to do anything else. The web rewards the thing that is easy to build, which is not always the thing worth building.
+
+Most of what passes for design discourse online is actually a discussion about defaults. Reading on a screen is a different act from reading on paper and pretending otherwise helps nobody. I keep a folder of half-finished projects and I do not consider it a failure.

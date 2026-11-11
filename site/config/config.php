@@ -32,6 +32,7 @@ return [
     // it ever needs to be Panel-editable or vary by post.
     'site.author' => 'Brian Goodwin',
 
+
     // Routes
     'routes' => [
         [
@@ -63,6 +64,33 @@ return [
                 // Block all frontend access to documentation pages
                 // These are Panel-only pages for internal documentation
                 return kirby()->site()->errorPage();
+            }
+        ],
+
+        // Draft preview, non-production only.
+        //
+        // Test posts live in content/2_posts/_drafts/ so they stay out of
+        // the sitemap, the RSS feed and the /posts index. But Kirby gives a
+        // draft no preview URL without an authenticated Panel session, and
+        // the Panel is deliberately unusable on a dev host (see
+        // $isProduction at the top of this file) — which would leave layout
+        // work with no way to view its own test content.
+        //
+        // /draft/posts/synthetic-1500 renders that draft. The route is not
+        // registered at all in production, and it still refuses anything
+        // that is not actually a draft.
+        [
+            'pattern' => 'draft/(:all)',
+            'action'  => function (string $path) use ($isProduction) {
+                if ($isProduction === true) {
+                    return kirby()->site()->errorPage();
+                }
+
+                $page = kirby()->site()->index(true)->find($path);
+
+                return $page && $page->isDraft()
+                    ? $page->render()
+                    : kirby()->site()->errorPage();
             }
         ]
     ],
