@@ -27,6 +27,11 @@ return [
     // Debug mode - shows detailed errors
     'debug' => false,
 
+    // Byline shown on articles. Single-author site, so this is a config
+    // value rather than a per-page field. Promote to a site.txt field if
+    // it ever needs to be Panel-editable or vary by post.
+    'site.author' => 'Brian Goodwin',
+
     // Routes
     'routes' => [
         [

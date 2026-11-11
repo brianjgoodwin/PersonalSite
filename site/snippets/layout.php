@@ -31,7 +31,7 @@ $layoutClass = $layoutClass ?? '';
     <?php snippet('breadcrumb') ?>
   <?php endif ?>
 
-  <div class="col-primary">
+  <div class="col-primary flow">
     <?php if (is_callable($primary)): ?>
       <?php $primary() ?>
     <?php endif ?>

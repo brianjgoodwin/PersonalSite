@@ -1,22 +1,48 @@
 <?php snippet('header') ?>
 
-<?php snippet('layout', [
-  'showBreadcrumb' => true,
+<?php
+/**
+ * Article layout — prototype.
+ *
+ * Does not use snippet('layout'): that snippet emits a fixed
+ * breadcrumb + .col-primary + aside.col-secondary shape, and the title
+ * here has to span both tracks, which a grid child cannot do from inside
+ * .col-primary. Predicted in #44.
+ *
+ * Shape:
+ *   breadcrumb        spans
+ *   title             spans (capped, see --title-measure)
+ *   meta | body       body is the RIGHT track, meta the left
+ *
+ * Mobile stacks title -> meta -> body via DOM order, so no `order`
+ * property is needed and reading order matches visual order.
+ */
+?>
+<div class="article-layout">
 
-  'primary' => function() use ($page) { ?>
-    <article class="article-content">
-      <h1><?= $page->title()->html() ?></h1>
-      <?= $page->body()->kirbytext() ?>
+  <?php snippet('breadcrumb') ?>
 
-      <?php if ($parent = $page->parent()): ?>
-      <p class="back-link"><a href="<?= $parent->url() ?>">← Back to <?= $parent->title()->html() ?></a></p>
-      <?php endif ?>
-    </article>
-  <?php },
+  <h1 class="article-title"><?= $page->title()->html() ?></h1>
 
-  'secondary' => function() { ?>
-    <?php snippet('procedural-art') ?>
-  <?php }
-]) ?>
+  <div class="article-meta">
+    <p class="article-byline"><?= esc(option('site.author', 'Brian Goodwin')) ?></p>
+    <?php if ($page->date()->isNotEmpty()): ?>
+      <p class="article-date">
+        <time datetime="<?= $page->date()->toDate('c') ?>">
+          <?= $page->date()->toDate('F j, Y') ?>
+        </time>
+      </p>
+    <?php endif ?>
+  </div>
+
+  <article class="article-body flow">
+    <?= $page->body()->kirbytext() ?>
+
+    <?php if ($parent = $page->parent()): ?>
+      <p class="back-link"><a href="<?= $parent->url() ?>">&larr; Back to <?= $parent->title()->html() ?></a></p>
+    <?php endif ?>
+  </article>
+
+</div>
 
 <?php snippet('footer') ?>

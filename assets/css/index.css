@@ -29,7 +29,14 @@
        measure and the page's structural unit. That coupling clamped the
        whole layout to reading width (nothing happened above 1440px) while
        also squeezing columns to ~42 characters at iPad portrait. */
-    --page-max: 2000px;
+    /* Composition width. Originally 2000px, chosen before there was
+       anything to put in that space; at that width a reading page strands
+       its text ribbon in an empty track (see the article layout below).
+       72em caps the composition where it still reads as composed, and the
+       page centres beyond that rather than growing. Header, footer and
+       article all share this, so the logo keeps the same edge as the
+       body text at every width. */
+    --page-max: 72em;
     --page-pad: var(--space-sm);
     /* Floor for the gutter; surplus beyond it emerges from the measure cap. */
     --col-gap: var(--space-md);
@@ -59,11 +66,28 @@
     --flow-space-after-title: 1.4em;   /* below a display-sized page title */
 
     /* ---- MEASURE ----
-       Line length for sustained reading. 32em at 16px = 512px ≈ 73
+       Line length for sustained reading. 32rem at a 16px root = 512px ≈ 73
        characters in SF Pro Text (avg glyph 0.4128em incl. spaces), inside
        the 45–75 range. Measured against real font metrics, not the 1ch ≈
-       0.5em rule of thumb, which is ~21% low for proportional faces. */
-    --measure: 32em;
+       0.5em rule of thumb, which is ~21% low for proportional faces.
+
+       `rem`, not `em`: em would resolve against each element's own font
+       size, so a 24px h2 took a 768px cap against a paragraph's 512px and
+       — both being centred — hung 128px to the left of the text. That was
+       an accident of arithmetic, not a decision. rem gives every capped
+       element the same edge regardless of its size. */
+    --measure: 32rem;
+    /* A display-sized title needs its own, shorter measure — a spanning
+       title at the page width would run too long to read as display type.
+
+       `em` here, deliberately — unlike --measure above. A title is a single
+       element rather than part of a shared left edge, so its line length
+       should scale with its own size: 24em of the title's own type ≈ 922px
+       at the default scale. rem would freeze it at 384px. */
+    --title-measure: 24em;
+    /* Metadata column: wide enough for a date without wrapping, narrow
+       enough that the body track clearly dominates. */
+    --article-meta-col: 14em;
 
     /* ---- HEADER PADDING (responsive) ---- */
     --header-padding: var(--mobile-pad);
@@ -250,21 +274,24 @@ ul, ol {
     line-height: 1.5;
 }
 
-/* Every sibling pair inside a content column gets a gap. Scoped to the
+/* `.flow` marks a container whose children want vertical rhythm.
+   .col-primary opts in below; the article template applies it directly.
+
+   Every sibling pair inside a flow container gets a gap. Scoped to the
    containers rather than enumerated by tag: an earlier version listed
    prose tags as the LEFT operand (`p + *`, `ul + *`, …), so any pair
    whose first element was a wrapper matched nothing — `.home-text` →
    `.home-cards` and consecutive `.post-preview` articles both rendered
    flush at 0px. Matching on position rather than tag name means a new
    component cannot silently fall outside the rhythm. */
-.col-primary > * + *,
-.col-primary > * > * + * {
+.flow > * + *,
+.flow > * > * + * {
     margin-block-start: var(--flow-space);
 }
 
 /* Headings open a section, so they take the larger space above —
    and override the flow value set by whatever preceded them. */
-.col-primary :is(* + h1, * + h2, * + h3, * + h4, * + h5, * + h6),
+.flow :is(* + h1, * + h2, * + h3, * + h4, * + h5, * + h6),
 * + h1, * + h2, * + h3, * + h4, * + h5, * + h6 {
     margin-block-start: var(--flow-space-heading);
 }
@@ -272,14 +299,14 @@ ul, ol {
 /* What follows a heading sits closer to it than to the previous section —
    that proximity is what binds a heading to its own text. Resolves against
    the following element's size, so it stays constant for body copy. */
-.col-primary :is(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *),
+.flow :is(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *),
 h2 + *, h3 + *, h4 + *, h5 + *, h6 + * {
     margin-block-start: var(--flow-space-after-heading);
 }
 
 /* A page title is display-sized, so it needs more room beneath it than a
    section heading does — otherwise body copy reads as glued to it. */
-.col-primary :is(h1 + *),
+.flow :is(h1 + *),
 h1 + * {
     margin-block-start: var(--flow-space-after-title);
 }
@@ -1345,3 +1372,113 @@ h1, h2, h3, h4, h5, h6 {
     max-width: var(--measure);
 }
 
+
+/* ============================================
+   ARTICLE LAYOUT (prototype)
+   Title spans; metadata left; body right. Body text is a centred ribbon
+   at the measure, images break out to the full column.
+   ============================================ */
+
+.article-layout {
+    max-width: var(--content-max-width);
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--page-pad);
+    padding-bottom: calc(var(--section-gap) * 0.25);
+    /* Mobile: single column, DOM order is reading order. */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* The title gets its own measure rather than the full page. At --page-max
+   a spanning title would run ~1900px — too long to read as display type.
+   Capping it keeps the scale while still starting at the page's left edge,
+   so the eye registers full width before dropping into the reading ribbon. */
+.article-title {
+    font-family: var(--ff-display);
+    font-size: var(--font-xl);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    max-width: var(--title-measure);
+}
+
+.article-meta {
+    font-size: var(--font-sm);
+    color: #666;
+    line-height: 1.4;
+}
+
+.article-byline {
+    font-weight: 600;
+    color: #333;
+}
+
+.article-date {
+    margin-block-start: var(--space-3xs);
+}
+
+@media (min-width: 48em) {
+    .article-layout {
+        display: grid;
+        /* The body track is capped rather than 1fr. At --page-max a 1fr
+           track reaches ~1690px, which strands the 512px ribbon in the
+           middle of a void — it reads as broken, not spacious. Capping it
+           keeps meaningful room for full-bleed images (roughly 1.5x the
+           measure) while the page itself still grows. */
+        grid-template-columns: var(--article-meta-col) minmax(0, 1fr);
+        column-gap: var(--col-gap);
+        align-items: start;
+    }
+
+    .article-layout > nav[aria-label="breadcrumb"],
+    .article-title {
+        grid-column: 1 / -1;
+    }
+
+    .article-meta {
+        grid-column: 1;
+        /* Baseline-align the byline with the body's first line. The two
+           differ in size, so matching box tops leaves the metadata looking
+           dropped; this offsets by the difference in half-leading. */
+        margin-block-start: 0.2em;
+    }
+
+    .article-body {
+        grid-column: 2;
+        min-width: 0;
+    }
+}
+
+/* ---- The ribbon ----
+   Prose is centred in the column at the measure; anything that is not
+   prose keeps the full column width. This is what makes a wide display
+   pay off: the column grows, the line length does not, and images get
+   the extra room instead. */
+.article-body > :is(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, .back-link) {
+    max-width: var(--measure);
+    margin-inline: auto;
+}
+
+.article-body > :is(figure, pre, table) {
+    max-width: none;
+}
+
+.article-body > figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.article-body > figure figcaption {
+    max-width: var(--measure);
+    margin-inline: auto;
+    margin-block-start: var(--space-2xs);
+    font-size: var(--font-sm);
+    color: #666;
+}
+
+.back-link {
+    margin-block-start: var(--space-lg);
+    font-size: var(--font-sm);
+}
