@@ -230,40 +230,36 @@ ul, ol {
     line-height: 1.5;
 }
 
-p + *,
-ul + *,
-ol + *,
-blockquote + *,
-figure + *,
-pre + *,
-table + * {
+/* Every sibling pair inside a content column gets a gap. Scoped to the
+   containers rather than enumerated by tag: an earlier version listed
+   prose tags as the LEFT operand (`p + *`, `ul + *`, …), so any pair
+   whose first element was a wrapper matched nothing — `.home-text` →
+   `.home-cards` and consecutive `.post-preview` articles both rendered
+   flush at 0px. Matching on position rather than tag name means a new
+   component cannot silently fall outside the rhythm. */
+.col-primary > * + *,
+.col-primary > * > * + * {
     margin-block-start: var(--flow-space);
 }
 
 /* Headings open a section, so they take the larger space above —
    and override the flow value set by whatever preceded them. */
-* + h1,
-* + h2,
-* + h3,
-* + h4,
-* + h5,
-* + h6 {
+.col-primary :is(* + h1, * + h2, * + h3, * + h4, * + h5, * + h6),
+* + h1, * + h2, * + h3, * + h4, * + h5, * + h6 {
     margin-block-start: var(--flow-space-heading);
 }
 
 /* What follows a heading sits closer to it than to the previous section —
    that proximity is what binds a heading to its own text. Resolves against
    the following element's size, so it stays constant for body copy. */
-h2 + *,
-h3 + *,
-h4 + *,
-h5 + *,
-h6 + * {
+.col-primary :is(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *),
+h2 + *, h3 + *, h4 + *, h5 + *, h6 + * {
     margin-block-start: var(--flow-space-after-heading);
 }
 
 /* A page title is display-sized, so it needs more room beneath it than a
    section heading does — otherwise body copy reads as glued to it. */
+.col-primary :is(h1 + *),
 h1 + * {
     margin-block-start: var(--flow-space-after-title);
 }
