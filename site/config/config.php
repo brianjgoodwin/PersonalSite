@@ -1,5 +1,28 @@
 <?php
 
+/**
+ * Is this the real production server?
+ *
+ * ALLOWLIST, not a denylist. The previous version listed three "safe"
+ * hostnames (localhost, 127.0.0.1, ::1) and treated everything else as
+ * production — so ANY other hostname armed git-content auto-commit and
+ * auto-push to the real remote. That included LAN IPs, Tailscale and ngrok
+ * addresses, and anything else you might bind a dev server to. Running
+ * `php -S 192.168.x.x:8000` for device testing was enough to arm it.
+ *
+ * Now production must be named explicitly, so anything unrecognised gets
+ * the safe (disabled) behaviour by construction.
+ *
+ * These must match the server's SERVER_NAME exactly. If Panel edits stop
+ * being committed after a deploy, check here first: a mismatch fails safe
+ * (disabled), which is the right direction but is silent.
+ *
+ * SERVER_NAME comes from the server config rather than the Host header, so
+ * it is not attacker-controlled the way HTTP_HOST would be.
+ */
+$productionHosts = ['brianjgoodwin.net', 'www.brianjgoodwin.net'];
+$isProduction = in_array($_SERVER['SERVER_NAME'] ?? '', $productionHosts, true);
+
 return [
     // Debug mode - shows detailed errors
     'debug' => false,
@@ -154,35 +177,18 @@ return [
 
     // Git Content Plugin Configuration
     // https://github.com/thathoff/kirby-git-content
-    // Only enabled in production (disabled on localhost for testing)
-
-    // Validate server environment - whitelist approach for security
-    // This prevents HTTP Host header injection attacks
-    'isProduction' => (function() {
-        $allowedLocalHosts = ['localhost', '127.0.0.1', '::1'];
-        $serverName = $_SERVER['SERVER_NAME'] ?? '';
-
-        // Only disable git features if we're definitely on localhost
-        // If SERVER_NAME doesn't match localhost patterns, assume production
-        return !in_array($serverName, $allowedLocalHosts, true);
-    })(),
+    //
+    // See $isProduction at the top of this file.
+    'isProduction' => $isProduction,
 
     // Enable automatic commits when content changes via Panel
-    'thathoff.git-content.commit' => (function() {
-        $allowedLocalHosts = ['localhost', '127.0.0.1', '::1'];
-        $serverName = $_SERVER['SERVER_NAME'] ?? '';
-        return !in_array($serverName, $allowedLocalHosts, true);
-    })(),
+    'thathoff.git-content.commit' => $isProduction,
 
     // Automatically pull changes from remote before making changes
     'thathoff.git-content.pull' => false,
 
     // Automatically push commits to remote repository
-    'thathoff.git-content.push' => (function() {
-        $allowedLocalHosts = ['localhost', '127.0.0.1', '::1'];
-        $serverName = $_SERVER['SERVER_NAME'] ?? '';
-        return !in_array($serverName, $allowedLocalHosts, true);
-    })(),
+    'thathoff.git-content.push' => $isProduction,
 
     // Path to git repository (defaults to content directory)
     // 'thathoff.git-content.path' => kirby()->root('content'),
