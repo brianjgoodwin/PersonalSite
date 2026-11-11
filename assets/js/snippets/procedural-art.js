@@ -18,27 +18,23 @@
   if (!canvas || !container) return;
 
   const ctx = canvas.getContext('2d');
-  const section = container.dataset.section;
   const seed = parseInt(container.dataset.seed, 10);
 
-  // Theme colors (Apple Rainbow palette)
-  const themeColors = {
-    'home': '#E03A3E',
-    'about': '#F5821F',
-    'posts': '#FDB827',
-    'projects': '#009DDC',
-    'links': '#61BB46'
-  };
+  // Read the palette from CSS rather than keeping a copy. The container
+  // sits inside [data-section], so --color-section already resolves to the
+  // right hue, and index.css stays the single source of truth.
+  const cssVar = (name, fallback) =>
+    getComputedStyle(container).getPropertyValue(name).trim() || fallback;
 
-  const themeColor = themeColors[section] || '#E03A3E';
+  const themeColor = cssVar('--color-section', '#E03A3E');
 
   // Shared color palette (for accents)
   const palette = [
-    '#E03A3E',  // red
-    '#F5821F',  // orange
-    '#FDB827',  // yellow
-    '#009DDC',  // blue
-    '#61BB46',  // green
+    cssVar('--color-home', '#E03A3E'),
+    cssVar('--color-about', '#F5821F'),
+    cssVar('--color-posts', '#FDB827'),
+    cssVar('--color-projects', '#009DDC'),
+    cssVar('--color-links', '#61BB46'),
     '#1a1a1a',  // black
     '#f5f3ef',  // off-white
     '#8a8578'   // gray

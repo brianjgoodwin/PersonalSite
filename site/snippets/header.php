@@ -18,14 +18,28 @@
     }
     $sectionSlug = $section->slug();
 
-    $sectionColors = [
-        'home'     => '#E03A3E',
-        'about'    => '#F5821F',
-        'posts'    => '#FDB827',
-        'projects' => '#009DDC',
-        'links'    => '#61BB46',
-    ];
-    $themeColor = $sectionColors[$sectionSlug] ?? $sectionColors['home'];
+    // theme-color must be a literal in the HTML, so PHP needs the value —
+    // but it reads it out of index.css rather than keeping a copy, so the
+    // palette cannot drift. Cached per request; falls back to home red if
+    // the stylesheet is unreadable or the variable is renamed.
+    $themeColor = (function () use ($sectionSlug) {
+        static $colors = null;
+        if ($colors === null) {
+            $colors = [];
+            $css = @file_get_contents(kirby()->root('assets') . '/css/index.css');
+            if ($css !== false && preg_match_all(
+                '/--color-([a-z]+)\s*:\s*(#[0-9A-Fa-f]{3,8})\s*;/',
+                $css,
+                $m,
+                PREG_SET_ORDER
+            )) {
+                foreach ($m as $match) {
+                    $colors[$match[1]] = $match[2];
+                }
+            }
+        }
+        return $colors[$sectionSlug] ?? $colors['home'] ?? '#E03A3E';
+    })();
     ?>
     <!-- viewport-fit=cover makes env(safe-area-inset-*) resolve to real
          values, so the footer can extend under the home indicator -->
