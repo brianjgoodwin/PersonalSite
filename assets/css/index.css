@@ -88,12 +88,16 @@
     /* Metadata column: wide enough for a date without wrapping, narrow
        enough that the body track clearly dominates. */
     --article-meta-col: 14em;
+    /* Plain variant column. Measure + room on each side for figures and
+       code to break out of the text without leaving the composition. */
+    --plain-width: 50rem;
 
     /* ---- HEADER PADDING (responsive) ---- */
     --header-padding: var(--mobile-pad);
 
     /* ---- TYPOGRAPHY (relational) ---- */
     --ff-display: Georgia, 'Times New Roman', serif;
+    --ff-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     --ff-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     --font-xs: calc(var(--base-font) * 0.7);
     --font-sm: calc(var(--base-font) * 0.82);
@@ -1481,4 +1485,100 @@ h1, h2, h3, h4, h5, h6 {
 .back-link {
     margin-block-start: var(--space-lg);
     font-size: var(--font-sm);
+}
+
+/* ---- PLAIN VARIANT ----
+   One centred column: metadata stacked above the body, both at the
+   measure. For technical writing — code blocks and screenshots want the
+   full column rather than a narrow two-up track.
+
+   Essentially the mobile layout promoted to a deliberate desktop choice,
+   so it needs no new markup: the grid rules simply do not apply. */
+@media (min-width: 48em) {
+    .article-layout--plain {
+        display: block;
+        max-width: var(--plain-width);
+        /* margin-inline:auto would centre the column but leave the title,
+           metadata and body sharing its left edge, which is what we want —
+           the whole composition centres, not each element independently. */
+        margin-inline: auto;
+    }
+
+    /* Title and metadata sit on the prose edge, not the column edge. The
+       column is wider than the measure so figures and code can break out;
+       without this the title, the metadata and the text each start at a
+       different x and the composition loses its spine. */
+    .article-layout--plain .article-title,
+    .article-layout--plain .article-meta {
+        max-width: var(--measure);
+        margin-inline: auto;
+    }
+
+    .article-layout--plain .article-meta {
+        margin-block-start: var(--space-sm);
+        /* Row rather than stack: the byline and date read as one line of
+           metadata under the title, not two stacked fragments. */
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+
+    .article-layout--plain .article-meta p {
+        margin-block-start: 0;
+    }
+
+    .article-layout--plain .article-body {
+        margin-block-start: var(--space-lg);
+    }
+
+    /* Prose sits at the measure; the column itself is the bleed band. */
+    .article-layout--plain .article-body > :is(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, .back-link) {
+        max-width: var(--measure);
+        margin-inline: auto;
+    }
+
+    /* Bounded bleed: figures, code and tables break out past the measure
+       to the full column, symmetrically. Not to the viewport — that would
+       undo the --page-max decision, where unbounded width read as broken.
+       Images get their own scale without escaping the composition. */
+    .article-layout--plain .article-body > :is(figure, pre, table) {
+        max-width: none;
+        margin-inline: 0;
+    }
+}
+
+/* ---- CODE ----
+   Previously unstyled: a fenced block rendered as body text with no
+   background, which is unusable for the technical posts the plain layout
+   exists for. */
+pre {
+    font-family: var(--ff-mono);
+    font-size: var(--font-sm);
+    line-height: 1.5;
+    background-color: #f6f5f3;
+    border: 1px solid #e4e2dd;
+    padding: var(--space-xs);
+    overflow-x: auto;
+    /* Long lines scroll inside the block rather than widening the page. */
+    max-width: 100%;
+}
+
+pre code {
+    font-family: inherit;
+    font-size: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    white-space: pre;
+}
+
+/* Inline code, inside prose */
+code {
+    font-family: var(--ff-mono);
+    font-size: 0.9em;
+    background-color: #f6f5f3;
+    border: 1px solid #e4e2dd;
+    border-radius: 3px;
+    padding: 0.1em 0.3em;
+    overflow-wrap: break-word;
 }

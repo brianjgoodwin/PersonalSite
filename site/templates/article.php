@@ -16,9 +16,16 @@
  *
  * Mobile stacks title -> meta -> body via DOM order, so no `order`
  * property is needed and reading order matches visual order.
+ *
+ * Two variants, selected per post in the blueprint:
+ *   essay  two-column, centred reading ribbon (default)
+ *   plain  one column at the measure, metadata stacked above the body.
+ *          For technical writing, where code blocks want the full column
+ *          rather than a narrow track. Same markup, modifier class only.
  */
+$layout = $page->layout()->or('essay')->value();
 ?>
-<div class="article-layout">
+<div class="article-layout article-layout--<?= esc($layout, 'attr') ?>">
 
   <?php snippet('breadcrumb') ?>
 
