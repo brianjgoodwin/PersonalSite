@@ -47,6 +47,26 @@ site/
   templates/       Page templates (home, about, article, posts, projects, links)
 ```
 
+## Untested code paths
+
+**Two features are fully wired but have never actually rendered**, because no
+content exercises them. They are not dead code -- the blueprint field, the
+template branch and the CSS all exist and connect. They have simply never been
+seen in a browser, so treat them as unverified rather than working.
+
+| Feature | Wired at | Why it never renders |
+| --- | --- | --- |
+| **One-column project layout** | `site/blueprints/pages/project.yml` (`layout` select) -> `site/templates/project.php:7` -> `.site-main.layout-one-column` in `assets/css/index.css` | Both projects are set to `Layout: two-column`. Nothing has selected one-column. |
+| **Project image gallery** | `site/blueprints/pages/project.yml` (`gallery` files section) -> `site/templates/project.php:23` -> `site/snippets/gallery.php` | The template branch requires images whose **file template is `gallery-image`**. Both project images are cover images, so the branch is never entered. |
+
+If you use either one for real, **look at the result before deploying** -- it is
+first-run code. To test: set a project to `Layout: one-column`, or upload an
+image into the Panel's "Gallery Images" section (not the cover image field,
+which uses a different file template).
+
+Do not delete these on the assumption that they are unused. A code review once
+flagged the one-column CSS as unreachable; it is reachable, just unselected.
+
 ## Deployment
 
 Merging to `main` triggers a GitHub Actions workflow that:

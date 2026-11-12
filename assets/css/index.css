@@ -1236,6 +1236,12 @@ h1, h2, h3, h4, h5, h6 {
 /* ============================================
    ONE-COLUMN LAYOUT (ARTICLE STYLE)
    Centered content with wider text column
+
+   UNTESTED. Reachable but never rendered: the `layout` select in
+   project.yml offers it and project.php applies the class, but both
+   projects are set to two-column, so nothing has ever used this.
+   Not dead code -- a review once called it that and was wrong.
+   See "Untested code paths" in README.md.
    ============================================ */
 
 .site-main.layout-one-column {

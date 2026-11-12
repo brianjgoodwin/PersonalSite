@@ -4,6 +4,12 @@
  * Displays images in a horizontally scrollable gallery with modal viewer
  *
  * Usage: <?php snippet('gallery', ['images' => $page->images()]) ?>
+ *
+ * UNTESTED: this snippet has never rendered. It only triggers on images
+ * whose FILE TEMPLATE is `gallery-image` (set by uploading into the Panel's
+ * "Gallery Images" section), and no content has one -- project images are
+ * cover images. Check the result in a browser the first time you use it.
+ * See "Untested code paths" in README.md.
  */
 
 $images = $images ?? $page->images()->template('gallery-image');
