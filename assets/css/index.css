@@ -14,26 +14,90 @@
 :root {
     /* ---- ROOT VALUES ---- */
     --base-unit: 80px;          /* X — the spatial root */
-    --base-font: 17px;          /* typographic root */
+    /* Typographic root as a ratio of the reader's browser default (usually
+       16px), not a fixed pixel size — see the html rule below. 1 = 16px for
+       a default reader; a reader who sets 20px gets 20px. */
+    --base-font-scale: 1;
+    --base-font: 1rem;
 
-    /* ---- LAYOUT (fluid grid with proportional columns) ---- */
-    /* Padding for smaller screens */
-    --content-padding: calc(var(--base-unit) * 1);
-    /* Column width - scales from iPad to desktop, accounting for padding */
-    --col-width: clamp(280px, calc((100vw - (var(--content-padding) * 2)) * 0.4), 480px);
-    /* Gap between columns - starts at 68px (2× horizontal padding at 768px), grows to 0.5× column width at 1280px+ */
-    --col-gap: clamp(68px, calc(30.5vw - 166px), calc(var(--col-width) * 0.5));
-    /* Total content width - col + gap + col (fluid: fits within viewport with padding) */
-    --content-max-width: calc((var(--col-width) * 2) + var(--col-gap));
+    /* ---- LAYOUT ----
+       The page is the root, not the column. Columns are `1fr` — they take
+       whatever the page gives them — and text inside is capped by
+       --measure. Surplus past that cap becomes padding, not longer lines.
 
-    /* ---- VERTICAL RHYTHM ---- */
-    --section-gap: calc(var(--base-unit) * 0.5);
+       This inverts the old system, where --col-width was both the text
+       measure and the page's structural unit. That coupling clamped the
+       whole layout to reading width (nothing happened above 1440px) while
+       also squeezing columns to ~42 characters at iPad portrait. */
+    /* Composition width. Originally 2000px, chosen before there was
+       anything to put in that space; at that width a reading page strands
+       its text ribbon in an empty track (see the article layout below).
+       72em caps the composition where it still reads as composed, and the
+       page centres beyond that rather than growing. Header, footer and
+       article all share this, so the logo keeps the same edge as the
+       body text at every width. */
+    --page-max: 72em;
+    --page-pad: var(--space-sm);
+    /* Floor for the gutter; surplus beyond it emerges from the measure cap. */
+    --col-gap: var(--space-md);
+    --content-max-width: var(--page-max);
+
+    /* ---- SPACING SCALE ----
+       Six steps, hand-picked to cover what the site actually uses.
+       Not derived from a ratio: small UI padding resists ratios, and an
+       honest short list beats a generated scale with exceptions bolted on.
+       Use these by name. Reach for a raw calc() only for component SIZES
+       (thumbnail dimensions, canvas heights) — those aren't rhythm. */
+    --space-3xs: 4px;
+    --space-2xs: 8px;
+    --space-xs: 16px;
+    --space-sm: 24px;
+    --space-md: 40px;   /* = base-unit * 0.5 */
+    --space-lg: 64px;   /* section separation — borders, major breaks */
+
+    /* ---- VERTICAL RHYTHM ----
+       Flow spacing is proportional (em) so gaps scale with the type they
+       separate, and one-directional (margin-block-start only) so margins
+       never collapse against each other. */
+    --section-gap: var(--space-md);
+    --flow-space: 0.9em;               /* between body-level siblings */
+    --flow-space-heading: 1.6em;       /* above a heading — belongs to the section it opens */
+    --flow-space-after-heading: 0.6em; /* below a section heading — binds it to its own text */
+    --flow-space-after-title: 1.4em;   /* below a display-sized page title */
+
+    /* ---- MEASURE ----
+       Line length for sustained reading. 32rem at a 16px root = 512px ≈ 73
+       characters in SF Pro Text (avg glyph 0.4128em incl. spaces), inside
+       the 45–75 range. Measured against real font metrics, not the 1ch ≈
+       0.5em rule of thumb, which is ~21% low for proportional faces.
+
+       `rem`, not `em`: em would resolve against each element's own font
+       size, so a 24px h2 took a 768px cap against a paragraph's 512px and
+       — both being centred — hung 128px to the left of the text. That was
+       an accident of arithmetic, not a decision. rem gives every capped
+       element the same edge regardless of its size. */
+    --measure: 32rem;
+    /* A display-sized title needs its own, shorter measure — a spanning
+       title at the page width would run too long to read as display type.
+
+       `em` here, deliberately — unlike --measure above. A title is a single
+       element rather than part of a shared left edge, so its line length
+       should scale with its own size: 24em of the title's own type ≈ 922px
+       at the default scale. rem would freeze it at 384px. */
+    --title-measure: 24em;
+    /* Metadata column: wide enough for a date without wrapping, narrow
+       enough that the body track clearly dominates. */
+    --article-meta-col: 14em;
+    /* Plain variant column. Measure + room on each side for figures and
+       code to break out of the text without leaving the composition. */
+    --plain-width: 50rem;
 
     /* ---- HEADER PADDING (responsive) ---- */
-    --header-padding: var(--mobile-pad);  /* 28px top/bottom padding */
+    --header-padding: var(--mobile-pad);
 
     /* ---- TYPOGRAPHY (relational) ---- */
     --ff-display: Georgia, 'Times New Roman', serif;
+    --ff-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
     --ff-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     --font-xs: calc(var(--base-font) * 0.7);
     --font-sm: calc(var(--base-font) * 0.82);
@@ -51,20 +115,73 @@
     --color-links: #61BB46;     /* Green */
     --color-purple: #8B5CF6;    /* Purple */
 
+    /* The active section's color, resolved from [data-section] below.
+       Lets any component theme itself without knowing which section it is
+       in. Falls back to home red on pages outside the five sections
+       (privacy, error). */
+    --color-section: var(--color-home);
+
     /* ---- MOBILE ---- */
-    --mobile-pad: calc(var(--base-unit) * 0.35);
+    --mobile-pad: var(--space-sm);
     --art-min-height: calc(var(--base-unit) * 3);
 }
 
+/* Percentage, not px: a px root font-size overrides the reader's browser
+   font-size preference entirely (WCAG 1.4.4). Someone who sets a 20px
+   default should get 20px here, scaled by --base-font-scale rather than
+   replaced by a fixed number. Browser zoom worked before this; the
+   font-size setting did not. */
 html {
-    font-size: var(--base-font);
+    font-size: calc(var(--base-font-scale) * 100%);
     font-family: var(--ff-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* iOS paints the overscroll ("rubber band") area from the root element.
+       Without this it shows white below the footer when you pull past the
+       bottom — and under iOS 26's translucent UI chrome, which samples
+       whatever is behind it. The page itself is white-on-white, so only the
+       bottom end of the scroll reveals the difference. */
+    background-color: var(--color-section, var(--color-home));
 }
 
 a {
     color: currentColor
+}
+
+/* ---- REDUCED MOTION ----
+   One blanket rule rather than per-component overrides. This was previously
+   four separate blocks each naming specific selectors, which meant a new or
+   renamed component silently shipped unguarded — and two had already slipped
+   through (.gallery-close and .gallery-prev/.gallery-next kept their hover
+   transitions regardless of the preference).
+
+   Near-zero rather than `none` so transitionend/animationend still fire and
+   any JS waiting on them is not left hanging. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ---- PAGE GRID ----
+   One definition of the two-column tracks, shared by everything that
+   aligns to them: header, footer, content, art showcase. #41 finding 3 —
+   previously declared in four places, so the tracks could drift apart.
+
+   Deliberately does NOT set `display`. Each component decides whether and
+   when it is a grid (the header and .site-main both switch to flex at
+   mobile), and an unconditional `display: grid` here would fight those
+   rules on equal specificity, where source order decides. The tracks are
+   the shared thing; the display mode is not. */
+.page-grid,
+.page-grid-wide {
+    grid-template-columns: 1fr 1fr;
+    column-gap: var(--col-gap);
 }
 
 body {
@@ -74,18 +191,19 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* Keep the readable area white; the theme color on <html> shows only
+       in the overscroll area past the footer. */
+    background-color: #fff;
 }
 
 .header {
   position: relative; /* For absolute positioning of mobile menu */
   display: grid;
-  grid-template-columns: var(--col-width) var(--col-width);
-  column-gap: var(--col-gap);
   align-items: baseline; /* Align text baselines */
   max-width: var(--content-max-width);
+  width: 100%;
   margin: 0 auto;
-  padding-top: var(--header-padding);
-  padding-bottom: var(--header-padding);
+  padding: var(--header-padding) var(--page-pad);
 }
 
 .logo {
@@ -121,63 +239,130 @@ menu {
 }
 
 .menu ul li {
-    margin-left: 1.5rem;
+    margin-left: var(--space-sm);
 }
 
+/* No width constraint here — page width is set by the layout container
+   (.site-main / .art-showcase), which owns --page-max and --page-pad. */
 main {
     flex-grow: 1;
-    max-width: 600px;
-    margin: 0 auto 3rem auto; /* Center horizontally, 3rem bottom margin */
-    width: 100%; /* Allow it to be responsive on small screens */
-    padding: 0 3rem; /* Left and right padding */
+    display: flex;
+    flex-direction: column;
 }
 
-main h1 {
-    margin-bottom: 1.5rem;
+/* ---- FLOW SPACING ----
+   Space goes between siblings, in one direction only. The owl selector
+   means the first child never carries a stray top margin and margins
+   never collapse — the gap you read is the value you set. */
+/* Long URLs and unbroken strings would otherwise overflow a narrow column
+   — the measure cap limits the box, not the word inside it. */
+p, li, blockquote, h1, h2, h3, h4, h5, h6, dd, dt, figcaption, td, th {
+    overflow-wrap: break-word;
 }
 
 p {
     line-height: 1.5;
-    margin-bottom: 1.5rem;
 }
 
 h1 {
     font-size: 2em;
     font-weight: bold;
-    margin-bottom: 1.5rem;
 }
 
 h2 {
     font-size: 1.5em;
     font-weight: bold;
-    margin-bottom: 1.5rem;
-}
-
-h3, h4, h5, h6 {
-    margin-bottom: 1.5rem;
 }
 
 ul, ol {
     line-height: 1.5;
-    margin-bottom: 1.5rem;
 }
 
+/* `.flow` marks a container whose children want vertical rhythm.
+   .col-primary opts in below; the article template applies it directly.
+
+   Every sibling pair inside a flow container gets a gap. Scoped to the
+   containers rather than enumerated by tag: an earlier version listed
+   prose tags as the LEFT operand (`p + *`, `ul + *`, …), so any pair
+   whose first element was a wrapper matched nothing — `.home-text` →
+   `.home-cards` and consecutive `.post-preview` articles both rendered
+   flush at 0px. Matching on position rather than tag name means a new
+   component cannot silently fall outside the rhythm. */
+.flow > * + *,
+.flow > * > * + * {
+    margin-block-start: var(--flow-space);
+}
+
+/* Headings open a section, so they take the larger space above —
+   and override the flow value set by whatever preceded them. */
+.flow :is(* + h1, * + h2, * + h3, * + h4, * + h5, * + h6),
+* + h1, * + h2, * + h3, * + h4, * + h5, * + h6 {
+    margin-block-start: var(--flow-space-heading);
+}
+
+/* What follows a heading sits closer to it than to the previous section —
+   that proximity is what binds a heading to its own text. Resolves against
+   the following element's size, so it stays constant for body copy. */
+.flow :is(h2 + *, h3 + *, h4 + *, h5 + *, h6 + *),
+h2 + *, h3 + *, h4 + *, h5 + *, h6 + * {
+    margin-block-start: var(--flow-space-after-heading);
+}
+
+/* A page title is display-sized, so it needs more room beneath it than a
+   section heading does — otherwise body copy reads as glued to it. */
+.flow :is(h1 + *),
+h1 + * {
+    margin-block-start: var(--flow-space-after-title);
+}
+
+/* ---- FOOTER ----
+   A full-bleed field in the section's theme color, closing the page. The
+   color spans the viewport; the content inside stays on the page grid.
+
+   Text sits in a white card rather than directly on the color. None of the
+   palette clears 4.5:1 against white text (yellow is ~1.7:1), so the card
+   is what makes this legible — the color becomes a field, not a text
+   background. */
 footer {
     margin-top: auto;
-    color: #666;
-    max-width: var(--content-max-width);
-    margin-left: auto;
-    margin-right: auto;
-    padding-bottom: 3rem;
-    display: grid;
-    grid-template-columns: var(--col-width) var(--col-width);
-    column-gap: var(--col-gap);
+    background-color: var(--color-section, var(--color-home));
+    padding-block: var(--space-lg);
+    /* Extend into the iOS home-indicator inset so the color reaches the
+       physical bottom of the screen rather than stopping at the safe area.
+       Falls back to the plain value everywhere else. */
+    padding-bottom: calc(var(--space-lg) + env(safe-area-inset-bottom));
 }
 
-footer > * {
-    grid-column: 2;
-    justify-self: end; /* Align to RIGHT edge of right column */
-    text-align: right; /* Also right-align text inside */
+/* Inner element carries the page grid, so the color can go full-bleed. */
+.footer-inner {
+    display: grid;
+    max-width: var(--content-max-width);
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--page-pad);
+}
+
+/* Left-aligned to the same edge as the logo and body text. Shrink-wrapped
+   so it reads as a label on the field rather than a panel. */
+.footer-card {
+    grid-column: 1;
+    justify-self: start;
+    background-color: #fff;
+    color: #333;
+    padding: var(--space-sm);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-sm);
+    font-size: var(--font-sm);
+}
+
+.footer-card p {
+    margin: 0;
+}
+
+.footer-card a {
+    color: #333;
 }
 
 /* ============================================
@@ -258,37 +443,36 @@ select:focus-visible {
     position: relative;
     background-color: black;
     color: white;
-    padding: 0.35rem 0.65rem;
+    padding: var(--space-3xs) var(--space-2xs);
     text-decoration: none;
     line-height: 1;
     /* Add 6px colored stripe on right edge */
     border-right: 6px solid transparent;
 }
 
-/* Theme color stripe for each section */
-[data-section="home"] .logo[aria-current="page"],
-[data-section="home"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-home);
-}
+/* Resolve the section's color once, then let components read it by name.
+   Previously each consumer repeated the full five-way [data-section] fan,
+   so adding a themed component meant five more rules. */
+[data-section="home"]     { --color-section: var(--color-home); }
+[data-section="about"]    { --color-section: var(--color-about); }
+[data-section="posts"]    { --color-section: var(--color-posts); }
+[data-section="projects"] { --color-section: var(--color-projects); }
+[data-section="links"]    { --color-section: var(--color-links); }
 
-[data-section="about"] .logo[aria-current="page"],
-[data-section="about"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-about);
-}
+/* <html> is the parent of the [data-section] element, so it cannot inherit
+   the variable set there — :has() reaches back up. This matters because
+   iOS paints the overscroll area from the root: without it, pulling past
+   a green footer reveals red. */
+html:has([data-section="home"])     { --color-section: var(--color-home); }
+html:has([data-section="about"])    { --color-section: var(--color-about); }
+html:has([data-section="posts"])    { --color-section: var(--color-posts); }
+html:has([data-section="projects"]) { --color-section: var(--color-projects); }
+html:has([data-section="links"])    { --color-section: var(--color-links); }
 
-[data-section="posts"] .logo[aria-current="page"],
-[data-section="posts"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-posts);
-}
-
-[data-section="projects"] .logo[aria-current="page"],
-[data-section="projects"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-projects);
-}
-
-[data-section="links"] .logo[aria-current="page"],
-[data-section="links"] .menu a[aria-current="page"] {
-    border-right-color: var(--color-links);
+/* Theme color stripe on the active nav item */
+.logo[aria-current="page"],
+.menu a[aria-current="page"] {
+    border-right-color: var(--color-section);
 }
 
 /* Focus indicator for active navigation - white outline with black stroke */
@@ -306,9 +490,16 @@ select:focus-visible {
    Traditional file-path style breadcrumb
    ============================================ */
 
-/* Container for breadcrumb */
+/* Container for breadcrumb.
+   Page-level navigation, not article content — it spans the grid and
+   aligns to the container edge (same edge as the logo above it) rather
+   than sitting inside the text column and inheriting its measure. */
 nav[aria-label="breadcrumb"] {
-    margin-bottom: calc(var(--base-unit) * 0.5);
+    grid-column: 1 / -1;
+    /* No bottom margin: as a direct child of .site-main the breadcrumb sits
+       in a flex/grid row, so the container's `gap` already supplies the
+       space below it. A margin here would stack on top of that. */
+    margin-bottom: 0;
     font-size: 0.9em;
     color: #666;
 }
@@ -330,7 +521,7 @@ nav[aria-label="breadcrumb"] li {
 /* Add separator after each item except the last */
 nav[aria-label="breadcrumb"] li:not(:last-child)::after {
     content: " / ";
-    margin: 0 0.5rem;
+    margin: 0 var(--space-2xs);
     color: #767676; /* 4.54:1 contrast ratio - WCAG AA compliant */
 }
 
@@ -361,7 +552,7 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
 }
 
 /* Mobile: show hamburger, hide menu by default */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     .header {
         display: flex !important;
         grid-template-columns: none;
@@ -469,28 +660,22 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
 
     .menu ul li {
         margin-left: 0;
-        margin-bottom: 0.5rem;
+        margin-bottom: var(--space-2xs);
     }
 
     .menu ul li:last-child {
         margin-bottom: 0;
     }
 
-    /* Increase touch target size for WCAG 2.5.5 (minimum 44×44px) */
+    /* Increase touch target size for WCAG 2.5.5 (minimum 44×44px).
+       16px vertical + ~26px line box = ~58px tall. */
     .menu a {
-        padding: 0.65rem 0.75rem;
+        padding: var(--space-xs);
     }
 
     /* Maintain proper padding for active navigation on mobile */
     .menu a[aria-current="page"] {
-        padding: 0.65rem 0.75rem;
-    }
-}
-
-/* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .menu {
-        transition: none;
+        padding: var(--space-xs);
     }
 }
 
@@ -499,40 +684,43 @@ nav[aria-label="breadcrumb"] span[aria-current="page"] {
    Max-width container with proportional two-column grid
    ============================================ */
 
-/* Override main element constraints for unified grid */
-main:has(.site-main) {
-    max-width: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
-
 .site-main {
     max-width: var(--content-max-width);
+    /* Flex item: without this it shrink-wraps its content instead of
+       filling the page up to max-width. */
+    width: 100%;
+    /* The header already carries padding-bottom, which is the whole gap. */
     margin: 0 auto;
     padding-bottom: calc(var(--section-gap) * 0.25);
+    padding-inline: var(--page-pad);
     /* Default: stack columns vertically for narrow viewports */
     display: flex;
     flex-direction: column;
     gap: var(--section-gap);
 }
 
-/* Enable two-column grid at tablet/iPad width and above */
-@media (min-width: 768px) {
+/* Two columns from the breakpoint up. Tracks come from .page-grid-wide. */
+@media (min-width: 48em) {
     .site-main {
         display: grid;
-        grid-template-columns: var(--col-width) var(--col-width);
-        column-gap: var(--col-gap);
+    }
+
+    .art-showcase {
+        display: grid;
     }
 }
 
+
 .col-primary {
     grid-column: 1;
+    /* Grid items default to min-width:auto, so a long word or URL can push
+       the track wider than its share. */
+    min-width: 0;
 }
 
 .col-secondary {
     grid-column: 2;
+    min-width: 0;
 }
 
 /* Typography — Serif for headings, sans for body */
@@ -540,12 +728,12 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--ff-display);
 }
 
+/* Display type only — spacing comes from the flow rules above. */
 .col-primary h1 {
     font-family: var(--ff-display);
     font-size: var(--font-xl);
     line-height: 1.05;
     letter-spacing: -0.025em;
-    margin-bottom: calc(var(--base-unit) * 0.35);
 }
 
 .col-primary h2 {
@@ -553,20 +741,41 @@ h1, h2, h3, h4, h5, h6 {
     font-size: var(--font-lg);
     line-height: 1.15;
     letter-spacing: -0.02em;
-    margin-top: calc(var(--base-unit) * 0.6);
-    margin-bottom: calc(var(--base-unit) * 0.2);
 }
 
-.col-primary p {
-    margin-bottom: calc(var(--base-unit) * 0.2);
-    max-width: 38em;
+/* ---- MEASURE APPLICATION ----
+   Cap prose at the measure; exempt the elements that want full width.
+   Stated affirmatively by element type rather than by an opt-out class:
+   Markdown already emits <figure> for a standalone image, <pre> for a
+   fenced block, <table> for a pipe table — the tag IS the signal.
+
+   Capped-by-default is the safer failure for a reading site. A tag nobody
+   anticipated gets a measure rather than silently running full width.
+
+   The `>` combinator confines this to the top of the stream, the only
+   level where "prose or wide thing" is a meaningful question — a <p>
+   inside a <blockquote> is not independently capped.
+
+   Surplus column width past the cap becomes padding. That is what lets
+   --page-max grow without lengthening lines.
+
+   This enumerates prose rather than exempting wide elements. #43 argued
+   the inverse (cap everything, exempt the known-wide) so a forgotten tag
+   fails safe. That holds when the content is one flat kirbytext stream,
+   but templates here nest prose at varying depths inside wrappers
+   (.about-bio, .article-content, .links-intro), so the exempt form needs
+   a selector per wrapper and rots as templates change. The prose tag set
+   is small and fixed — it is what Markdown emits — so listing it is the
+   more stable half. */
+.col-primary :is(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote) {
+    max-width: var(--measure);
 }
 
 /* Secondary Column — Sidebar + Art */
 .col-secondary {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--base-unit) * 0.35);
+    gap: var(--space-sm);
 }
 
 /* Sidebar Text Box — Content on top of art */
@@ -574,35 +783,9 @@ h1, h2, h3, h4, h5, h6 {
     font-size: var(--font-sm);
     line-height: 1.5;
     color: #666;
-    padding: calc(var(--base-unit) * 0.25);
+    padding: var(--space-sm);
     background-color: rgba(255, 255, 255, 0.95);
     border: 1px solid #e0e0e0;
-}
-
-/* Links columns within sidebar */
-.sidebar-box .links-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: calc(var(--base-unit) * 0.35);
-}
-
-.sidebar-box .links-column ul,
-.sidebar-box .links-column ol {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar-box .links-column li {
-    margin-bottom: 0.5rem;
-}
-
-.sidebar-box .links-column a {
-    text-decoration: none;
-}
-
-.sidebar-box .links-column a:hover {
-    text-decoration: underline;
 }
 
 /* Procedural Art Container */
@@ -625,25 +808,21 @@ h1, h2, h3, h4, h5, h6 {
 .home-cards {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--base-unit) * 0.35);
+    gap: var(--space-sm);
     padding: 0;
 }
 
 /* Mobile — Stack below 768px */
-@media (max-width: 767px) {
-    footer {
+@media (max-width: 47.9375em) {
+    /* Single column: the card spans the width rather than sitting in a
+       two-up grid. The color band and its padding are unchanged. */
+    .footer-inner {
         display: block;
-        /* Remove max-width constraint - span full viewport on mobile */
-        max-width: none;
-        margin: 0;
-        padding-left: var(--mobile-pad);
-        padding-right: var(--mobile-pad);
-        text-align: right;
+        padding-inline: var(--mobile-pad);
     }
 
-    footer > * {
-        grid-column: auto;
-        justify-self: auto;
+    footer {
+        padding-block: var(--space-md);
     }
 
     .site-main {
@@ -676,7 +855,7 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     .card {
-        padding: calc(var(--base-unit) * 0.2);
+        padding: var(--space-xs);
     }
 }
 
@@ -702,7 +881,7 @@ h1, h2, h3, h4, h5, h6 {
 .card {
     display: block;
     width: 100%;
-    padding: calc(var(--base-unit) * 0.25);
+    padding: var(--space-sm);
     text-decoration: none;
     color: #000;
     background-color: white;
@@ -715,7 +894,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--ff-display);
     font-size: var(--font-lg);
     font-weight: bold;
-    margin-bottom: calc(var(--base-unit) * 0.1);
+    margin-bottom: var(--space-2xs);
 }
 
 .card-description {
@@ -735,13 +914,6 @@ h1, h2, h3, h4, h5, h6 {
     outline-offset: 4px;
 }
 
-/* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .card {
-        transition: none;
-    }
-}
-
 /* ============================================
    PROJECT CARDS
    Cards with square image box and text
@@ -750,7 +922,7 @@ h1, h2, h3, h4, h5, h6 {
 .card-project {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: calc(var(--base-unit) * 0.25);
+    gap: var(--space-sm);
     align-items: center; /* Vertically center content */
 }
 
@@ -781,7 +953,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Adjust spacing for project cards */
 .card-project .card-title {
-    margin-bottom: calc(var(--base-unit) * 0.05);
+    margin-bottom: var(--space-3xs);
 }
 
 .card-project .card-description {
@@ -793,19 +965,22 @@ h1, h2, h3, h4, h5, h6 {
    Lightweight gallery for app screenshots
    ============================================ */
 
+/* One-directional, like the rest of the flow system. The previous
+   two-directional version also won an unintended specificity fight: a
+   class selector beats `p + *`, so a gallery after a paragraph took 40px
+   rather than the flow value, by accident rather than by design. */
 .gallery {
-    margin-top: calc(var(--base-unit) * 0.5);
-    margin-bottom: calc(var(--base-unit) * 0.5);
+    margin-block-start: var(--space-md);
 }
 
 .gallery-scroll {
     display: flex;
-    gap: calc(var(--base-unit) * 0.2);
+    gap: var(--space-xs);
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    padding-bottom: calc(var(--base-unit) * 0.15); /* Space for scrollbar */
+    padding-bottom: var(--space-2xs); /* Space for scrollbar */
 }
 
 /* Scrollbar styling */
@@ -888,7 +1063,7 @@ h1, h2, h3, h4, h5, h6 {
 .gallery-modal-caption {
     color: #fff;
     text-align: center;
-    margin-top: calc(var(--base-unit) * 0.2);
+    margin-top: var(--space-xs);
     font-size: var(--font-sm);
     max-width: 600px;
     margin-left: auto;
@@ -969,18 +1144,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .gallery-scroll {
-        scroll-behavior: auto;
-    }
-
-    .gallery-item {
-        transition: none;
-    }
-}
-
 /* Mobile adjustments */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     .gallery-item img {
         height: calc(var(--base-unit) * 2); /* Smaller on mobile: 160px */
     }
@@ -1008,31 +1173,27 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 .related-posts {
-    margin-top: calc(var(--base-unit) * 0.8);
-    padding-top: calc(var(--base-unit) * 0.6);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
     border-top: 2px solid #e0e0e0;
 }
 
 .related-posts h2 {
     font-family: var(--ff-display);
     font-size: var(--font-lg);
-    margin-bottom: calc(var(--base-unit) * 0.4);
+    margin-bottom: var(--space-md);
     line-height: 1.15;
 }
 
 .related-posts-grid {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--base-unit) * 0.3);
-}
-
-.related-post-card {
-    /* Container only - no visual styling */
+    gap: var(--space-sm);
 }
 
 .related-post-card-link {
     display: block;
-    padding: calc(var(--base-unit) * 0.25);
+    padding: var(--space-sm);
     border: 2px solid #e0e0e0;
     background-color: white;
     text-decoration: none;
@@ -1054,7 +1215,7 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--ff-display);
     font-size: var(--font-lg);
     font-weight: bold;
-    margin: 0 0 calc(var(--base-unit) * 0.1) 0;
+    margin: 0 0 var(--space-2xs) 0;
     line-height: 1.2;
     color: #000;
 }
@@ -1063,7 +1224,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     font-size: var(--font-sm);
     color: #666;
-    margin-bottom: calc(var(--base-unit) * 0.15);
+    margin-bottom: var(--space-2xs);
 }
 
 .related-post-excerpt {
@@ -1072,24 +1233,24 @@ h1, h2, h3, h4, h5, h6 {
     color: #333;
 }
 
-/* Respect user motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    .related-post-card-link {
-        transition: none;
-    }
-}
-
 /* ============================================
    ONE-COLUMN LAYOUT (ARTICLE STYLE)
    Centered content with wider text column
+
+   UNTESTED. Reachable but never rendered: the `layout` select in
+   project.yml offers it and project.php applies the class, but both
+   projects are set to two-column, so nothing has ever used this.
+   Not dead code -- a review once called it that and was wrong.
+   See "Untested code paths" in README.md.
    ============================================ */
 
 .site-main.layout-one-column {
-    /* Single centered column - no grid */
+    /* Single centered column - no grid. Width is the measure plus its
+       padding, so the text sets the page rather than the other way round. */
     display: block;
-    max-width: calc(var(--col-width) * 1.5); /* ~720px max */
+    max-width: calc(var(--measure) + (var(--page-pad) * 2));
     margin: 0 auto;
-    padding: 0 var(--mobile-pad);
+    padding: 0 var(--page-pad);
 }
 
 .site-main.layout-one-column .col-primary {
@@ -1103,44 +1264,25 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
 }
 
-/* Typography adjustments for one-column */
-.site-main.layout-one-column .col-primary h1 {
-    font-family: var(--ff-display);
-    font-size: var(--font-xl);
-    line-height: 1.05;
-    letter-spacing: -0.025em;
-    margin-bottom: calc(var(--base-unit) * 0.4);
+/* The container is already the measure here, so prose needs no further cap
+   — letting it fill the container is the measure. */
+.site-main.layout-one-column .col-primary :is(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote) {
+    max-width: none;
 }
 
-.site-main.layout-one-column .col-primary h2 {
-    font-family: var(--ff-display);
-    font-size: var(--font-lg);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
-    margin-top: calc(var(--base-unit) * 0.6);
-    margin-bottom: calc(var(--base-unit) * 0.2);
-}
-
-.site-main.layout-one-column .col-primary p {
-    margin-bottom: calc(var(--base-unit) * 0.25);
-    max-width: none; /* Full width of container */
-}
-
-/* Gallery in one-column can optionally break out to full viewport width */
+/* Gallery in one-column breaks out past the page padding. */
 .site-main.layout-one-column .gallery {
-    margin-left: calc(var(--mobile-pad) * -1);
-    margin-right: calc(var(--mobile-pad) * -1);
-    padding-left: var(--mobile-pad);
-    padding-right: var(--mobile-pad);
+    margin-inline: calc(var(--page-pad) * -1);
+    padding-inline: var(--page-pad);
 }
 
 /* Related posts in one-column layout */
 .site-main.layout-one-column .related-posts {
-    margin-top: calc(var(--base-unit) * 0.8);
+    margin-top: var(--space-lg);
 }
 
 /* Mobile adjustments for one-column */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     .site-main.layout-one-column {
         max-width: none;
         padding: var(--mobile-pad);
@@ -1152,17 +1294,15 @@ h1, h2, h3, h4, h5, h6 {
    Art-book layout: text left, canvas right
    ============================================ */
 
-main:has(.art-showcase) {
-    max-width: none;
-    padding: 0;
-    margin: 0;
-}
-
 .art-showcase {
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding-top: var(--header-padding);
     padding-bottom: calc(var(--section-gap) * 0.25);
+    /* Matches .site-main. Without it, showcase content runs flush to the
+       viewport edge at any width below --page-max while every other
+       template is inset. */
+    padding-inline: var(--page-pad);
 }
 
 .art-showcase-title {
@@ -1170,19 +1310,12 @@ main:has(.art-showcase) {
     font-size: var(--font-xl);
     line-height: 1.05;
     letter-spacing: -0.025em;
-    margin-bottom: calc(var(--base-unit) * 0.5);
+    margin-bottom: var(--space-md);
 }
 
 /* Desktop: 2-column grid, one row per section */
-@media (min-width: 768px) {
-    .art-showcase {
-        display: grid;
-        grid-template-columns: var(--col-width) var(--col-width);
-        column-gap: var(--col-gap);
-    }
-
-    /* Breadcrumb and title span both columns */
-    .art-showcase > nav[aria-label="breadcrumb"],
+@media (min-width: 48em) {
+    /* Title spans both columns (the breadcrumb does so globally). */
     .art-showcase-title {
         grid-column: 1 / -1;
     }
@@ -1192,7 +1325,7 @@ main:has(.art-showcase) {
         grid-column: 1 / -1;
         grid-template-columns: subgrid;
         align-items: start;
-        padding-bottom: calc(var(--base-unit) * 0.75);
+        padding-bottom: var(--space-lg);
     }
 
     .art-showcase-text {
@@ -1207,12 +1340,12 @@ main:has(.art-showcase) {
 }
 
 /* Mobile: stack text then canvas per section */
-@media (max-width: 767px) {
+@media (max-width: 47.9375em) {
     .art-showcase {
         display: flex;
         flex-direction: column;
         padding: var(--mobile-pad);
-        gap: calc(var(--base-unit) * 0.35);
+        gap: var(--space-sm);
         max-width: none;
         margin: 0;
     }
@@ -1220,8 +1353,8 @@ main:has(.art-showcase) {
     .art-showcase-section {
         display: flex;
         flex-direction: column;
-        gap: calc(var(--base-unit) * 0.25);
-        padding-bottom: calc(var(--base-unit) * 0.5);
+        gap: var(--space-sm);
+        padding-bottom: var(--space-md);
     }
 
     .art-showcase-canvas {
@@ -1241,11 +1374,217 @@ main:has(.art-showcase) {
     font-size: var(--font-lg);
     line-height: 1.05;
     letter-spacing: -0.025em;
-    margin-bottom: calc(var(--base-unit) * 0.2);
+    margin-bottom: var(--space-xs);
 }
 
 .art-showcase-text p {
-    margin-bottom: calc(var(--base-unit) * 0.2);
-    max-width: 38em;
+    margin-bottom: var(--space-xs);
+    max-width: var(--measure);
 }
 
+
+/* ============================================
+   ARTICLE LAYOUT (prototype)
+   Title spans; metadata left; body right. Body text is a centred ribbon
+   at the measure, images break out to the full column.
+   ============================================ */
+
+.article-layout {
+    max-width: var(--content-max-width);
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--page-pad);
+    padding-bottom: calc(var(--section-gap) * 0.25);
+    /* Mobile: single column, DOM order is reading order. */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* The title gets its own measure rather than the full page. At --page-max
+   a spanning title would run ~1900px — too long to read as display type.
+   Capping it keeps the scale while still starting at the page's left edge,
+   so the eye registers full width before dropping into the reading ribbon. */
+.article-title {
+    font-family: var(--ff-display);
+    font-size: var(--font-xl);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    max-width: var(--title-measure);
+}
+
+.article-meta {
+    font-size: var(--font-sm);
+    color: #666;
+    line-height: 1.4;
+}
+
+.article-byline {
+    font-weight: 600;
+    color: #333;
+}
+
+.article-date {
+    margin-block-start: var(--space-3xs);
+}
+
+@media (min-width: 48em) {
+    .article-layout {
+        display: grid;
+        /* The body track is capped rather than 1fr. At --page-max a 1fr
+           track reaches ~1690px, which strands the 512px ribbon in the
+           middle of a void — it reads as broken, not spacious. Capping it
+           keeps meaningful room for full-bleed images (roughly 1.5x the
+           measure) while the page itself still grows. */
+        grid-template-columns: var(--article-meta-col) minmax(0, 1fr);
+        column-gap: var(--col-gap);
+        align-items: start;
+    }
+
+    .article-layout > nav[aria-label="breadcrumb"],
+    .article-title {
+        grid-column: 1 / -1;
+    }
+
+    .article-meta {
+        grid-column: 1;
+        /* Baseline-align the byline with the body's first line. The two
+           differ in size, so matching box tops leaves the metadata looking
+           dropped; this offsets by the difference in half-leading. */
+        margin-block-start: 0.2em;
+    }
+
+    .article-body {
+        grid-column: 2;
+        min-width: 0;
+    }
+}
+
+/* ---- The ribbon ----
+   Prose is centred in the column at the measure; anything that is not
+   prose keeps the full column width. This is what makes a wide display
+   pay off: the column grows, the line length does not, and images get
+   the extra room instead. */
+.article-body > :is(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, .back-link) {
+    max-width: var(--measure);
+    margin-inline: auto;
+}
+
+.article-body > :is(figure, pre, table) {
+    max-width: none;
+}
+
+.article-body > figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.article-body > figure figcaption {
+    max-width: var(--measure);
+    margin-inline: auto;
+    margin-block-start: var(--space-2xs);
+    font-size: var(--font-sm);
+    color: #666;
+}
+
+.back-link {
+    margin-block-start: var(--space-lg);
+    font-size: var(--font-sm);
+}
+
+/* ---- PLAIN VARIANT ----
+   One centred column: metadata stacked above the body, both at the
+   measure. For technical writing — code blocks and screenshots want the
+   full column rather than a narrow two-up track.
+
+   Essentially the mobile layout promoted to a deliberate desktop choice,
+   so it needs no new markup: the grid rules simply do not apply. */
+@media (min-width: 48em) {
+    .article-layout--plain {
+        display: block;
+        max-width: var(--plain-width);
+        /* margin-inline:auto would centre the column but leave the title,
+           metadata and body sharing its left edge, which is what we want —
+           the whole composition centres, not each element independently. */
+        margin-inline: auto;
+    }
+
+    /* Title and metadata sit on the prose edge, not the column edge. The
+       column is wider than the measure so figures and code can break out;
+       without this the title, the metadata and the text each start at a
+       different x and the composition loses its spine. */
+    .article-layout--plain .article-title,
+    .article-layout--plain .article-meta {
+        max-width: var(--measure);
+        margin-inline: auto;
+    }
+
+    .article-layout--plain .article-meta {
+        margin-block-start: var(--space-sm);
+        /* Row rather than stack: the byline and date read as one line of
+           metadata under the title, not two stacked fragments. */
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+
+    .article-layout--plain .article-meta p {
+        margin-block-start: 0;
+    }
+
+    .article-layout--plain .article-body {
+        margin-block-start: var(--space-lg);
+    }
+
+    /* Prose sits at the measure; the column itself is the bleed band. */
+    .article-layout--plain .article-body > :is(p, h1, h2, h3, h4, h5, h6, ul, ol, blockquote, .back-link) {
+        max-width: var(--measure);
+        margin-inline: auto;
+    }
+
+    /* Bounded bleed: figures, code and tables break out past the measure
+       to the full column, symmetrically. Not to the viewport — that would
+       undo the --page-max decision, where unbounded width read as broken.
+       Images get their own scale without escaping the composition. */
+    .article-layout--plain .article-body > :is(figure, pre, table) {
+        max-width: none;
+        margin-inline: 0;
+    }
+}
+
+/* ---- CODE ----
+   Previously unstyled: a fenced block rendered as body text with no
+   background, which is unusable for the technical posts the plain layout
+   exists for. */
+pre {
+    font-family: var(--ff-mono);
+    font-size: var(--font-sm);
+    line-height: 1.5;
+    background-color: #f6f5f3;
+    border: 1px solid #e4e2dd;
+    padding: var(--space-xs);
+    overflow-x: auto;
+    /* Long lines scroll inside the block rather than widening the page. */
+    max-width: 100%;
+}
+
+pre code {
+    font-family: inherit;
+    font-size: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    white-space: pre;
+}
+
+/* Inline code, inside prose */
+code {
+    font-family: var(--ff-mono);
+    font-size: 0.9em;
+    background-color: #f6f5f3;
+    border: 1px solid #e4e2dd;
+    border-radius: 3px;
+    padding: 0.1em 0.3em;
+    overflow-wrap: break-word;
+}

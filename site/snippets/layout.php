@@ -26,12 +26,12 @@ $secondary = $secondary ?? null;
 $layoutClass = $layoutClass ?? '';
 ?>
 
-<div class="site-main <?= esc($layoutClass, 'attr') ?>">
-  <div class="col-primary">
-    <?php if ($showBreadcrumb): ?>
-      <?php snippet('breadcrumb') ?>
-    <?php endif ?>
+<div class="site-main page-grid-wide <?= esc($layoutClass, 'attr') ?>">
+  <?php if ($showBreadcrumb): ?>
+    <?php snippet('breadcrumb') ?>
+  <?php endif ?>
 
+  <div class="col-primary flow">
     <?php if (is_callable($primary)): ?>
       <?php $primary() ?>
     <?php endif ?>

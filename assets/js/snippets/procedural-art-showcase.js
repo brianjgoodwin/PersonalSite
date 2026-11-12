@@ -12,22 +12,28 @@
   const containers = document.querySelectorAll('.art-showcase-canvas');
   if (!containers.length) return;
 
+  // Read the palette from CSS so index.css stays the single source of
+  // truth. Resolved against :root, which is where the colours are declared.
+  const rootStyle = getComputedStyle(document.documentElement);
+  const cssVar = (name, fallback) =>
+    rootStyle.getPropertyValue(name).trim() || fallback;
+
   const themeColors = {
-    'home': '#E03A3E',
-    'about': '#F5821F',
-    'posts': '#FDB827',
-    'projects': '#009DDC',
-    'links': '#61BB46',
-    'purple': '#8B5CF6'
+    'home': cssVar('--color-home', '#E03A3E'),
+    'about': cssVar('--color-about', '#F5821F'),
+    'posts': cssVar('--color-posts', '#FDB827'),
+    'projects': cssVar('--color-projects', '#009DDC'),
+    'links': cssVar('--color-links', '#61BB46'),
+    'purple': cssVar('--color-purple', '#8B5CF6')
   };
 
   const palette = [
-    '#E03A3E',
-    '#F5821F',
-    '#FDB827',
-    '#009DDC',
-    '#61BB46',
-    '#8B5CF6',
+    themeColors.home,
+    themeColors.about,
+    themeColors.posts,
+    themeColors.projects,
+    themeColors.links,
+    themeColors.purple,
     '#1a1a1a',
     '#f5f3ef',
     '#8a8578'

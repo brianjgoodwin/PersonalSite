@@ -49,6 +49,16 @@ columns:
       meta:
         type: fields
         fields:
+          layout:
+            label: Layout
+            type: select
+            options:
+              essay: Essay (two-column, centred reading ribbon)
+              plain: Plain (one column, full width for code)
+            default: essay
+            help: Plain suits technical posts — code blocks get the full column instead of a narrow track.
+            width: 1/1
+
           breadcrumbTitle:
             label: Breadcrumb Title
             type: text

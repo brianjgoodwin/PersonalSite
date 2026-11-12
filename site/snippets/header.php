@@ -3,7 +3,48 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php
+    // Determine the current section (top-level page) for theming.
+    // Computed here rather than before <body> so the theme-color meta can
+    // use it — iOS tints its own browser chrome from that value, which is
+    // what keeps the footer colour from stopping at a white band.
+    if ($page->isHomePage()) {
+        $section = $page;
+    } else {
+        $section = $page;
+        while ($section->parent() && !$section->parent()->isHomePage()) {
+            $section = $section->parent();
+        }
+    }
+    $sectionSlug = $section->slug();
+
+    // theme-color must be a literal in the HTML, so PHP needs the value —
+    // but it reads it out of index.css rather than keeping a copy, so the
+    // palette cannot drift. Cached per request; falls back to home red if
+    // the stylesheet is unreadable or the variable is renamed.
+    $themeColor = (function () use ($sectionSlug) {
+        static $colors = null;
+        if ($colors === null) {
+            $colors = [];
+            $css = @file_get_contents(kirby()->root('assets') . '/css/index.css');
+            if ($css !== false && preg_match_all(
+                '/--color-([a-z]+)\s*:\s*(#[0-9A-Fa-f]{3,8})\s*;/',
+                $css,
+                $m,
+                PREG_SET_ORDER
+            )) {
+                foreach ($m as $match) {
+                    $colors[$match[1]] = $match[2];
+                }
+            }
+        }
+        return $colors[$sectionSlug] ?? $colors['home'] ?? '#E03A3E';
+    })();
+    ?>
+    <!-- viewport-fit=cover makes env(safe-area-inset-*) resolve to real
+         values, so the footer can extend under the home indicator -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="<?= $themeColor ?>">
     <title><?= $page->title()->html() ?> | <?= $site->title()->html() ?></title>
     <?php
     // Cache busting: use file modification time as version
@@ -41,27 +82,14 @@
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 
 </head>
-<?php
-// Determine the current section (top-level page) for theming
-if ($page->isHomePage()) {
-    $section = $page;
-} else {
-    // Find the topmost parent that is a direct child of home
-    $section = $page;
-    while ($section->parent() && !$section->parent()->isHomePage()) {
-        $section = $section->parent();
-    }
-}
-$sectionSlug = $section->slug();
-?>
-<body data-section="<?= $sectionSlug ?>">
+<body data-section="<?= esc($sectionSlug, 'attr') ?>">
     <!-- Skip link - first focusable element for keyboard users -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <!-- Live region for screen reader announcements -->
     <div aria-live="polite" aria-atomic="true" class="sr-only" id="menu-status"></div>
 
-    <header class="header">
+    <header class="header page-grid">
         <a class="logo" href="<?= $site->url() ?>" <?= $page->isHomePage() ? 'aria-current="page"' : '' ?>><?= $site->title()->html() ?></a>
 
         <!-- Mobile menu toggle button -->

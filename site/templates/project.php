@@ -1,6 +1,11 @@
 <?php snippet('header') ?>
 
 <?php
+// NOTE: both the one-column layout below and the gallery further down are
+// wired but UNTESTED -- no content has ever selected either, so neither has
+// rendered in a browser. See "Untested code paths" in README.md before you
+// rely on them, and do not delete them as dead code: they are reachable.
+
 // Get layout option from blueprint (defaults to two-column)
 $layout = $page->layout()->or('two-column')->value();
 // Whitelist allowed values to prevent XSS
