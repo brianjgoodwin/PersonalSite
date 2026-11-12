@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7861c506f7eff1c513d907727ae8873",
+    "content-hash": "da1c3a8eb3e9e3b252ad405f32a3f585",
     "packages": [
         {
             "name": "christian-riesen/base32",
@@ -194,70 +194,6 @@
                 }
             ],
             "time": "2025-08-20T19:15:30+00:00"
-        },
-        {
-            "name": "czproject/git-php",
-            "version": "v4.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/czproject/git-php.git",
-                "reference": "1f1ecc92aea9ee31120f4f5b759f5aa947420b0a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/czproject/git-php/zipball/1f1ecc92aea9ee31120f4f5b759f5aa947420b0a",
-                "reference": "1f1ecc92aea9ee31120f4f5b759f5aa947420b0a",
-                "shasum": ""
-            },
-            "require": {
-                "php": "8.0 - 8.5"
-            },
-            "require-dev": {
-                "nette/tester": "^2.5"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Jan Pecha",
-                    "email": "janpecha@email.cz"
-                }
-            ],
-            "description": "Library for work with Git repository in PHP.",
-            "keywords": [
-                "git"
-            ],
-            "support": {
-                "issues": "https://github.com/czproject/git-php/issues",
-                "source": "https://github.com/czproject/git-php/tree/v4.6.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/sponsors/janpecha",
-                    "type": "github"
-                },
-                {
-                    "url": "https://www.janpecha.cz/donate/git-php/",
-                    "type": "other"
-                },
-                {
-                    "url": "https://donate.stripe.com/7sIcO2a9maTSg2A9AA",
-                    "type": "stripe"
-                },
-                {
-                    "url": "https://thanks.dev/u/gh/czproject",
-                    "type": "thanks.dev"
-                }
-            ],
-            "time": "2025-11-10T07:24:07+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -1390,58 +1326,6 @@
                 }
             ],
             "time": "2026-06-08T20:24:16+00:00"
-        },
-        {
-            "name": "thathoff/kirby-git-content",
-            "version": "v5.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thathoff/kirby-git-content.git",
-                "reference": "d0311d191e70868dc2366f4cde79129d4301f0c8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thathoff/kirby-git-content/zipball/d0311d191e70868dc2366f4cde79129d4301f0c8",
-                "reference": "d0311d191e70868dc2366f4cde79129d4301f0c8",
-                "shasum": ""
-            },
-            "require": {
-                "czproject/git-php": "^4.4.0",
-                "getkirby/composer-installer": "^1.2"
-            },
-            "require-dev": {
-                "getkirby/cms": "^3.6.0|^4.0.0|^5.0.0"
-            },
-            "type": "kirby-plugin",
-            "extra": {
-                "installer-name": "git-content",
-                "kirby-cms-path": false
-            },
-            "autoload": {
-                "psr-4": {
-                    "Thathoff\\GitContent\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Markus Denhoff",
-                    "email": "markus@denhoff.com"
-                },
-                {
-                    "name": "reinorange GmbH",
-                    "email": "info@reinorange.com"
-                }
-            ],
-            "description": "Plugin to track changes to content in a git repository.",
-            "support": {
-                "issues": "https://github.com/thathoff/kirby-git-content/issues",
-                "source": "https://github.com/thathoff/kirby-git-content"
-            },
-            "time": "2025-11-01T18:11:12+00:00"
         }
     ],
     "packages-dev": [],

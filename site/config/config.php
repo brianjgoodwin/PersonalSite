@@ -3,19 +3,20 @@
 /**
  * Is this the real production server?
  *
- * ALLOWLIST, not a denylist. The previous version listed three "safe"
- * hostnames (localhost, 127.0.0.1, ::1) and treated everything else as
- * production — so ANY other hostname armed git-content auto-commit and
- * auto-push to the real remote. That included LAN IPs, Tailscale and ngrok
- * addresses, and anything else you might bind a dev server to. Running
- * `php -S 192.168.x.x:8000` for device testing was enough to arm it.
+ * ALLOWLIST, not a denylist: production must be named explicitly, so any
+ * unrecognised hostname gets the safe behaviour by construction. This was
+ * originally written because the git-content plugin armed auto-commit and
+ * auto-push on any hostname that was not localhost — binding a dev server
+ * to a LAN IP was enough to arm it. That plugin is gone, but the shape is
+ * worth keeping: a dev host should never be mistaken for production.
  *
- * Now production must be named explicitly, so anything unrecognised gets
- * the safe (disabled) behaviour by construction.
+ * Currently consumed by the draft preview route below, which refuses to
+ * register in production.
  *
- * These must match the server's SERVER_NAME exactly. If Panel edits stop
- * being committed after a deploy, check here first: a mismatch fails safe
- * (disabled), which is the right direction but is silent.
+ * These must match the server's SERVER_NAME exactly. A mismatch fails
+ * safe (treated as non-production), which is the right direction but is
+ * silent — so check here first if production-only behaviour goes missing
+ * after a deploy.
  *
  * SERVER_NAME comes from the server config rather than the Host header, so
  * it is not attacker-controlled the way HTTP_HOST would be.
@@ -71,10 +72,9 @@ return [
         //
         // Test posts live in content/2_posts/_drafts/ so they stay out of
         // the sitemap, the RSS feed and the /posts index. But Kirby gives a
-        // draft no preview URL without an authenticated Panel session, and
-        // the Panel is deliberately unusable on a dev host (see
-        // $isProduction at the top of this file) — which would leave layout
-        // work with no way to view its own test content.
+        // draft no preview URL without an authenticated Panel session, which
+        // makes test content awkward to view while doing layout work on a
+        // throwaway `php -S` server.
         //
         // /draft/posts/synthetic-1500 renders that draft. The route is not
         // registered at all in production, and it still refuses anything
@@ -208,21 +208,10 @@ return [
         ])
     ],
 
-    // Git Content Plugin Configuration
-    // https://github.com/thathoff/kirby-git-content
+    // Used by the draft preview route above. Kept after the git-content
+    // plugin was removed; it is a general "are we on the real server?"
+    // flag, not plugin-specific.
     //
     // See $isProduction at the top of this file.
     'isProduction' => $isProduction,
-
-    // Enable automatic commits when content changes via Panel
-    'thathoff.git-content.commit' => $isProduction,
-
-    // Automatically pull changes from remote before making changes
-    'thathoff.git-content.pull' => false,
-
-    // Automatically push commits to remote repository
-    'thathoff.git-content.push' => $isProduction,
-
-    // Path to git repository (defaults to content directory)
-    // 'thathoff.git-content.path' => kirby()->root('content'),
 ];

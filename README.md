@@ -20,7 +20,6 @@ My personal website built with [Kirby CMS](https://getkirby.com) (v5).
 ## Tech Stack
 
 - **[Kirby CMS 5](https://getkirby.com)** -- File-based CMS (PHP 8.2+)
-- **[Kirby Git Content](https://github.com/thathoff/kirby-git-content)** -- Auto-commits Panel changes to git
 - **Custom Site Plugin** -- Panel dashboard and cache invalidation hooks
 - **Cloudflare** -- CDN and caching layer
 - **nginx** -- Web server
@@ -32,7 +31,42 @@ My personal website built with [Kirby CMS](https://getkirby.com) (v5).
 2. Run `composer install` to install dependencies
 3. Run `composer start` to start the development server at http://localhost:8000
 
-Git content syncing is automatically disabled on localhost.
+To view draft content while working on layout, use the dev-only route:
+`/draft/posts/<slug>` (not registered in production).
+
+## Content workflow
+
+**Panel edits on the production server are not committed to git.** There is no
+automatic commit or push. The `thathoff/kirby-git-content` plugin used to do
+this and was removed -- its auto-commits produced messages like
+`update(page): links` that carried no information, and having content in git
+delivered none of git's actual benefits (no meaningful diffs, no branching, no
+reverting a typo fix).
+
+**Current state, as of this commit:** content is *still tracked in git*, but
+nothing commits it automatically. If you edit in the production Panel, that
+change lives only on the server until you deliberately bring it down.
+
+**Intended end state:** content leaves version control entirely and is covered
+by separate backups. Git stays for the layer between core Kirby and content --
+templates, snippets, blueprints, CSS, config.
+
+That move is deliberately **not done yet**, because it has a prerequisite:
+
+> `.github/workflows/deploy.yml` runs `git reset --hard origin/main` on the
+> server. The moment `content/` stops being tracked, the next deploy deletes
+> every content file that git no longer knows about. The deploy has to stop
+> managing `content/` *before* content leaves the index.
+
+The clean fix is the release-directory layout sketched in
+`.github/workflows/deploy-releases.yml.draft`, where `content/` is a symlink
+into a `shared/` directory that deploys cannot reach. That is part of the
+planned server rebuild.
+
+**Before content leaves git, backups must exist and a restore must be
+verified.** Right now GitHub is an accidental offsite copy of content; removing
+content from git removes that copy, silently. Content is ~750K, so this is not
+a hard problem -- it just has to actually be done first.
 
 ## Project Structure
 
@@ -41,8 +75,8 @@ assets/            CSS, JS (menu, gallery, breadcrumb nav, procedural art)
 content/           File-based content (text files and media)
 site/
   blueprints/      Panel field definitions
-  config/          Kirby configuration (routes, caching, security, git plugin)
-  plugins/         Site plugin (dashboard, cache hooks) + git-content
+  config/          Kirby configuration (routes, caching, security)
+  plugins/         Site plugin (dashboard, cache hooks)
   snippets/        Reusable components (header, footer, gallery, feed, sitemap)
   templates/       Page templates (home, about, article, posts, projects, links)
 ```

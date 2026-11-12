@@ -20,9 +20,11 @@ updates:
       kirby-core:
         patterns:
           - "getkirby/cms"
+      # No Kirby plugins are installed via composer right now (the only
+      # one, thathoff/kirby-git-content, was removed). Pattern kept so a
+      # future plugin is grouped rather than opening its own PR.
       kirby-plugins:
         patterns:
-          - "thathoff/kirby-*"
           - "*/kirby-*"
     # Only update to stable versions
     ignore:

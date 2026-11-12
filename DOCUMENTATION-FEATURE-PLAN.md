@@ -187,14 +187,15 @@ Remove migrated content, keep structure
 
 ### Why This Approach Works
 1. **No frontend impact**: Unlisted pages never appear on site
-2. **Git-friendly**: All content in `/content/` syncs via git-content plugin
+2. **Plain files**: All content lives in `/content/` as text files
 3. **Native Kirby**: Uses built-in Panel features, no custom code
 4. **Scalable**: Easy to add more sections or nest deeper
 
 ### Security Considerations
 - Pages require Panel authentication to view
 - No special permissions needed (uses existing Panel auth)
-- Content version controlled via git-content plugin
+- Panel edits are **not** auto-committed to git; see "Content workflow" in
+  README.md for how content is handled (the git-content plugin was removed)
 
 ### Performance Impact
 - Minimal: Only 3-4 additional pages
