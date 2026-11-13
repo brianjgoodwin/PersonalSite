@@ -195,8 +195,8 @@ left version control. Removing the pipeline removes that trap.
 
 ## What is and is not in this repo
 
-**Tracked: 64 files.** `assets/` (CSS, JS), `site/` (templates, snippets,
-blueprints, config), two GitHub workflows, and the root-level docs and
+**Tracked: 59 files.** `assets/` (CSS, JS), `site/` (templates, snippets,
+blueprints, config), two GitHub workflows, and the root-level README and
 composer manifests. That is the whole repo -- just the parts written by hand.
 
 It was 785 files before this cleanup. The difference was Kirby itself and the
