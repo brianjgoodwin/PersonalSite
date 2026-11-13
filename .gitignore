@@ -53,12 +53,26 @@ index.html
 # ---------------
 
 /site/config/.license
+
+# NOTE: config.php is listed here but IS tracked — git keeps tracking
+# files already in the index, ignore rule or not. The practical effect is
+# that edits to it do not show up in `git status`, so they are easy to
+# miss. Use `git status site/config/config.php` or `git diff HEAD --
+# site/config/config.php` after changing it. It contains no secrets (the
+# Kirby license key lives in .license, which is genuinely untracked).
 /site/config/config.php
 
 # Composer dependencies
 # ---------------
+#
+# Both of these are installed by `composer install`, not committed.
+# Kirby lands in kirby/ rather than vendor/ because getkirby/cms is
+# type "kirby-cms" and getkirby/composer-installer puts it there.
+# index.php does `require 'kirby/bootstrap.php'`, so the server needs
+# composer install to have run. See "Updating the site" in README.md.
 
 /vendor/
+/kirby/
 
 # Environment files
 # ---------------
@@ -98,8 +112,12 @@ brianjgoodwin.net---docs-main/01-current-site-audits.md
 .claudeZ/agents/kirby-consultant.md
 CLAUDE.md
 cloud-config.yaml
-root@95.216.149.68
 server-setup.sh
+
+# Local server notes and setup scripts. Ignored by directory rather than
+# by filename: the previous rule named the server's IP address, which put
+# the address in a now-public repo for no reason.
+/docs/
 header-redesign-audit-findings.md
 prototype-to-kirby-plan.md
 remote-development-plan.md

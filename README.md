@@ -15,7 +15,6 @@ My personal website built with [Kirby CMS](https://getkirby.com) (v5).
 - **Caching** -- Page caching with automatic invalidation on content changes, smart HTTP cache headers per content type
 - **Security Headers** -- CSP, X-Frame-Options, XSS protection, referrer policy
 - **SEO** -- Sitemap.xml, RSS/Atom feed, robots.txt (blocks AI scrapers, allows major search engines)
-- **Automated Deployment** -- GitHub Actions pipeline: deploy via SSH, clear nginx/Cloudflare caches, warm cache from sitemap
 
 ## Tech Stack
 
@@ -23,13 +22,30 @@ My personal website built with [Kirby CMS](https://getkirby.com) (v5).
 - **Custom Site Plugin** -- Panel dashboard and cache invalidation hooks
 - **Cloudflare** -- CDN and caching layer
 - **nginx** -- Web server
-- **GitHub Actions** -- CI/CD (deploy, link checking, feed validation)
+- **GitHub Actions** -- link checking and feed validation only (no deploy)
 
 ## Local Development
 
 1. Clone this repository
-2. Run `composer install` to install dependencies
+2. Run `composer install` -- **required**, not optional. Kirby itself lives in
+   `kirby/` and is not committed, so a fresh clone has no CMS until composer
+   installs it. Without this step `index.php` fails on
+   `require 'kirby/bootstrap.php'`.
 3. Run `composer start` to start the development server at http://localhost:8000
+
+`composer start` runs `php -S localhost:8000 kirby/router.php`. Use that
+router as the front controller for any hand-rolled `php -S` -- pointing it at
+`index.php` instead breaks Kirby's routing in ways that look like template
+bugs.
+
+To test on another device on the LAN, bind to the machine's actual LAN IP
+rather than `0.0.0.0`; Kirby builds absolute asset URLs from the bind address,
+and `0.0.0.0` is not routable from the other device, so the page loads
+unstyled:
+
+```bash
+php -S 192.168.x.x:8000 kirby/router.php
+```
 
 To view draft content while working on layout, use the dev-only route:
 `/draft/posts/<slug>` (not registered in production).
@@ -51,22 +67,22 @@ change lives only on the server until you deliberately bring it down.
 by separate backups. Git stays for the layer between core Kirby and content --
 templates, snippets, blueprints, CSS, config.
 
-That move is deliberately **not done yet**, because it has a prerequisite:
+That move is deliberately **not done yet**. Exactly one prerequisite is left:
 
-> `.github/workflows/deploy.yml` runs `git reset --hard origin/main` on the
-> server. The moment `content/` stops being tracked, the next deploy deletes
-> every content file that git no longer knows about. The deploy has to stop
-> managing `content/` *before* content leaves the index.
+> **Backups must exist, and a restore must have been tested.** Right now
+> GitHub is an accidental offsite copy of content. Remove content from git
+> and that copy stops updating -- silently, with the site still working, so
+> there is no signal that anything is wrong. Until a backup has had a file
+> successfully restored *from* it, there is no backup.
 
-The clean fix is the release-directory layout sketched in
-`.github/workflows/deploy-releases.yml.draft`, where `content/` is a symlink
-into a `shared/` directory that deploys cannot reach. That is part of the
-planned server rebuild.
+Content is ~750K, so this is not a hard problem. It just has to actually be
+done, and verified, first.
 
-**Before content leaves git, backups must exist and a restore must be
-verified.** Right now GitHub is an accidental offsite copy of content; removing
-content from git removes that copy, silently. Content is ~750K, so this is not
-a hard problem -- it just has to actually be done first.
+The other prerequisite used to be the deploy pipeline: it ran
+`git reset --hard origin/main` on the server, which would have deleted
+server-side content the moment `content/` left the index. **That hazard is
+gone** -- the pipeline was removed (see "Updating the site"), and a manual
+`git pull` does not touch untracked files.
 
 ## Project Structure
 
@@ -79,6 +95,10 @@ site/
   plugins/         Site plugin (dashboard, cache hooks)
   snippets/        Reusable components (header, footer, gallery, feed, sitemap)
   templates/       Page templates (home, about, article, posts, projects, links)
+index.php          Front controller -- requires kirby/bootstrap.php
+
+kirby/             NOT IN GIT -- installed by composer
+vendor/            NOT IN GIT -- installed by composer
 ```
 
 ## Untested code paths
@@ -101,15 +121,80 @@ which uses a different file template).
 Do not delete these on the assumption that they are unused. A code review once
 flagged the one-column CSS as unreachable; it is reachable, just unselected.
 
-## Deployment
+## Updating the site
 
-Merging to `main` triggers a GitHub Actions workflow that:
+**There is no automated deploy.** Updating is a manual `git pull` on the
+server, by design -- see "Why no pipeline" below.
 
-1. Deploys code to the production server via SSH
-2. Clears Kirby, nginx, and Cloudflare caches
-3. Warms the page cache by crawling the sitemap
+```bash
+ssh <user>@<server>
+cd /var/www/brianjgoodwin.net        # wherever the site lives
 
-See [`.github/DEPLOYMENT.md`](.github/DEPLOYMENT.md) for setup details.
+git pull origin main
+composer install --no-dev --optimize-autoloader
+rm -rf site/cache/*                 # Kirby caches rendered pages
+```
+
+`composer install` is required because `kirby/` is **not** in this repo (see
+below). Skip it and nothing breaks *unless* `composer.lock` changed -- but
+running it is cheap and idempotent, so just run it.
+
+### The remote must be HTTPS, not SSH
+
+```bash
+git remote set-url origin https://github.com/brianjgoodwin/PersonalSite.git
+```
+
+This repo is public, so HTTPS pulls need no credentials at all. SSH
+(`git@github.com:...`) **always** demands a key even for public repos --
+there is no anonymous SSH -- and on a server that means every user who
+might pull (you, root via sudo, the web server user running the Panel)
+needs its own key and its own `known_hosts`. That is what produced
+`Host key verification failed` from the Panel and
+`Permission denied (publickey)` from `sudo git pull`: three identities,
+one key, in the wrong home directory.
+
+HTTPS sidesteps all of it.
+
+### Why no pipeline
+
+There used to be a GitHub Actions deploy: SSH in, `git reset --hard`,
+`composer install`, purge nginx and Cloudflare, warm the cache from the
+sitemap. It was a good thing to learn and it is kept in git history.
+
+It was removed because it was load-bearing infrastructure for a personal
+blog that gets edited rarely. Its last two runs failed in April 2026 and
+nobody noticed for seven months, which is the whole argument: a pipeline
+you do not watch is not reliability, it is a second thing that can break.
+A manual pull fails loudly, in front of you, while you are already
+looking at the terminal.
+
+The `git reset --hard origin/main` in that workflow was also a standing
+hazard -- it would have deleted server-side content the moment `content/`
+left version control. Removing the pipeline removes that trap.
+
+## What is and is not in this repo
+
+**Tracked:** `assets/` (CSS, JS), `site/` (templates, snippets, blueprints,
+config), `content/`, and docs. Roughly 105 files -- the parts actually
+written by hand.
+
+**Not tracked:**
+
+| Path | Why | How it gets there |
+| --- | --- | --- |
+| `kirby/` | Kirby CMS itself, ~680 files of build output | `composer install` |
+| `vendor/` | Composer dependencies | `composer install` |
+| `media/` | Kirby's generated thumbnails | regenerated on demand |
+| `site/accounts/`, `site/sessions/`, `site/cache/` | Runtime state | created at runtime |
+| `site/config/.license` | Kirby license key -- **never commit** | manual |
+
+`kirby/` used to be committed. It was 678 tracked files that
+`composer install` overwrote on every deploy, which meant the repo claimed
+Kirby 5.2.0 while `composer.lock` specified 5.5.3 and the server ran
+whatever composer last installed. It also generated most of this repo's
+Dependabot noise and vulnerability alerts. Untracking it makes
+`composer.lock` the single authority on which Kirby version runs.
 
 ## License
 
