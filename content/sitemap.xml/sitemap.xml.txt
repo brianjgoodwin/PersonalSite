@@ -1,9 +1,0 @@
-Title: Sitemap
-
-----
-
-Template: sitemap.xml
-
-----
-
-Uuid: p74ilr8anbbqsjiz

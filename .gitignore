@@ -95,6 +95,27 @@ php_error.log
 *.sql
 *.sql.gz
 
+# Content
+# ---------------
+#
+# The site's actual content is NOT in version control. The production
+# server is the source of truth; backups are rsync mirrors pulled nightly
+# to content_backups/ by scripts/sync-blog.sh (see scripts/README.md).
+#
+# Why not git: Panel edits produced commits like "update(page): links"
+# with no meaningful diff, no branching, and nothing anyone would ever
+# revert. Git is for the layer between core Kirby and content.
+#
+# Consequence worth remembering: a fresh clone has NO content, so it will
+# render a site with no pages. Pull content from the server or from
+# content_backups/ to work on templates locally.
+/content/
+
+# Remote content backups (rsync target, see scripts/sync-blog.sh)
+# ---------------
+/content_backups/
+/archive/
+
 # Documentation
 # ---------------
 
@@ -124,3 +145,7 @@ remote-development-plan.md
 prototype_index.html
 PROCEDURAL_ART_TODO.md
 PROJECTS-IMPLEMENTATION-PLAN.md
+scripts/check-blog-sync.sh
+scripts/sync-blog.sh
+scripts/restore-blog.sh
+scripts/README.md

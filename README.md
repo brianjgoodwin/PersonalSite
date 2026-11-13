@@ -59,36 +59,50 @@ this and was removed -- its auto-commits produced messages like
 delivered none of git's actual benefits (no meaningful diffs, no branching, no
 reverting a typo fix).
 
-**Current state, as of this commit:** content is *still tracked in git*, but
-nothing commits it automatically. If you edit in the production Panel, that
-change lives only on the server until you deliberately bring it down.
+**`content/` is not in version control.** The production server is the source
+of truth. Git holds the layer between core Kirby and content -- templates,
+snippets, blueprints, CSS, config.
 
-**Intended end state:** content leaves version control entirely and is covered
-by separate backups. Git stays for the layer between core Kirby and content --
-templates, snippets, blueprints, CSS, config.
+### Where content actually lives
 
-That move is deliberately **not done yet**. Exactly one prerequisite is left:
+| | |
+| --- | --- |
+| **Source of truth** | the production server, edited via the Panel |
+| **Backup** | `content_backups/`, an rsync mirror pulled nightly at 03:00 |
+| **In git** | nothing |
 
-> **Backups must exist, and a restore must have been tested.** Right now
-> GitHub is an accidental offsite copy of content. Remove content from git
-> and that copy stops updating -- silently, with the site still working, so
-> there is no signal that anything is wrong. Until a backup has had a file
-> successfully restored *from* it, there is no backup.
+Three local scripts handle it. They live in `scripts/` and are **gitignored**
+-- not in this repo, because they contain server paths and hostnames. See
+`scripts/README.md` for details.
 
-Content is ~750K, so this is not a hard problem. It just has to actually be
-done, and verified, first.
+- `sync-blog.sh` -- pulls `content/` from production to `content_backups/`.
+  Scheduled by launchd, daily 03:00. Notifies on failure.
+- `check-blog-sync.sh` -- watchdog, daily 15:00. Notifies if the last
+  successful sync is over 36 hours old. This catches the failure mode a
+  backup script cannot catch itself: never having run (Mac asleep, network
+  down).
+- `restore-blog.sh` -- manual only, never scheduled. Pushes
+  `content_backups/` back up, overwriting the server. Supports `--dry-run`
+  and requires typing `YES`.
 
-The other prerequisite used to be the deploy pipeline: it ran
-`git reset --hard origin/main` on the server, which would have deleted
-server-side content the moment `content/` left the index. **That hazard is
-gone** -- the pipeline was removed (see "Updating the site"), and a manual
-`git pull` does not touch untracked files.
+### Consequences to remember
+
+**A fresh clone has no content.** It will boot and render a site with no
+pages. To work on templates locally, copy `content/` down from the server or
+from `content_backups/`.
+
+**Panel edits are not versioned at all.** There is no history, no diff, no
+revert. If you need to undo a content change, the backup mirror is the only
+way back, and it is at most 24 hours old.
+
+**`_changes/` directories are not backed up, by design.** Those are the
+Panel's unsaved-draft buffers -- transient editor state, not content. The site
+renders fine without them; this was tested, not assumed.
 
 ## Project Structure
 
 ```
 assets/            CSS, JS (menu, gallery, breadcrumb nav, procedural art)
-content/           File-based content (text files and media)
 site/
   blueprints/      Panel field definitions
   config/          Kirby configuration (routes, caching, security)
@@ -97,8 +111,14 @@ site/
   templates/       Page templates (home, about, article, posts, projects, links)
 index.php          Front controller -- requires kirby/bootstrap.php
 
-kirby/             NOT IN GIT -- installed by composer
-vendor/            NOT IN GIT -- installed by composer
+NOT IN GIT
+  kirby/           Kirby CMS       -- composer install
+  vendor/          Dependencies    -- composer install
+  content/         Site content    -- server is source of truth; see above
+  content_backups/ rsync mirror    -- scripts/sync-blog.sh
+  scripts/         Backup scripts  -- local only, contain server details
+  media/           Kirby thumbs    -- regenerated on demand
+  archive/         Old design sketches
 ```
 
 ## Untested code paths
@@ -175,9 +195,12 @@ left version control. Removing the pipeline removes that trap.
 
 ## What is and is not in this repo
 
-**Tracked:** `assets/` (CSS, JS), `site/` (templates, snippets, blueprints,
-config), `content/`, and docs. Roughly 105 files -- the parts actually
-written by hand.
+**Tracked: 64 files.** `assets/` (CSS, JS), `site/` (templates, snippets,
+blueprints, config), two GitHub workflows, and the root-level docs and
+composer manifests. That is the whole repo -- just the parts written by hand.
+
+It was 785 files before this cleanup. The difference was Kirby itself and the
+site's content, neither of which belonged here.
 
 **Not tracked:**
 
@@ -185,7 +208,11 @@ written by hand.
 | --- | --- | --- |
 | `kirby/` | Kirby CMS itself, ~680 files of build output | `composer install` |
 | `vendor/` | Composer dependencies | `composer install` |
+| `content/` | Server is the source of truth | rsync from server |
+| `content_backups/` | The backup mirror itself | `scripts/sync-blog.sh` |
+| `scripts/` | Backup scripts -- hold server paths and hostnames | local only |
 | `media/` | Kirby's generated thumbnails | regenerated on demand |
+| `archive/` | Old design sketches, kept for reference | local only |
 | `site/accounts/`, `site/sessions/`, `site/cache/` | Runtime state | created at runtime |
 | `site/config/.license` | Kirby license key -- **never commit** | manual |
 
